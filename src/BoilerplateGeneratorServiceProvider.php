@@ -2,10 +2,25 @@
 
 namespace Fligno\BoilerplateGenerator;
 
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeModel;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRequest;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
+use Fligno\BoilerplateGenerator\Console\Commands\MagicStarter;
+use Fligno\BoilerplateGenerator\Exceptions\Handler;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\ServiceProvider;
 
 class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
+    protected array $commands = [
+        ExtendedMakeController::class,
+        ExtendedMakeModel::class,
+        ExtendedMakeRequest::class,
+        ExtendedMakeResource::class,
+        MagicStarter::class
+    ];
+
     /**
      * Perform post-registration booting of services.
      *
@@ -22,6 +37,11 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        // Register Custom Exception Handler
+        if (config('boilerplate-generator.override_exception_handler')) {
+            $this->app->singleton(ExceptionHandler::class, Handler::class);
+        }
     }
 
     /**
@@ -34,8 +54,9 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/boilerplate-generator.php', 'boilerplate-generator');
 
         // Register the service the package provides.
-        $this->app->singleton('boilerplate-generator', function ($app) {
-            return new BoilerplateGenerator;
+
+        $this->app->bind('extended-response', function ($app) {
+            return new ExtendedResponse();
         });
     }
 
@@ -44,9 +65,9 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
-        return ['boilerplate-generator'];
+        return ['extended-response'];
     }
 
     /**
@@ -77,6 +98,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ], 'boilerplate-generator.views');*/
 
         // Registering package commands.
-        // $this->commands([]);
+         $this->commands($this->commands);
     }
 }
