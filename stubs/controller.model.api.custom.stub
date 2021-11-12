@@ -1,0 +1,170 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+//use {{ rootNamespace }}Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
+
+// Custom Requests
+use {{ rootNamespace }}Http\Requests\{{ requestFolder }}{{ model }}\Index{{ model }};
+use {{ rootNamespace }}Http\Requests\{{ requestFolder }}{{ model }}\Show{{ model }};
+use {{ rootNamespace }}Http\Requests\{{ requestFolder }}{{ model }}\Create{{ model }};
+use {{ rootNamespace }}Http\Requests\{{ requestFolder }}{{ model }}\Update{{ model }};
+use {{ rootNamespace }}Http\Requests\{{ requestFolder }}{{ model }}\Delete{{ model }};
+use {{ rootNamespace }}Http\Requests\{{ requestFolder }}{{ model }}\Restore{{ model }};
+
+// Custom Events
+use {{ rootNamespace }}Events\{{ requestFolder }}{{ model }}\{{ model }}Collected;
+use {{ rootNamespace }}Events\{{ requestFolder }}{{ model }}\{{ model }}Fetched;
+use {{ rootNamespace }}Events\{{ requestFolder }}{{ model }}\{{ model }}Created;
+use {{ rootNamespace }}Events\{{ requestFolder }}{{ model }}\{{ model }}Updated;
+use {{ rootNamespace }}Events\{{ requestFolder }}{{ model }}\{{ model }}Deleted;
+use {{ rootNamespace }}Events\{{ requestFolder }}{{ model }}\{{ model }}Restored;
+
+// Other Imports
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ * @since 2021-11-10
+ */
+class {{ class }} extends Controller
+{
+    /**
+     * {{ model }} List
+     *
+     * @group {{ model }} Management
+     *
+     * @param Index{{ model }} $request
+     * @return JsonResponse
+     */
+    public function index(Index{{model}} $request): JsonResponse
+    {
+        $data = new {{ model }};
+
+        if ($request->has('full_data') === TRUE) {
+            $data = $data->get();
+        } else {
+            $data = $data->simplePaginate($request->get('per_page', 15));
+        }
+
+        event(new {{ model }}Collected($data));
+
+        return customResponse()
+            ->data($data)
+            ->message('Successfully collected record.')
+            ->success()
+            ->generate();
+    }
+
+    /**
+     * Store {{ model }}
+     *
+     * @group {{ model }} Management
+     *
+     * @param Create{{ model }} $request
+     * @return JsonResponse
+     */
+    public function store(Create{{model}} $request): JsonResponse
+    {
+        $data = $request->all();
+
+        $model = {{ model }}::create($data)->fresh();
+
+        event(new {{ model }}Created($model));
+
+        return customResponse()
+            ->data($model)
+            ->message('Successfully created record.')
+            ->success()
+            ->generate();
+    }
+
+    /**
+     * Show {{ model }}
+     *
+     * @group {{ model }} Management
+     *
+     * @param Show{{ model }} $request
+     * @param {{ model }} ${{ modelVariable }}
+     * @return JsonResponse
+     */
+    public function show(Show{{model}} $request, {{ model }} ${{ modelVariable }}): JsonResponse
+    {
+        event(new {{ model }}Fetched(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully fetched record.')
+            ->success()
+            ->generate();
+    }
+
+    /**
+     * Update {{ model }}
+     *
+     * @group {{ model }} Management
+     *
+     * @param Update{{ model }} $request
+     * @param {{ model }} ${{ modelVariable }}
+     * @return JsonResponse
+     */
+    public function update(Update{{model}} $request, {{ model }} ${{ modelVariable }}): JsonResponse
+    {
+        event(new {{ model }}Updated(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully updated record.')
+            ->success()
+            ->generate();
+    }
+
+    /**
+     * Soft Delete {{ model }}
+     *
+     * @group {{ model }} Management
+     *
+     * @param Delete{{ model }} $request
+     * @param {{ model }} ${{ modelVariable }}
+     * @return JsonResponse
+     */
+    public function destroy(Delete{{model}} $request, {{ model }} ${{ modelVariable }}): JsonResponse
+    {
+        ${{ modelVariable }}->delete();
+
+        event(new {{ model }}Deleted(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully deleted record.')
+            ->success()
+            ->generate();
+    }
+
+    /**
+     * Restore {{ model }}
+     *
+     * @group {{ model }} Management
+     *
+     * @param Restore{{ model }} $request
+     * @param ${{ modelVariable }}
+     * @return JsonResponse
+     */
+    public function restore(Restore{{ model }} $request, ${{ modelVariable }}): JsonResponse
+    {
+        {{ model }}::withTrashed()->find(${{ modelVariable }})->restore();
+
+        event(new {{ model }}Restored(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully restored record.')
+            ->success()
+            ->generate();
+    }
+}

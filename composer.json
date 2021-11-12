@@ -20,6 +20,9 @@
         "jeroen-g/laravel-packager ": "2.7.*"
     },
     "autoload": {
+        "files": [
+            "helpers/CustomHelpers.php"
+        ],
         "psr-4": {
             "Fligno\\BoilerplateGenerator\\": "src/"
         }

@@ -3,8 +3,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Foundation\Console\ResourceMakeCommand;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 /**
  * Class ExtendedMakeResource
@@ -14,6 +16,8 @@ use Illuminate\Support\Facades\File;
  */
 class ExtendedMakeResource extends ResourceMakeCommand
 {
+    use UsesVendorPackageInput;
+
     /**
      * The console command name.
      *
@@ -28,12 +32,21 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     protected $description = 'Create a new resource class for Eloquent model.';
 
+    /***** OVERRIDDEN FUNCTIONS *****/
+
     /**
-     * The type of class being generated.
-     *
-     * @var string
+     * @return void
      */
-    protected $type = 'Resource';
+    public function handle(): void
+    {
+        // Initiate Stuff
+
+        $this->info('Creating resource for ' . $this->vendor_name . '/' . $this->package_name . '...');
+
+        $this->setVendorAndPackage($this);
+
+        parent::handle();
+    }
 
     /**
      * @return string
@@ -47,5 +60,16 @@ class ExtendedMakeResource extends ResourceMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * @return array|array[]
+     */
+    protected function getOptions(): array
+    {
+        return array_merge(
+            parent::getOptions(),
+            $this->default_package_options
+        );
     }
 }

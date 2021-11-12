@@ -3,10 +3,14 @@
 namespace Fligno\BoilerplateGenerator;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeEvent;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeMigration;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeModel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRequest;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\MagicStarter;
+use Fligno\BoilerplateGenerator\Console\Commands\MakePackage;
 use Fligno\BoilerplateGenerator\Exceptions\Handler;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\ServiceProvider;
@@ -15,9 +19,13 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
     protected array $commands = [
         ExtendedMakeController::class,
+        ExtendedMakeEvent::class,
+        ExtendedMakeMigration::class,
         ExtendedMakeModel::class,
         ExtendedMakeRequest::class,
         ExtendedMakeResource::class,
+        ExtendedMakeTest::class,
+        MakePackage::class,
         MagicStarter::class
     ];
 

@@ -2,9 +2,13 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use JeroenG\Packager\FileHandler;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class MagicStarter
@@ -14,19 +18,14 @@ use InvalidArgumentException;
  */
 class MagicStarter extends Command
 {
+    use UsesVendorPackageInput, FileHandler;
+
     /**
-     * The name and signature of the console command.
+     * The name of the console command.
      *
      * @var string
      */
-    protected $signature = 'gen:start
-    {model : Eloquent Model}
-    {--requestsFolder= : Custom root folder for auto-generated requests}
-    {--parent}
-    {--model=}
-    {--y : Yes to all questions}
-    {--skip : Skip all questions}
-    ';
+    protected $name = 'gen:start';
 
     /**
      * @var string
@@ -46,20 +45,22 @@ class MagicStarter extends Command
     /**
      * @var bool
      */
-    protected bool $skip_all_questions = FALSE;
+    protected bool $is_model_created = FALSE;
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create model, controller, request, event, and resource classes automagically!';
+    protected $description = 'Create model, migration file, controller, request, event, and resource classes automagically!';
 
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
+        $this->setVendorAndPackage($this);
+
         $this->startPreparations();
 
         $this->startMagicShow();
@@ -93,9 +94,7 @@ class MagicStarter extends Command
 
     public function startPreparations(): void
     {
-        $this->yes_to_questions = $this->option('y');
-
-        $this->skip_all_questions = $this->option('skip');
+        $this->yes_to_questions = $this->option('yes');
 
         if ($model_name = $this->argument('model')) {
             $this->setFields($model_name);
@@ -109,13 +108,14 @@ class MagicStarter extends Command
         }
 
         $this->startPreparations();
+
         return $this->modelExists();
     }
 
     public function startMagicShow(): void
     {
         // Create Model
-        $this->generateEloquentModel();
+        $this->generateModel();
 
         // Create Resource File
         $this->generateResource();
@@ -128,6 +128,9 @@ class MagicStarter extends Command
 
         // Create API Controller
         $this->generateController();
+
+        // Create Tests
+        $this->generateTests();
     }
 
     /***** COMMANDS *****/
@@ -135,16 +138,16 @@ class MagicStarter extends Command
     /**
      *
      */
-    protected function generateEloquentModel(): void
+    protected function generateModel(): void
     {
         if ($this->modelExists() === FALSE) {
 
             $modelClass = $this->getModelClass();
-            $args = [];
+            $args = $this->getInitialArgs();
             $will_generate = FALSE;
 
             if($this->yes_to_questions || $this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
-                $args['name'] = $modelClass;
+                $args['name'] = $this->model_name;
                 $will_generate = TRUE;
             }
 
@@ -154,10 +157,12 @@ class MagicStarter extends Command
 
             if ($will_generate) {
                 $this->call('gen:model', $args);
+                $this->is_model_created = TRUE;
             }
         }
         else {
             $this->error('Model already exists!');
+            $this->is_model_created = TRUE;
         }
     }
 
@@ -166,10 +171,10 @@ class MagicStarter extends Command
      */
     public function generateResource(): void
     {
-        if($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true)) {
-            $this->call('gen:resource', [
-                'name' => $this->getModelName() . 'Resource'
-            ]);
+        if($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true))) {
+            $args = $this->getInitialArgs();
+            $args['name'] = $this->getModelName() . 'Resource';
+            $this->call('gen:resource', $args);
         }
     }
 
@@ -186,7 +191,7 @@ class MagicStarter extends Command
      */
     protected function generateAPIRequests(): void
     {
-        if($this->yes_to_questions || $this->confirm("Do you want to generate REQUEST files?", true)) {
+        if($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate REQUEST files?", true))) {
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
@@ -196,12 +201,14 @@ class MagicStarter extends Command
                 $folder . $model . '/Create' . $model,
                 $folder . $model . '/Update' . $model,
                 $folder . $model . '/Delete' . $model,
+                $folder . $model . '/Restore' . $model,
             ];
 
             foreach ($names as $name) {
-                $this->call('gen:request', [
-                    'name' => $name,
-                ]);
+                $args = $this->getInitialArgs();
+                $args['name'] = $name;
+
+                $this->call('gen:request', $args);
             }
         }
     }
@@ -212,7 +219,7 @@ class MagicStarter extends Command
      */
     public function generateEvents(): void
     {
-        if($this->yes_to_questions || $this->confirm("Do you want to generate EVENT files?", true)) {
+        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate EVENT files?", true))) {
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
@@ -222,24 +229,28 @@ class MagicStarter extends Command
                 $folder . $model . '/' . $model . 'Created',
                 $folder . $model . '/' . $model . 'Updated',
                 $folder . $model . '/' . $model . 'Deleted',
+                $folder . $model . '/' . $model . 'Restored',
             ];
 
             foreach ($names as $name) {
-                $this->call('make:event', [
-                    'name' => $name,
-                ]);
+                $args = $this->getInitialArgs();
+                $args['name'] = $name;
+
+                $this->call('gen:event', $args);
             }
         }
     }
 
+    /**
+     *
+     */
     public function generateController(): void
     {
-        if($this->yes_to_questions || $this->confirm("Do you want to generate API Controller file?", true)) {
-            $args = [
-                'name' => $this->getModelName() . 'Controller',
-                '--model' => $this->getModelName(),
-                '--skip'
-            ];
+        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate API Controller file?", true))) {
+            $args = $this->getInitialArgs();
+            $args['name'] = $this->getModelName() . 'Controller';
+            $args['--model'] = $this->getModelName();
+            $args[] = '--skip';
 
             if ($this->hasOption('requestsFolder') && $folder = $this->option('requestsFolder')) {
                 $args['--requestFolder'] = $folder;
@@ -250,6 +261,33 @@ class MagicStarter extends Command
             }
 
             $this->call('gen:controller', $args);
+        }
+    }
+
+    /**
+     * This will auto-generate a test for each of the functions that you have on the generated controller class.
+     */
+    public function generateTests(): void
+    {
+        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate TEST files?", true))) {
+            $model = $this->getModelName();
+            $folder = $this->option('requestsFolder');
+
+            $names = [
+                $folder . $model . '/Index' . $model . 'Test',
+                $folder . $model . '/Show' . $model . 'Test',
+                $folder . $model . '/Create' . $model . 'Test',
+                $folder . $model . '/Update' . $model . 'Test',
+                $folder . $model . '/Delete' . $model . 'Test',
+                $folder . $model . '/Restore' . $model . 'Test',
+            ];
+
+            foreach ($names as $name) {
+                $args = $this->getInitialArgs();
+                $args['name'] = $name;
+
+                $this->call('gen:test', $args);
+            }
         }
     }
 
@@ -303,5 +341,30 @@ class MagicStarter extends Command
     protected function rootNamespace(): string
     {
         return $this->laravel->getNamespace();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getArguments(): array
+    {
+        return [
+            ['model', InputArgument::REQUIRED, 'The name of the model to create.'],
+        ];
+    }
+
+    /**
+     * @return array|array[]
+     */
+    protected function getOptions(): array
+    {
+        return array_merge(
+            parent::getOptions(),
+            $this->default_package_options,
+            [
+                ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.'],
+                ['requestsFolder', null, InputOption::VALUE_OPTIONAL, 'Target request folder.'],
+            ]
+        );
     }
 }

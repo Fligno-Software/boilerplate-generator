@@ -2,8 +2,14 @@
 
 namespace {{ namespace }};
 
-use FourelloDevs\MagicController\Requests\FormRequest;
+use Fligno\BoilerplateGenerator\Requests\FormRequest;
 
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ * @since 2021-11-10
+ */
 class {{ class }} extends FormRequest
 {
     /**

@@ -2,12 +2,30 @@
 
 namespace {{ namespace }};
 
-use App\Models\AbstractModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Fligno\BoilerplateGenerator\Traits\UsesUUID;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
-class {{ class }} extends AbstractModel
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ * @since 2021-11-10
+ */
+class {{ class }} extends Model
 {
-    use HasFactory;
+    use UsesUUID, HasFactory, SoftDeletes;
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +33,8 @@ class {{ class }} extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        //
+        // write here...
+        'deleted_at',
     ];
 
     /******** RELATIONSHIPS ********/

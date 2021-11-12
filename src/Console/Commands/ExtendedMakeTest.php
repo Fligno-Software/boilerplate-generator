@@ -5,17 +5,17 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Foundation\Console\RequestMakeCommand;
+use Illuminate\Foundation\Console\TestMakeCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 /**
- * Class ExtendedMakeRequest
+ * Class ExtendedMakeResource
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-09
+ * @since 2021-11-10
  */
-class ExtendedMakeRequest extends RequestMakeCommand
+class ExtendedMakeTest extends TestMakeCommand
 {
     use UsesVendorPackageInput;
 
@@ -24,14 +24,14 @@ class ExtendedMakeRequest extends RequestMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:request';
+    protected $name = 'gen:test';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new form request with authorize as true.';
+    protected $description = 'Create a new resource class for Eloquent model.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
@@ -43,7 +43,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
     {
         // Initiate Stuff
 
-        $this->info('Creating requests for ' . $this->vendor_name . '/' . $this->package_name . '...');
+        $this->info('Creating tests for ' . $this->vendor_name . '/' . $this->package_name . '...');
 
         $this->setVendorAndPackage($this);
 
@@ -51,15 +51,13 @@ class ExtendedMakeRequest extends RequestMakeCommand
     }
 
     /**
-     * Get the stub file for the generator.
-     *
      * @return string
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/request.custom.stub';
+        $stub = $this->option('unit') ? '/../../../stubs/test.unit.custom.stub' : '/../../../stubs/test.custom.stub';
 
-        if (File::exists($path = __DIR__ . $stub) === false) {
+        if (File::exists($path = __DIR__ . $stub) === FALSE) {
             return parent::getStub();
         }
 

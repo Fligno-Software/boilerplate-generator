@@ -3,8 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 /**
  * Class ExtendedMakeModel
@@ -14,6 +17,8 @@ use Illuminate\Support\Facades\File;
  */
 class ExtendedMakeModel extends ModelMakeCommand
 {
+    use UsesVendorPackageInput;
+
     /**
      * The console command name.
      *
@@ -28,12 +33,21 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected $description = 'Create a new model using custom stub.';
 
+    /***** OVERRIDDEN FUNCTIONS *****/
+
     /**
-     * The type of class being generated.
-     *
-     * @var string
+     * @return bool|null
      */
-    protected $type = 'Model';
+    public function handle(): ?bool
+    {
+        // Initiate Stuff
+
+        $this->setVendorAndPackage($this);
+
+        $this->info('Creating model for ' . $this->vendor_name . '/' . $this->package_name . '...');
+
+        return parent::handle();
+    }
 
     /**
      * Get the stub file for the generator.
@@ -49,5 +63,16 @@ class ExtendedMakeModel extends ModelMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * @return array|array[]
+     */
+    protected function getOptions(): array
+    {
+        return array_merge(
+            parent::getOptions(),
+            $this->default_package_options
+        );
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Console\ControllerMakeCommand;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ExtendedMakeController
@@ -27,19 +29,29 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeController extends ControllerMakeCommand
 {
+    use UsesVendorPackageInput;
+
     /**
-     * The name and signature of the console command.
+     * The name of the console command.
      *
      * @var string
      */
-    protected $signature = 'gen:controller
-    {name : Controller name to be generated}
-    {--requestsFolder= : Custom root folder for auto-generated requests}
-    {--parent}
-    {--model=}
-    {--y : Yes to all questions}
-    {--skip : Skip all questions}
-    ';
+    protected $name = 'gen:controller';
+
+    /**
+     * @return array|array[]
+     */
+    protected function getOptions(): array
+    {
+        return array_merge(
+            parent::getOptions(),
+            $this->default_package_options,
+            [
+                ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.'],
+                ['requestsFolder', null, InputOption::VALUE_OPTIONAL, 'Target request folder.'],
+            ]
+        );
+    }
 
     /**
      * @var bool
@@ -52,6 +64,11 @@ class ExtendedMakeController extends ControllerMakeCommand
     protected bool $skip_all_questions = FALSE;
 
     /**
+     * @var bool
+     */
+    protected bool $is_ddd = FALSE;
+
+    /**
      * The console command description.
      *
      * @var string
@@ -60,9 +77,9 @@ class ExtendedMakeController extends ControllerMakeCommand
 
     public function getStub(): string
     {
-        $stub = '/../../../stubs/controller.custom.stub';
+        $stub = $this->option('ddd') ? '/../../../stubs/controller.invokable.stub' : '/../../../stubs/controller.model.api.custom.stub';
 
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
+        if (file_exists($path = __DIR__ . $stub) === FALSE) {
             return parent::getStub();
         }
 
@@ -94,9 +111,26 @@ class ExtendedMakeController extends ControllerMakeCommand
         return Str::studly($name);
     }
 
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
-     * DO NOT TOUCH IF YOU DON'T KNOW WHAT YOU'RE DOING
+     * @return bool|null
+     * @throws FileNotFoundException
+     */
+    public function handle(): ?bool
+    {
+        // Initiate Stuff
+
+        $this->info('Creating controller for ' . $this->vendor_name . '/' . $this->package_name . '...');
+
+        $this->skip_all_questions = $this->hasOption('no-interaction');
+        $this->is_ddd = $this->hasOption('ddd');
+        $this->setVendorAndPackage($this);
+
+        return parent::handle();
+    }
+
+    /**
      * Build the model replacement values.
      *
      * @param  array  $replace
@@ -106,11 +140,9 @@ class ExtendedMakeController extends ControllerMakeCommand
     {
         $modelClass = $this->getModelClass();
 
-        $this->yes_to_questions = $this->hasOption('y');
+        if (! $this->skip_all_questions && ! $this->is_ddd && class_exists($modelClass) === FALSE) {
 
-        $this->skip_all_questions = $this->hasOption('skip');
-
-        if (! $this->skip_all_questions && class_exists($modelClass) === FALSE) {
+            $this->yes_to_questions = $this->hasOption('y') && $this->hasOption('ddd');
 
             $args = [];
             $will_generate = FALSE;
