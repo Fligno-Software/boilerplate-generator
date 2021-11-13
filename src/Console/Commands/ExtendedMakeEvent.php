@@ -7,10 +7,9 @@ use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\EventMakeCommand;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 /**
- * Class ExtendedMakeResource
+ * Class ExtendedMakeEvent
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-10

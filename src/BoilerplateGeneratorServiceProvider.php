@@ -25,8 +25,8 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ExtendedMakeRequest::class,
         ExtendedMakeResource::class,
         ExtendedMakeTest::class,
-        MakePackage::class,
-        MagicStarter::class
+        MagicStarter::class,
+        MakePackage::class
     ];
 
     /**

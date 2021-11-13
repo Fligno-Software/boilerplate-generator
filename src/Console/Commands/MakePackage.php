@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class MagicStarter
+ * Class MakePackage
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-09
@@ -30,7 +30,7 @@ class MakePackage extends Command
      *
      * @var string
      */
-    protected $description = 'Create a Laravel package. [Wrapper for Jeroen-G/laravel-packager]';
+    protected $description = 'Create a Laravel package. [Wrapper for `packager:new` of Jeroen-G/laravel-packager]';
 
     /**
      * Execute the console command.

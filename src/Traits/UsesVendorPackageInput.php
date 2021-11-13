@@ -75,8 +75,8 @@ trait UsesVendorPackageInput
             }
         }
 
-        $this->info('VENDOR: ' . $this->vendor_name);
-        $this->info('PACKAGE: ' . $this->package_name);
+//        $this->info('VENDOR: ' . $this->vendor_name);
+//        $this->info('PACKAGE: ' . $this->package_name);
     }
 
     /**

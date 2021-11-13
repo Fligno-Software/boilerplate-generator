@@ -4,9 +4,7 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\ModelMakeCommand;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 /**
@@ -50,6 +48,24 @@ class ExtendedMakeModel extends ModelMakeCommand
     }
 
     /**
+     * Create a migration file for the model.
+     *
+     * @return void
+     */
+    protected function createMigration(): void
+    {
+        $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
+
+        if ($this->option('pivot')) {
+            $table = Str::singular($table);
+        }
+
+        $this->call('gen:migration', [
+            'name' => "create_{$table}_table"
+        ]);
+    }
+
+    /**
      * Get the stub file for the generator.
      *
      * @return string
@@ -58,7 +74,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $stub = '/../../../stubs/model.custom.stub';
 
-        if (File::exists($path = __DIR__ . $stub) === false) {
+        if (file_exists($path = __DIR__ . $stub) === false) {
             return parent::getStub();
         }
 

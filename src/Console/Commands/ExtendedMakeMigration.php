@@ -10,7 +10,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
 /**
- * Class ExtendedMakeResource
+ * Class ExtendedMakeMigration
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-10
@@ -20,26 +20,11 @@ class ExtendedMakeMigration extends MigrateMakeCommand
     use UsesVendorPackageInput;
 
     /**
-     * The console command name.
+     * The name of the console command.
      *
      * @var string
      */
-    protected $signature = 'gen:migration
-        {name : The name of the migration}
-        {vendor? : Vendor name}
-        {package? : Package name}
-        {--create= : The table to be created}
-        {--table= : The table to migrate}
-        {--path= : The location where the migration file should be created}
-        {--realpath : Indicate any provided migration file paths are pre-resolved absolute paths}
-        {--fullpath : Output the full path of the migration}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new resource class for Eloquent model.';
+    protected $name = 'gen:migration';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
@@ -56,7 +41,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
     /**
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // Initiate Stuff
 
@@ -76,5 +61,15 @@ class ExtendedMakeMigration extends MigrateMakeCommand
             parent::getOptions(),
             $this->default_package_options
         );
+    }
+
+    /**
+     * Get migration path (either specified by '--path' option or default location).
+     *
+     * @return string
+     */
+    protected function getMigrationPath(): string
+    {
+        return $this->package_path ? package_migration_path($this->package_path)  : parent::getMigrationPath();
     }
 }

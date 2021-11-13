@@ -74,4 +74,19 @@ class ExtendedMakeTest extends TestMakeCommand
             $this->default_package_options
         );
     }
+
+    /**
+     * Get the destination class path.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getPath($name): string
+    {
+        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
+
+        $path = $this->package_path ? package_test_path($this->package_path).DIRECTORY_SEPARATOR : base_path('tests');
+
+        return $path.str_replace('\\', '/', $name).'.php';
+    }
 }
