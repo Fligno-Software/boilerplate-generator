@@ -58,9 +58,9 @@ class ExtendedMakeModel extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $this->call('make:migration', [
+        $this->call('gen:migration', [
             'name' => "create_{$table}_table",
-//            '--package' => $this->package_path
+            '--package' => $this->package_path
         ]);
     }
 
@@ -114,7 +114,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
     protected function getOptions(): array
     {

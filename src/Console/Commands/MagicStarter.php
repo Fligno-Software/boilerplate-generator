@@ -152,7 +152,15 @@ class MagicStarter extends Command
             }
 
             if ($will_generate && ($this->yes_to_questions || $this->confirm("{$modelClass} model has no migration file yet. Do you want to generate it?", true))) {
-                $args['-m'] = TRUE;
+                $args['--migration'] = TRUE;
+            }
+
+            if ($will_generate && ($this->yes_to_questions || $this->confirm("{$modelClass} model has no factory file yet. Do you want to generate it?", true))) {
+                $args['--factory'] = TRUE;
+            }
+
+            if ($will_generate && ($this->yes_to_questions || $this->confirm("{$modelClass} model has no seeder file yet. Do you want to generate it?", true))) {
+                $args['--seed'] = TRUE;
             }
 
             if ($will_generate) {
