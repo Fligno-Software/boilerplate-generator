@@ -42,8 +42,6 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $this->setVendorAndPackage($this);
 
-        $this->info('Creating model for ' . $this->vendor_name . '/' . $this->package_name . '...');
-
         return parent::handle();
     }
 
@@ -60,9 +58,43 @@ class ExtendedMakeModel extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $this->call('gen:migration', [
-            'name' => "create_{$table}_table"
+        $this->call('make:migration', [
+            'name' => "create_{$table}_table",
+//            '--package' => $this->package_path
         ]);
+    }
+
+    /**
+     * Create a model factory for the model.
+     *
+     * @return void
+     */
+    protected function createFactory(): void
+    {
+        $this->info('Passing at gen:factory');
+        $factory = Str::studly($this->argument('name'));
+
+        $args = $this->getInitialArgs();
+        $args['name'] = "{$factory}Factory";
+        $args['--model'] = $this->qualifyClass($this->getNameInput());
+
+        $this->call('gen:factory', $args);
+    }
+
+    /**
+     * Create a seeder file for the model.
+     *
+     * @return void
+     */
+    protected function createSeeder(): void
+    {
+        $this->info('Passing at gen:seeder');
+        $seeder = Str::studly(class_basename($this->argument('name')));
+
+        $args = $this->getInitialArgs();
+        $args['name'] = "{$seeder}Seeder";
+
+        $this->call('gen:seeder', $args);
     }
 
     /**

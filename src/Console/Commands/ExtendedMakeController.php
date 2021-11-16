@@ -39,6 +39,13 @@ class ExtendedMakeController extends ControllerMakeCommand
     protected $name = 'gen:controller';
 
     /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a new API controller file for a model using custom stub.';
+
+    /**
      * @return array|array[]
      */
     protected function getOptions(): array
@@ -67,13 +74,6 @@ class ExtendedMakeController extends ControllerMakeCommand
      * @var bool
      */
     protected bool $is_ddd = FALSE;
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create model, controller, request, event, and resource classes automagically!';
 
     public function getStub(): string
     {
@@ -120,8 +120,6 @@ class ExtendedMakeController extends ControllerMakeCommand
     public function handle(): ?bool
     {
         // Initiate Stuff
-
-        $this->info('Creating controller for ' . $this->vendor_name . '/' . $this->package_name . '...');
 
         $this->skip_all_questions = $this->hasOption('no-interaction');
         $this->is_ddd = $this->hasOption('ddd');

@@ -6,7 +6,6 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 use Illuminate\Database\Migrations\MigrationCreator;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
 /**
@@ -26,16 +25,18 @@ class ExtendedMakeMigration extends MigrateMakeCommand
      */
     protected $name = 'gen:migration';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a new migration file using custom stub.';
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
-    public function __construct()
+    public function __construct(MigrationCreator $creator, Composer $composer)
     {
-        $customStubPath = __DIR__ . '/../../../stubs/migration.create.custom.stub';
-
-        $files = new Filesystem();
-        $creator = new MigrationCreator($files , $customStubPath);
-        $composer = new Composer($files);
-        parent::__construct($creator, $composer);
+        parent::__construct(app('migration.creator'), app('composer'));
     }
 
     /**
@@ -44,8 +45,6 @@ class ExtendedMakeMigration extends MigrateMakeCommand
     public function handle(): void
     {
         // Initiate Stuff
-
-        $this->info('Creating migration for ' . $this->vendor_name . '/' . $this->package_name . '...');
 
         $this->setVendorAndPackage($this);
 
@@ -61,15 +60,5 @@ class ExtendedMakeMigration extends MigrateMakeCommand
             parent::getOptions(),
             $this->default_package_options
         );
-    }
-
-    /**
-     * Get migration path (either specified by '--path' option or default location).
-     *
-     * @return string
-     */
-    protected function getMigrationPath(): string
-    {
-        return $this->package_path ? package_migration_path($this->package_path)  : parent::getMigrationPath();
     }
 }

@@ -5,17 +5,17 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Foundation\Console\RequestMakeCommand;
+use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 /**
- * Class ExtendedMakeRequest
+ * Class ExtendedMakeFactory
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-09
+ * @since 2021-11-15
  */
-class ExtendedMakeRequest extends RequestMakeCommand
+class ExtendedMakeFactory extends FactoryMakeCommand
 {
     use UsesVendorPackageInput;
 
@@ -24,14 +24,14 @@ class ExtendedMakeRequest extends RequestMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:request';
+    protected $name = 'gen:factory';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new request file using custom stub.';
+    protected $description = 'Create a new factory class using custom stub.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
@@ -43,21 +43,21 @@ class ExtendedMakeRequest extends RequestMakeCommand
     {
         // Initiate Stuff
 
+        $this->info('Passed at gen:factory @ ' . $this->rootNamespace());
+
         $this->setVendorAndPackage($this);
 
         return parent::handle();
     }
 
     /**
-     * Get the stub file for the generator.
-     *
      * @return string
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/request.custom.stub';
+        $stub = '/../../../stubs/factory.custom.stub';
 
-        if (File::exists($path = __DIR__ . $stub) === false) {
+        if (File::exists($path = __DIR__ . $stub) === FALSE) {
             return parent::getStub();
         }
 
@@ -73,5 +73,20 @@ class ExtendedMakeRequest extends RequestMakeCommand
             parent::getOptions(),
             $this->default_package_options
         );
+    }
+
+    /**
+     * Get the destination class path.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getPath($name): string
+    {
+        $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
+
+        $path = $this->package_path ? package_database_path($this->package_path)  : $this->laravel->databasePath();
+
+        return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
     }
 }

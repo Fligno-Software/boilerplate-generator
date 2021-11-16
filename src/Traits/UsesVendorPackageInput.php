@@ -4,7 +4,6 @@ namespace Fligno\BoilerplateGenerator\Traits;
 
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Console\Command;
-use InvalidArgumentException;
 use Illuminate\Support\Str;
 
 /**

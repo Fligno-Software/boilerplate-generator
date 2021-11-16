@@ -4,26 +4,35 @@ namespace Fligno\BoilerplateGenerator;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeEvent;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeFactory;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeMigration;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeModel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRequest;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\MagicStarter;
 use Fligno\BoilerplateGenerator\Console\Commands\MakePackage;
 use Fligno\BoilerplateGenerator\Exceptions\Handler;
+use Fligno\BoilerplateGenerator\Macros\ArrMacros;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Database\Migrations\MigrationCreator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
+use ReflectionException;
 
-class BoilerplateGeneratorServiceProvider extends ServiceProvider
+class BoilerplateGeneratorServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     protected array $commands = [
         ExtendedMakeController::class,
         ExtendedMakeEvent::class,
-        ExtendedMakeMigration::class,
+        ExtendedMakeFactory::class,
+//        ExtendedMakeMigration::class,
         ExtendedMakeModel::class,
         ExtendedMakeRequest::class,
         ExtendedMakeResource::class,
+        ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
         MagicStarter::class,
         MakePackage::class
@@ -33,6 +42,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
      * Perform post-registration booting of services.
      *
      * @return void
+     * @throws ReflectionException
      */
     public function boot(): void
     {
@@ -50,6 +60,17 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         if (config('boilerplate-generator.override_exception_handler')) {
             $this->app->singleton(ExceptionHandler::class, Handler::class);
         }
+
+        // Register Custom Migration Creator
+
+        $this->app->singleton(MigrationCreator::class, CustomMigrationCreator::class);
+
+        $this->app->extend('command.migrate.make', function ($service, $app) {
+            return new ExtendedMakeMigration($app['migration.creator'], $app['composer']);
+        });
+
+        // Boot Arr
+        Arr::mixin(new ArrMacros);
     }
 
     /**
@@ -66,6 +87,10 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         $this->app->bind('extended-response', function ($app) {
             return new ExtendedResponse();
         });
+
+        // Register Custom Migration Creator
+
+        $this->app->singleton(MigrationCreator::class, CustomMigrationCreator::class);
     }
 
     /**

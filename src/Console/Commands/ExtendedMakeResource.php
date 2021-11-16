@@ -30,7 +30,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new resource class for Eloquent model.';
+    protected $description = 'Create a new resource file for a model using custom stub.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
@@ -40,8 +40,6 @@ class ExtendedMakeResource extends ResourceMakeCommand
     public function handle(): void
     {
         // Initiate Stuff
-
-        $this->info('Creating resource for ' . $this->vendor_name . '/' . $this->package_name . '...');
 
         $this->setVendorAndPackage($this);
 

@@ -31,7 +31,7 @@ class ExtendedMakeTest extends TestMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new resource class for Eloquent model.';
+    protected $description = 'Create a new test file using custom stub.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
