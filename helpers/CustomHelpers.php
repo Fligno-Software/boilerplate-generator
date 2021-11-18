@@ -181,20 +181,23 @@ if (!function_exists('request_or_array_has')) {
     /**
      * Check if the Request or associative array has a specific key.
      *
-     * @param Request|array $request
+     * @param array|Request $request
      * @param string $key
      * @param bool|null $is_exact
      * @return bool
      */
-    function request_or_array_has($request, string $key = '', ?bool $is_exact = true): bool
+    function request_or_array_has(array|Request $request, string $key = '', ?bool $is_exact = true): bool
     {
         if (is_array($request) && (empty($request) || Arr::isAssoc($request))) {
             if ($is_exact) {
                 return Arr::has($request, $key);
-            } else {
-                return (bool)preg_grep("/$key/", array_keys($request));
             }
-        } else if (is_subclass_of($request, Request::class)) {
+
+            return (bool)preg_grep("/$key/", array_keys($request));
+
+        }
+
+        if (is_subclass_of($request, Request::class)) {
             if ($is_exact) {
                 return $request->has($key);
             }
@@ -210,12 +213,12 @@ if (!function_exists('request_or_array_get')) {
     /**
      * Get a value from Request or associative array using a string key.
      *
-     * @param Request|array $request
+     * @param array|Request $request
      * @param string $key
-     * @param mixed $default
+     * @param mixed|null $default
      * @return mixed
      */
-    function request_or_array_get($request, string $key, $default = null)
+    function request_or_array_get(array|Request $request, string $key, mixed $default = null): mixed
     {
         if (request_or_array_has($request, $key)) {
             if (is_array($request)) {
@@ -233,11 +236,11 @@ if (!function_exists('is_request_or_array_filled')) {
     /**
      * Check if a key exists and is not empty on a Request or associative array.
      *
-     * @param Request|array $request
+     * @param array|Request $request
      * @param string $key
      * @return bool
      */
-    function is_request_or_array_filled($request, string $key): bool
+    function is_request_or_array_filled(array|Request $request, string $key): bool
     {
         if (request_or_array_has($request, $key)) {
             if (is_array($request)) {
@@ -251,14 +254,14 @@ if (!function_exists('is_request_or_array_filled')) {
     }
 }
 
-if (!function_exists('is_model_instance')) {
+if (!function_exists('is_eloquent_model')) {
     /**
      * Determine if the class using the trait is a subclass of Eloquent Model.
      *
      * @param mixed $object_or_class
      * @return bool
      */
-    function is_model_instance($object_or_class): bool
+    function is_eloquent_model(mixed $object_or_class): bool
     {
         return is_subclass_of($object_or_class, Model::class);
     }
@@ -267,9 +270,9 @@ if (!function_exists('is_model_instance')) {
 if (!function_exists('get_class_name_from_object')) {
     /**
      * @param mixed $object_or_class
-     * @return mixed|string
+     * @return mixed
      */
-    function get_class_name_from_object($object_or_class)
+    function get_class_name_from_object(mixed $object_or_class): mixed
     {
         return is_object($object_or_class) ? get_class($object_or_class) : $object_or_class;
     }

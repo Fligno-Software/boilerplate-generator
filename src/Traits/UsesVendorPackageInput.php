@@ -42,15 +42,25 @@ trait UsesVendorPackageInput
     /**
      * @var string|null
      */
-    protected ?string $package_path = null;
+    protected ?string $package_dir = null;
 
     /**
-     * @var array|array[]
+     * @param bool $has_ddd
+     * @return array
      */
-    protected array $default_package_options = [
-        ['package', null, InputOption::VALUE_OPTIONAL, 'Target package to generate the files (e.g., `vendor-name/package-name`).'],
-        ['ddd', null, InputOption::VALUE_NONE, 'Follow Domain-Driven Development pattern for files generation.'],
-    ];
+    public function getDefaultPackageOptions(bool $has_ddd = true): array
+    {
+        $options = ['package', null, InputOption::VALUE_REQUIRED, 'Target package to generate the files (e.g., `vendor-name/package-name`).'];
+
+        if ($has_ddd) {
+            return [
+                $options,
+                ['ddd', null, InputOption::VALUE_NONE, 'Follow Domain-Driven Development pattern for files generation.'],
+            ];
+        }
+
+        return [ $options ];
+    }
 
     public function setVendorAndPackage(Command $command): void
     {
@@ -60,7 +70,7 @@ trait UsesVendorPackageInput
             $package = $this->argument('vendor') . '/' . $this->argument('package');
         }
 
-        if ($package && strpos($package, '/') !== FALSE) {
+        if ($package && str_contains($package, '/')) {
             [$this->vendor_name, $this->package_name] = explode('/', $package);
 
             if ($this->vendor_name && $this->package_name) {
@@ -70,12 +80,9 @@ trait UsesVendorPackageInput
                 $this->vendor_name_studly = Str::studly($this->vendor_name);
                 $this->package_name_studly = Str::studly($this->package_name);
                 $this->package_namespace = $this->vendor_name_studly . '\\' . $this->package_name_studly . '\\';
-                $this->package_path = $this->vendor_name . '/' . $this->package_name;
+                $this->package_dir = $this->vendor_name . '/' . $this->package_name;
             }
         }
-
-//        $this->info('VENDOR: ' . $this->vendor_name);
-//        $this->info('PACKAGE: ' . $this->package_name);
     }
 
     /**
@@ -86,7 +93,7 @@ trait UsesVendorPackageInput
         $args = [];
 
         if ($this->vendor_name && $this->package_name) {
-            $args['--package'] = $this->package_path;
+            $args['--package'] = $this->package_dir;
         }
 
         return $args;
@@ -102,7 +109,7 @@ trait UsesVendorPackageInput
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_path ? package_app_path($this->package_path) : $this->laravel['path'];
+        $path = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
         return $path.'/'.str_replace('\\', '/', $name).'.php';
     }

@@ -7,6 +7,7 @@ use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\EventMakeCommand;
 use Illuminate\Support\Facades\File;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeEvent
@@ -62,13 +63,13 @@ class ExtendedMakeEvent extends EventMakeCommand
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
-    protected function getOptions(): array
+    #[Pure] protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 }

@@ -66,7 +66,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 }

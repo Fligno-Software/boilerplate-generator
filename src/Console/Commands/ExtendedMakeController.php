@@ -13,19 +13,6 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-09
- *
- * Usage
- *
- * This generator extends the php artisan make:controller --model={model} --api command
- * It will generate the necessary skeleton to create a CRUD and should contain all the basics for the task.
- *
- * php artisan gen:controller UserController --model=User --requestsFolder=Some\Folder
- * name (UserController) - The name of the controller that you want to generate
- * You can also pass a directory like V2\UserController for your convenience
- *
- * --model (User) - The Eloquent Model to be injected in the controller
- * --requestsFolder (\) - A custom path that you want to use for both Requests and Events file
- *      You must add a backslash on both ends to make this work (e.g. \V2\ or \Admin\)
  */
 class ExtendedMakeController extends ControllerMakeCommand
 {
@@ -46,13 +33,13 @@ class ExtendedMakeController extends ControllerMakeCommand
     protected $description = 'Create a new API controller file for a model using custom stub.';
 
     /**
-     * @return array|array[]
+     * @return array
      */
     protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options,
+            $this->getDefaultPackageOptions(),
             [
                 ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.'],
                 ['requestsFolder', null, InputOption::VALUE_OPTIONAL, 'Target request folder.'],

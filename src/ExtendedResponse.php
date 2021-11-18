@@ -25,7 +25,7 @@ class ExtendedResponse
     /**
      * @var array|AnonymousResourceCollection|Paginator|LengthAwarePaginator|null
      */
-    protected $data = [];
+    protected array|AnonymousResourceCollection|null|LengthAwarePaginator|Paginator $data = [];
 
     /**
      * @var int
@@ -54,10 +54,10 @@ class ExtendedResponse
 
     /**
      * ExtendedResponse constructor.
-     * @param array|AnonymousResourceCollection|Paginator|LengthAwarePaginator|null $data
-     * @param string|array|null $message
+     * @param array|AnonymousResourceCollection|LengthAwarePaginator|Paginator|null $data
+     * @param array|string|null $message
      */
-    public function __construct($data = NULL, $message = NULL)
+    public function __construct(Paginator|LengthAwarePaginator|AnonymousResourceCollection|array $data = NULL, array|string $message = NULL)
     {
         if (empty($data) === FALSE) {
             $this->data($data);
@@ -166,10 +166,10 @@ class ExtendedResponse
     /**
      * Set message
      *
-     * @param string|array|null $value
+     * @param array|string|null $value
      * @return $this
      */
-    public function message($value): ExtendedResponse
+    public function message(array|string|null $value): ExtendedResponse
     {
         if (is_string($value)) {
             $value = [$value];
@@ -194,7 +194,7 @@ class ExtendedResponse
      * @param $fallback
      * @return mixed
      */
-    protected function translateMessage($fallback)
+    protected function translateMessage($fallback): mixed
     {
         return $fallback;
     }

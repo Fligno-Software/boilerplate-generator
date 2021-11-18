@@ -6,7 +6,7 @@ use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use JeroenG\Packager\FileHandler;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class MagicStarter extends Command
 {
-    use UsesVendorPackageInput, FileHandler;
+    use UsesVendorPackageInput;
 
     /**
      * The name of the console command.
@@ -277,25 +277,16 @@ class MagicStarter extends Command
      */
     public function generateTests(): void
     {
-        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate TEST files?", true))) {
+        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate a test file?", true))) {
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
-            $names = [
-                $folder . $model . '/Index' . $model . 'Test',
-                $folder . $model . '/Show' . $model . 'Test',
-                $folder . $model . '/Create' . $model . 'Test',
-                $folder . $model . '/Update' . $model . 'Test',
-                $folder . $model . '/Delete' . $model . 'Test',
-                $folder . $model . '/Restore' . $model . 'Test',
-            ];
+            $args = $this->getInitialArgs();
+            $args['name'] = $folder . $model . '/' . $model . 'Test';
+            $args['--model'] = $model;
+            $args['--skip'] = true;
 
-            foreach ($names as $name) {
-                $args = $this->getInitialArgs();
-                $args['name'] = $name;
-
-                $this->call('gen:test', $args);
-            }
+            $this->call('gen:test', $args);
         }
     }
 
@@ -362,13 +353,13 @@ class MagicStarter extends Command
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
-    protected function getOptions(): array
+    #[Pure] protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options,
+            $this->getDefaultPackageOptions(),
             [
                 ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.'],
                 ['requestsFolder', null, InputOption::VALUE_OPTIONAL, 'Target request folder.'],

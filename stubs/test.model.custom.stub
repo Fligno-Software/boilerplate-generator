@@ -1,0 +1,130 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+use {{ model_class }};
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ * @since 2021-11-10
+ */
+class {{ class }} extends TestCase
+{
+/**
+     * Index Route for {{ model_class }}
+     *
+     * @test
+     */
+    public function can_get_{{ model_snake }}_list(): void
+    {
+        $response = $this->json('GET', '/api/{{ model_kebab }}');
+
+        $assertJson = [
+            'key' => 'value'
+        ];
+
+        $response
+            ->assertStatus(200)
+            ->assertJson($assertJson);
+    }
+
+    /**
+     * Create Route for {{ model_class }}
+     *
+     * @test
+     */
+    public function can_create_one_{{ model_snake }}_model(): void
+    {
+        $data = [
+            'key' => 'value'
+        ];
+
+        $response = $this->json('POST', '/api/{{ model_kebab }}', $data);
+
+        $assertJson = [
+            'key' => 'value'
+        ];
+
+        $response
+            ->assertStatus(200)
+            ->assertJson($assertJson);
+    }
+
+    /**
+     * Show Route for {{ model_class }}
+     *
+     * @test
+     */
+    public function can_get_one_{{ model_snake }}_model(): void
+    {
+        $response = $this->json('GET', '/api/{{ model_kebab }}/1');
+
+        $assertJson = [
+            'key' => 'value'
+        ];
+
+        $response
+            ->assertStatus(200)
+            ->assertJson($assertJson);
+    }
+
+    /**
+     * Update Route for {{ model_class }}
+     *
+     * @test
+     */
+    public function can_update_one_{{ model_snake }}_model(): void
+    {
+        $response = $this->json('PUT', '/api/{{ model_kebab }}/1');
+
+        $assertJson = [
+            'key' => 'value'
+        ];
+
+        $response
+            ->assertStatus(200)
+            ->assertJson($assertJson);
+    }
+
+    /**
+     * Delete Route for {{ model_class }}
+     * Note: Archive means Soft Delete
+     *
+     * @test
+     */
+    public function can_archive_one_{{ model_snake }}_model(): void
+    {
+        $response = $this->json('DELETE', '/api/{{ model_kebab }}/1');
+
+        $assertJson = [
+            'key' => 'value'
+        ];
+
+        $response
+            ->assertStatus(200)
+            ->assertJson($assertJson);
+    }
+
+    /**
+     * Restore Route for {{ model_class }}
+     *
+     * @test
+     */
+    public function can_restore_one_{{ model_snake }}_model(): void
+    {
+        $response = $this->json('POST', '/api/{{ model_kebab }}/1/restore');
+
+        $assertJson = [
+            'key' => 'value'
+        ];
+
+        $response
+            ->assertStatus(200)
+            ->assertJson($assertJson);
+    }
+}

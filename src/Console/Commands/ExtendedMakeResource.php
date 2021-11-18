@@ -6,7 +6,6 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Foundation\Console\ResourceMakeCommand;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 /**
  * Class ExtendedMakeResource
@@ -61,13 +60,13 @@ class ExtendedMakeResource extends ResourceMakeCommand
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
     protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 }

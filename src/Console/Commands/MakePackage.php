@@ -4,7 +4,6 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -61,14 +60,6 @@ class MakePackage extends Command
         }
     }
 
-    /***** GETTERS & SETTERS *****/
-
-
-    /***** OTHER METHODS *****/
-
-
-    /***** MODEL VALIDATION *****/
-
     /**
      * @return array
      */
@@ -81,7 +72,7 @@ class MakePackage extends Command
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
     protected function getOptions(): array
     {

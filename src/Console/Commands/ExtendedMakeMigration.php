@@ -6,8 +6,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\ExtendedMigrationCreator;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use Illuminate\Database\Migrations\MigrationCreator;
-use Illuminate\Support\Composer;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeMigration
@@ -60,21 +59,21 @@ class ExtendedMakeMigration extends MigrateMakeCommand
         $this->setVendorAndPackage($this);
 
         // Set MigrationCreator $package_path
-        if ($this->package_path && $this->creator instanceof ExtendedMigrationCreator) {
-            $this->creator->setPackagePath($this->package_path);
+        if ($this->package_dir && $this->creator instanceof ExtendedMigrationCreator) {
+            $this->creator->setPackagePath($this->package_dir);
         }
 
         parent::handle();
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
-    protected function getOptions(): array
+    #[Pure] protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 }

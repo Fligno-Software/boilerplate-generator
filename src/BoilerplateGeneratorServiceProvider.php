@@ -12,6 +12,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRequest;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoTest;
 use Fligno\BoilerplateGenerator\Console\Commands\MagicStarter;
 use Fligno\BoilerplateGenerator\Console\Commands\MakePackage;
 use Fligno\BoilerplateGenerator\Exceptions\Handler;
@@ -36,7 +37,8 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider implements Def
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
         MagicStarter::class,
-        MakePackage::class
+        MakePackage::class,
+        FlignoTest::class,
     ];
 
     /**

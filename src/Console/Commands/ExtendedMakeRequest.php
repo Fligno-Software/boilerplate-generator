@@ -7,7 +7,7 @@ use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\RequestMakeCommand;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeRequest
@@ -65,13 +65,13 @@ class ExtendedMakeRequest extends RequestMakeCommand
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
-    protected function getOptions(): array
+    #[Pure] protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 }

@@ -60,7 +60,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $this->call('gen:migration', [
             'name' => "create_{$table}_table",
-            '--package' => $this->package_path
+            '--package' => $this->package_dir
         ]);
     }
 
@@ -71,7 +71,6 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected function createFactory(): void
     {
-        $this->info('Passing at gen:factory');
         $factory = Str::studly($this->argument('name'));
 
         $args = $this->getInitialArgs();
@@ -88,7 +87,6 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected function createSeeder(): void
     {
-        $this->info('Passing at gen:seeder');
         $seeder = Str::studly(class_basename($this->argument('name')));
 
         $args = $this->getInitialArgs();
@@ -120,7 +118,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 }

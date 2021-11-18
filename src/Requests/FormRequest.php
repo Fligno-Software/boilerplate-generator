@@ -1,14 +1,13 @@
 <?php
 namespace Fligno\BoilerplateGenerator\Requests;
 
-use FourelloDevs\MagicController\Exceptions\UnauthorizedException;
-use FourelloDevs\MagicController\Exceptions\ValidationException;
+use Fligno\BoilerplateGenerator\Exceptions\UnauthorizedException;
+use Fligno\BoilerplateGenerator\Exceptions\ValidationException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest as BaseRequest;
 
 /**
  * Class FormRequest
- * @package Fligno\BoilerplateGenerator\Requests
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-10

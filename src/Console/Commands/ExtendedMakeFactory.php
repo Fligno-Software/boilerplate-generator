@@ -43,8 +43,6 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         // Initiate Stuff
 
-        $this->info('Passed at gen:factory @ ' . $this->rootNamespace());
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -65,13 +63,13 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     }
 
     /**
-     * @return array|array[]
+     * @return array
      */
     protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),
-            $this->default_package_options
+            $this->getDefaultPackageOptions()
         );
     }
 
@@ -85,7 +83,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
 
-        $path = $this->package_path ? package_database_path($this->package_path)  : $this->laravel->databasePath();
+        $path = $this->package_dir ? package_database_path($this->package_dir)  : $this->laravel->databasePath();
 
         return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
     }
