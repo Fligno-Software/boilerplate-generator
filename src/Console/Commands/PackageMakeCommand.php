@@ -56,7 +56,7 @@ class PackageMakeCommand extends Command
 
             $args['model'] = $this->package_name_studly;
 
-            $this->call('gen:start', $args);
+            $this->call('fligno:start', $args);
         }
     }
 
