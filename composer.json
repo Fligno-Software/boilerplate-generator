@@ -44,5 +44,11 @@
                 "BoilerplateGenerator": "Fligno\\BoilerplateGenerator\\Facades\\BoilerplateGenerator"
             }
         }
+    },
+    "repositories": {
+        "fligno/starter-kit": {
+            "type": "vcs",
+            "url": "git@git.fligno.com:marketplace/laravel-packaging/fligno-starter-kit-for-laravel.git"
+        }
     }
 }
