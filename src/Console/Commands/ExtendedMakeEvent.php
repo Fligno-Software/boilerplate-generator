@@ -31,7 +31,7 @@ class ExtendedMakeEvent extends EventMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new event class using custom stub.';
+    protected $description = 'Create a new event class in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

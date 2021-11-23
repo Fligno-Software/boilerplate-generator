@@ -8,12 +8,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class MakePackage
+ * Class PackageMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-09
  */
-class MakePackage extends Command
+class PackageMakeCommand extends Command
 {
     use UsesVendorPackageInput;
 

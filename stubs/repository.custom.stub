@@ -1,0 +1,15 @@
+<?php
+
+namespace {{ namespace }};
+
+use Fligno\StarterKit\Interfaces\BaseRepository;
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+class {{ class }} extends BaseRepository
+{
+    // Write your logic here...
+}

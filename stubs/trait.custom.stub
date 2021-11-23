@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+/**
+ * Trait {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+trait {{ class }}
+{
+
+}

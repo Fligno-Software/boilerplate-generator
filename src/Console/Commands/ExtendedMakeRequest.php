@@ -31,7 +31,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new request file using custom stub.';
+    protected $description = 'Create a new form request class in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

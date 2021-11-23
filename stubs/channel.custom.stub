@@ -1,0 +1,34 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedUserModel }};
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+class {{ class }}
+{
+    /**
+     * Create a new channel instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Authenticate the user's access to the channel.
+     *
+     * @param {{ userModel }} $user
+     * @return array|bool
+     */
+    public function join({{ userModel }} $user)
+    {
+        //
+    }
+}

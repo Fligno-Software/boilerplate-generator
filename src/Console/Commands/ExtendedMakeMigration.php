@@ -36,7 +36,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new migration file using custom stub.';
+    protected $description = 'Create a new migration file in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ExtendedMakeResource
+ * Class ExtendedMakeTest
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-10
@@ -32,7 +32,7 @@ class ExtendedMakeTest extends TestMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new test file using custom stub.';
+    protected $description = 'Create a new test class in Laravel or in a specific package.';
 
     /**
      * @var bool
@@ -69,12 +69,6 @@ class ExtendedMakeTest extends TestMakeCommand
         $this->setVendorAndPackage($this);
 
         $this->setOtherFields();
-
-        $this->info('Model Exists: ' . ($this->model_exists ? 'true' : 'false'));
-        $this->info('Skipping Model Check: ' . ($this->skip_model_check ? 'true' : 'false'));
-        $this->info('Model Class: ' . $this->getModelClass());
-        $this->info('Model Kebab: ' . $this->getModelKebab());
-        $this->info('Model Snake: ' . $this->getModelSnake());
 
         return parent::handle();
     }

@@ -25,7 +25,7 @@ class MagicStarter extends Command
      *
      * @var string
      */
-    protected $name = 'gen:start';
+    protected $name = 'fligno:start';
 
     /**
      * @var string

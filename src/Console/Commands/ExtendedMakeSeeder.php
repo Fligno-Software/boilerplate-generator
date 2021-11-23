@@ -30,7 +30,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new seeder class using custom stub.';
+    protected $description = 'Create a new seeder class in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

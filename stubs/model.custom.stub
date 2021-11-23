@@ -3,7 +3,7 @@
 namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Fligno\BoilerplateGenerator\Traits\UsesUUID;
+use Fligno\StarterKit\Traits\UsesUUID;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * Class {{ class }}
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
  */
 class {{ class }} extends Model
 {

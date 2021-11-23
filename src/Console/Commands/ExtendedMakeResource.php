@@ -29,7 +29,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new resource file for a model using custom stub.';
+    protected $description = 'Create a new resource file in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

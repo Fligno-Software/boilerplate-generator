@@ -4,6 +4,11 @@ namespace {{ namespace }};
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
 class {{ class }} extends ServiceProvider
 {
     /**

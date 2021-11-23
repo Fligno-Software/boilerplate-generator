@@ -3,7 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Foundation\Console\NotificationMakeCommand;
 use Illuminate\Support\Facades\File;
 
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\File;
  */
 class ExtendedMakeNotification extends NotificationMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesCreatesMatchingTest;
 
     /**
      * The console command name.
@@ -29,7 +29,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new notification class using custom stub.';
+    protected $description = 'Create a new notification class in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

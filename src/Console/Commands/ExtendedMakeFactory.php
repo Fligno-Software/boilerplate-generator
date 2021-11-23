@@ -31,7 +31,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new factory class using custom stub.';
+    protected $description = 'Create a new model factory in Laravel or in a specific package.';
 
     /***** OVERRIDDEN FUNCTIONS *****/
 

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  * Class {{ class }}
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
  */
 class {{ factory }}Factory extends Factory
 {

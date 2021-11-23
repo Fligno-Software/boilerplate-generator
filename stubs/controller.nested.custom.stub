@@ -1,0 +1,114 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+// Model
+use {{ namespacedModel }};
+
+// Parent
+use {{ namespacedParentModel }};
+
+// Requests
+use {{ namespacedIndexRequest }};
+use {{ namespacedStoreRequest }};
+use {{ namespacedShowRequest }};
+use {{ namespacedUpdateRequest }};
+use {{ namespacedDeleteRequest }};
+use {{ namespacedRestoreRequest }};
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+class {{ class }} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @param {{ indexRequest }} $request
+     * @param {{ parentModel }} ${{ parentModelVariable }}
+     * @return Response
+     */
+    public function index({{ indexRequest }} $request, {{ parentModel }} ${{ parentModelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  {{ parentModel }} ${{ parentModelVariable }}
+     * @return Response
+     */
+    public function create({{ parentModel }} ${{ parentModelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param {{ storeRequest }} $request
+     * @param {{ parentModel }} ${{ parentModelVariable }}
+     * @return Response
+     */
+    public function store({{ storeRequest }} $request, {{ parentModel }} ${{ parentModelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param {{ showRequest }} $request
+     * @param {{ parentModel }} ${{ parentModelVariable }}
+     * @param {{ model }} ${{ modelVariable }}
+     * @return Response
+     */
+    public function show({{ showRequest }} $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param {{ parentModel }} ${{ parentModelVariable }}
+     * @param {{ model }} ${{ modelVariable }}
+     * @return Response
+     */
+    public function edit({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param {{ updateRequest }} $request
+     * @param {{ parentModel }} ${{ parentModelVariable }}
+     * @param {{ model }} ${{ modelVariable }}
+     * @return Response
+     */
+    public function update({{ updateRequest }} $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param {{ deleteRequest }} $request
+     * @param {{ parentModel }} ${{ parentModelVariable }}
+     * @param {{ model }} ${{ modelVariable }}
+     * @return Response
+     */
+    public function destroy({{ deleteRequest }} $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+}

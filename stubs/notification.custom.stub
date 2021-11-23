@@ -11,7 +11,6 @@ use Illuminate\Notifications\Notification;
  * Class {{ class }}
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
  */
 class {{ class }} extends Notification
 {

@@ -2,50 +2,77 @@
 
 namespace Fligno\BoilerplateGenerator;
 
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeComponent;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController1;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeEvent;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeException;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeFactory;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeJob;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeListener;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeMail;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeMiddleware;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeMigration;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeModel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeNotification;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeObserver;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakePolicy;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeProvider;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRequest;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
+use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRule;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoTest;
+use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\MagicStarter;
-use Fligno\BoilerplateGenerator\Console\Commands\MakePackage;
-use Fligno\BoilerplateGenerator\Exceptions\Handler;
-use Fligno\BoilerplateGenerator\Macros\ArrMacros;
-use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Support\Arr;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
 use Illuminate\Support\ServiceProvider;
-use ReflectionException;
 
-class BoilerplateGeneratorServiceProvider extends ServiceProvider implements DeferrableProvider
+class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
     protected array $commands = [
+        ExtendedMakeCast::class,
+        ExtendedMakeChannel::class,
+        ExtendedMakeCommand::class,
+        ExtendedMakeComponent::class,
+        ExtendedMakeController1::class,
         ExtendedMakeController::class,
         ExtendedMakeEvent::class,
+        ExtendedMakeException::class,
         ExtendedMakeFactory::class,
+        ExtendedMakeJob::class,
+        ExtendedMakeListener::class,
+        ExtendedMakeMail::class,
+        ExtendedMakeMiddleware::class,
         ExtendedMakeMigration::class,
         ExtendedMakeModel::class,
         ExtendedMakeNotification::class,
+        ExtendedMakeObserver::class,
+        ExtendedMakePolicy::class,
+        ExtendedMakeProvider::class,
         ExtendedMakeRequest::class,
         ExtendedMakeResource::class,
+        ExtendedMakeRule::class,
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
-        MagicStarter::class,
-        MakePackage::class,
+        InterfaceMakeCommand::class,
         FlignoTest::class,
+        MagicStarter::class,
+        PackageMakeCommand::class,
+        RepositoryMakeCommand::class,
+        TraitMakeCommand::class,
     ];
 
     /**
      * Perform post-registration booting of services.
      *
      * @return void
-     * @throws ReflectionException
      */
     public function boot(): void
     {
@@ -58,14 +85,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider implements Def
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
-
-        // Register Custom Exception Handler
-        if (config('boilerplate-generator.override_exception_handler')) {
-            $this->app->singleton(ExceptionHandler::class, Handler::class);
-        }
-
-        // Boot Arr
-        Arr::mixin(new ArrMacros);
     }
 
     /**
@@ -76,22 +95,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider implements Def
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/boilerplate-generator.php', 'boilerplate-generator');
-
-        // Register the service the package provides.
-
-        $this->app->bind('extended-response', function ($app) {
-            return new ExtendedResponse();
-        });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides(): array
-    {
-        return ['extended-response'];
     }
 
     /**
