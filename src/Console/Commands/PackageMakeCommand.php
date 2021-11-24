@@ -55,6 +55,7 @@ class PackageMakeCommand extends Command
             $args = $this->getInitialArgs();
 
             $args['model'] = $this->package_name_studly;
+            $args['--yes'] = $this->option('yes');
 
             $this->call('fligno:start', $args);
         }

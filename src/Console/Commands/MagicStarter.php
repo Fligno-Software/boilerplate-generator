@@ -120,17 +120,8 @@ class MagicStarter extends Command
         // Create Resource File
         $this->generateResource();
 
-        // Create Requests
-        $this->generateAPIRequests();
-
-        // Create Events
-        $this->generateEvents();
-
-        // Create API Controller
-        $this->generateController();
-
-        // Create Tests
-        $this->generateTests();
+//        // Create Tests
+//        $this->generateTests();
     }
 
     /***** COMMANDS *****/
@@ -141,26 +132,17 @@ class MagicStarter extends Command
     protected function generateModel(): void
     {
         if ($this->modelExists() === FALSE) {
-
             $modelClass = $this->getModelClass();
             $args = $this->getInitialArgs();
             $will_generate = FALSE;
 
             if($this->yes_to_questions || $this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
                 $args['name'] = $this->model_name;
+                $args['--all'] = true;
+                $args['--repo'] = true;
+                $args['--test'] = true;
+                $args['--api'] = true;
                 $will_generate = TRUE;
-            }
-
-            if ($will_generate && ($this->yes_to_questions || $this->confirm("{$modelClass} model has no migration file yet. Do you want to generate it?", true))) {
-                $args['--migration'] = TRUE;
-            }
-
-            if ($will_generate && ($this->yes_to_questions || $this->confirm("{$modelClass} model has no factory file yet. Do you want to generate it?", true))) {
-                $args['--factory'] = TRUE;
-            }
-
-            if ($will_generate && ($this->yes_to_questions || $this->confirm("{$modelClass} model has no seeder file yet. Do you want to generate it?", true))) {
-                $args['--seed'] = TRUE;
             }
 
             if ($will_generate) {
@@ -183,92 +165,6 @@ class MagicStarter extends Command
             $args = $this->getInitialArgs();
             $args['name'] = $this->getModelName() . 'Resource';
             $this->call('gen:resource', $args);
-        }
-    }
-
-    /**
-     * Assume User model for example
-     *
-     * The requests will be generated on App\Http\Requests\User\{Method}User (e.g. IndexUser)
-     * By default, the requests will be TRUE (instead of Laravel's default of FALSE)
-     * This allows you to work on the Controller by default.
-     * See /stubs/request.custom.stub for more information.
-     *
-     * The requestsFolder parameter will be inserted before the Model folder
-     * to allow to create versioned or custom requests.
-     */
-    protected function generateAPIRequests(): void
-    {
-        if($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate REQUEST files?", true))) {
-            $model = $this->getModelName();
-            $folder = $this->option('requestsFolder');
-
-            $names = [
-                $folder . $model . '/Index' . $model,
-                $folder . $model . '/Show' . $model,
-                $folder . $model . '/Create' . $model,
-                $folder . $model . '/Update' . $model,
-                $folder . $model . '/Delete' . $model,
-                $folder . $model . '/Restore' . $model,
-            ];
-
-            foreach ($names as $name) {
-                $args = $this->getInitialArgs();
-                $args['name'] = $name;
-
-                $this->call('gen:request', $args);
-            }
-        }
-    }
-
-    /**
-     * This will auto-generate an event for each of the functions that you have
-     * Allowing to easily extend each functions when necessary.
-     */
-    public function generateEvents(): void
-    {
-        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate EVENT files?", true))) {
-            $model = $this->getModelName();
-            $folder = $this->option('requestsFolder');
-
-            $names = [
-                $folder . $model . '/' . $model . 'Collected',
-                $folder . $model . '/' . $model . 'Fetched',
-                $folder . $model . '/' . $model . 'Created',
-                $folder . $model . '/' . $model . 'Updated',
-                $folder . $model . '/' . $model . 'Deleted',
-                $folder . $model . '/' . $model . 'Restored',
-            ];
-
-            foreach ($names as $name) {
-                $args = $this->getInitialArgs();
-                $args['name'] = $name;
-
-                $this->call('gen:event', $args);
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    public function generateController(): void
-    {
-        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate API Controller file?", true))) {
-            $args = $this->getInitialArgs();
-            $args['name'] = $this->getModelName() . 'Controller';
-            $args['--model'] = $this->getModelName();
-            $args[] = '--skip';
-
-            if ($this->hasOption('requestsFolder') && $folder = $this->option('requestsFolder')) {
-                $args['--requestFolder'] = $folder;
-            }
-
-            if ($this->hasOption('parent') && $parent = $this->option('parent')) {
-                $args['--parent'] = $parent;
-            }
-
-            $this->call('gen:controller', $args);
         }
     }
 
@@ -333,16 +229,6 @@ class MagicStarter extends Command
     }
 
     /**
-     * Get the root namespace for the class.
-     *
-     * @return string
-     */
-    protected function rootNamespace(): string
-    {
-        return $this->laravel->getNamespace();
-    }
-
-    /**
      * @return array
      */
     protected function getArguments(): array
@@ -361,8 +247,7 @@ class MagicStarter extends Command
             parent::getOptions(),
             $this->getDefaultPackageOptions(),
             [
-                ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.'],
-                ['requestsFolder', null, InputOption::VALUE_OPTIONAL, 'Target request folder.'],
+                ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.']
             ]
         );
     }

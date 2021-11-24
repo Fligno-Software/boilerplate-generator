@@ -6,10 +6,8 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Console\ControllerMakeCommand;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
@@ -43,7 +41,13 @@ class ExtendedMakeController extends ControllerMakeCommand
      *
      * @var array|string[]
      */
-    public array $controllerMethods = ['Index', 'Store', 'Show', 'Update', 'Delete'];
+    public array $controllerMethods = [
+        'Index' => 'Collected',
+        'Store' => 'Created',
+        'Show' => 'Shown',
+        'Update' => 'Updated',
+        'Delete' => 'Archived'
+    ];
 
     /**
      * @param bool $isModelRestorable
@@ -54,7 +58,7 @@ class ExtendedMakeController extends ControllerMakeCommand
         $collection = collect($this->controllerMethods);
 
         if ($isModelRestorable) {
-            return $collection->add('Restore');
+            return $collection->put('Restore', 'Restored');
         }
 
         return $collection;
@@ -109,7 +113,7 @@ class ExtendedMakeController extends ControllerMakeCommand
             return parent::getStub();
         }
 
-        $this->info('Controller Stub: ' . $stub);
+//        $this->info('Controller Stub: ' . $stub);
 
         return $stub;
     }
@@ -146,7 +150,7 @@ class ExtendedMakeController extends ControllerMakeCommand
     /**
      * Build the model replacement values.
      *
-     * @param  array  $replace
+     * @param array $replace
      * @return array
      */
     protected function buildModelReplacements(array $replace): array
@@ -181,7 +185,6 @@ class ExtendedMakeController extends ControllerMakeCommand
      * @param array $replace
      * @param string $modelClass
      * @return array
-     * @throws \JsonException
      */
     protected function buildFormRequestReplacements(array $replace, $modelClass): array
     {
@@ -190,22 +193,34 @@ class ExtendedMakeController extends ControllerMakeCommand
             $result = collect();
 
             $model = Str::of($modelClass)->afterLast('\\');
-            $this->getControllerMethods()->each(function ($method) use ($model, $result) {
-                $class = $method . $model;
-                $classPath = $model . '\\' . $method . $model;
-                $namespacedClass = $this->package_namespace . 'Http\\Requests\\'. $classPath;
-                $args = $this->getInitialArgs();
-                $args['name'] = $classPath;
-                $this->call('gen:request', $args);
+            $this->getControllerMethods()->each(function ($event, $request) use ($model, $result) {
+                // Generate Request
+                $requestClass = $request . $model;
+                $requestClassPath = $model . '\\' . $request . $model;
+                $namespacedRequestClass = $this->package_namespace . 'Http\\Requests\\'. $requestClassPath;
 
-                $result->put('{{ ' . Str::camel($method . 'Request') . ' }}', $class);
-                $result->put('{{' . Str::camel($method . 'Request') . '}}', $class);
-                $result->put('{{ ' . Str::camel('namespaced'. $method . 'Request') . ' }}', $namespacedClass);
-                $result->put('{{' . Str::camel('namespaced'. $method . 'Request') . '}}', $namespacedClass);
-            });
+                $requestArgs = $this->getInitialArgs();
+                $requestArgs['name'] = $requestClassPath;
+                $this->call('gen:request', $requestArgs);
 
-            $result->each(function ($item, $key) {
-                $this->info($key . '=>' . $item);
+                $result->put('{{ ' . Str::camel($request . 'Request') . ' }}', $requestClass);
+                $result->put('{{' . Str::camel($request . 'Request') . '}}', $requestClass);
+                $result->put('{{ ' . Str::camel('namespaced'. $request . 'Request') . ' }}', $namespacedRequestClass);
+                $result->put('{{' . Str::camel('namespaced'. $request . 'Request') . '}}', $namespacedRequestClass);
+
+                // Generate Event
+                $eventClass = $model . $event;
+                $eventClassPath = $model . '\\' . $model . $event;
+                $namespacedEventClass = $this->package_namespace . 'Events\\'. $eventClassPath;
+
+                $eventArgs = $this->getInitialArgs();
+                $eventArgs['name'] = $eventClassPath;
+                $this->call('gen:event', $eventArgs);
+
+                $result->put('{{ ' . Str::camel($request . 'Event') . ' }}', $eventClass);
+                $result->put('{{' . Str::camel($request . 'Event') . '}}', $eventClass);
+                $result->put('{{ ' . Str::camel('namespaced'. $request . 'Event') . ' }}', $namespacedEventClass);
+                $result->put('{{' . Str::camel('namespaced'. $request . 'Event') . '}}', $namespacedEventClass);
             });
 
             return array_merge($replace, $result->toArray());
@@ -224,6 +239,7 @@ class ExtendedMakeController extends ControllerMakeCommand
             $this->getDefaultPackageOptions(false),
             [
                 ['repo', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
+                ['skip-model', null, InputOption::VALUE_NONE, 'Proceed as if model is already created.'],
             ]
         );
     }

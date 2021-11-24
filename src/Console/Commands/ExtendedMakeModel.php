@@ -34,53 +34,25 @@ class ExtendedMakeModel extends ModelMakeCommand
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
-    /**
-     * @return false|void
-     */
     public function handle()
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
-        if (parent::handle() === false && ! $this->option('force')) {
-            return false;
+        $res = parent::handle();
+
+        if ($res) {
+            if ($this->option('all')) {
+                $this->input->setOption('repo', true);
+            }
+
+            if ($this->option('repo')) {
+                $this->createRepository();
+            }
         }
 
-        if ($this->option('all')) {
-            $this->input->setOption('factory', true);
-            $this->input->setOption('seed', true);
-            $this->input->setOption('migration', true);
-            $this->input->setOption('controller', true);
-            $this->input->setOption('policy', true);
-            $this->input->setOption('resource', true);
-            $this->input->setOption('repo', true);
-        }
-
-        if ($this->option('factory')) {
-            $this->createFactory();
-        }
-
-        if ($this->option('migration')) {
-            $this->createCustomMigration();
-        }
-
-        if ($this->option('seed')) {
-            $this->createSeeder();
-        }
-
-        if ($this->option('controller') || $this->option('resource') || $this->option('api')) {
-            $this->createController();
-        }
-
-        if ($this->option('repo')) {
-            $this->createRepository();
-        }
-
-        if ($this->option('policy')) {
-            $this->createPolicy();
-        }
+        return $res;
     }
+
 
     /**
      * Create a migration file for the model.
@@ -95,10 +67,11 @@ class ExtendedMakeModel extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $this->call('gen:migration', [
-            'name' => "create_{$table}_table",
-            '--package' => $this->package_dir
-        ]);
+        $args = $this->getInitialArgs();
+        $args['name'] = "create_{$table}_table";
+        $args['--create'] = $table;
+
+        $this->call('gen:migration', $args);
     }
 
     /**
@@ -133,26 +106,6 @@ class ExtendedMakeModel extends ModelMakeCommand
     }
 
     /**
-     * Create a migration file for the model.
-     *
-     * @return void
-     */
-    protected function createCustomMigration(): void
-    {
-        $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
-
-        if ($this->option('pivot')) {
-            $table = Str::singular($table);
-        }
-
-        $args = $this->getInitialArgs();
-        $args['name'] = "create_{$table}_table";
-        $args['--create'] = $table;
-
-        $this->call('gen:migration', $args);
-    }
-
-    /**
      * Create a controller for the model.
      *
      * @return void
@@ -163,12 +116,14 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
-        $this->call('gen:controller', array_filter([
-            'name' => "{$controller}Controller",
-            '--model' => $this->option('resource') || $this->option('api') ? $modelName : null,
-            '--api' => $this->option('api'),
-            '--requests' => $this->option('requests') || $this->option('all'),
-        ]));
+        $args = $this->getInitialArgs();
+        $args['name'] = "{$controller}Controller";
+        $args['--model'] = $this->option('resource') || $this->option('api') ? $modelName : null;
+        $args['--api'] = $this->option('api');
+        $args['--requests'] = $this->option('requests') || $this->option('all');
+        $args['--skip-model'] = true;
+
+        $this->call('gen:controller', array_filter($args));
     }
 
     /**

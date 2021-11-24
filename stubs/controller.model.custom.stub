@@ -3,7 +3,8 @@
 namespace {{ namespace }};
 
 use App\Http\Controllers\Controller;
-use {{ namespacedRequests }}
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 // Model
 use {{ namespacedModel }};
@@ -16,6 +17,14 @@ use {{ namespacedUpdateRequest }};
 use {{ namespacedDeleteRequest }};
 use {{ namespacedRestoreRequest }};
 
+// Events
+use {{ namespacedIndexEvent }};
+use {{ namespacedStoreEvent }};
+use {{ namespacedShowEvent }};
+use {{ namespacedUpdateEvent }};
+use {{ namespacedDeleteEvent }};
+use {{ namespacedRestoreEvent }};
+
 /**
  * Class {{ class }}
  *
@@ -24,93 +33,183 @@ use {{ namespacedRestoreRequest }};
 class {{ class }} extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * {{ model }} List
+     *
+     * @group {{ model }} Management
      *
      * @param {{ indexRequest }} $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function index({{ indexRequest }} $request)
+    public function index({{ indexRequest }} $request): JsonResponse
     {
-        //
+        $data = new {{ model }};
+
+        if ($request->has('full_data') === TRUE) {
+            $data = $data->get();
+        } else {
+            $data = $data->simplePaginate($request->get('per_page', 15));
+        }
+
+        event(new {{ indexEvent }}($data));
+
+        return customResponse()
+            ->data($data)
+            ->message('Successfully collected record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create {{ model }}
      *
-     * @return Response
+     * @group {{ model }} Management
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function create()
+    public function create(Request $request): JsonResponse
     {
-        //
+        $data = $request->all();
+
+        $model = {{ model }}::create($data)->fresh();
+
+        event(new {{ storeEvent }}($model));
+
+        return customResponse()
+            ->data($model)
+            ->message('Successfully created record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store {{ model }}
+     *
+     * @group {{ model }} Management
      *
      * @param {{ storeRequest }} $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function store({{ storeRequest }} $request)
+    public function store({{ storeRequest }} $request): JsonResponse
     {
-        //
+        $data = $request->all();
+
+        $model = {{ model }}::create($data)->fresh();
+
+        event(new {{ storeEvent }}($model));
+
+        return customResponse()
+            ->data($model)
+            ->message('Successfully created record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Display the specified resource.
+     * Show {{ model }}
+     *
+     * @group {{ model }} Management
      *
      * @param {{ showRequest }} $request
      * @param {{ model }} ${{ modelVariable }}
-     * @return Response
+     * @return JsonResponse
      */
-    public function show({{ showRequest }} $request, {{ model }} ${{ modelVariable }})
+    public function show({{ showRequest }} $request, {{ model }} ${{ modelVariable }}): JsonResponse
     {
-        //
+        event(new {{ showEvent }}(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully collected record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Edit {{ model }}
      *
+     * @group {{ model }} Management
+     *
+     * @param Request $request
      * @param {{ model }} ${{ modelVariable }}
-     * @return Response
+     * @return JsonResponse
      */
-    public function edit({{ model }} ${{ modelVariable }})
+    public function edit(Request $request, {{ model }} ${{ modelVariable }}): JsonResponse
     {
-        //
+        // Logic here...
+
+        event(new {{ updateEvent }}(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully updated record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update {{ model }}
+     *
+     * @group {{ model }} Management
      *
      * @param {{ updateRequest }} $request
      * @param {{ model }} ${{ modelVariable }}
-     * @return Response
+     * @return JsonResponse
      */
-    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }}): JsonResponse
     {
-        //
+        // Logic here...
+
+        event(new {{ updateEvent }}(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully updated record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Archive {{ model }}
+     *
+     * @group {{ model }} Management
      *
      * @param {{ deleteRequest }} $request
      * @param {{ model }} ${{ modelVariable }}
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy({{ deleteRequest }} $request, {{ model }} ${{ modelVariable }})
+    public function destroy({{ deleteRequest }} $request, {{ model }} ${{ modelVariable }}): JsonResponse
     {
-        //
+        ${{ modelVariable }}->delete();
+
+        event(new {{ deleteEvent }}(${{ modelVariable }}));
+
+        return customResponse()
+            ->data(${{ modelVariable }})
+            ->message('Successfully archived record.')
+            ->success()
+            ->generate();
     }
 
     /**
-     * Restore the specified resource.
+     * Restore {{ model }}
+     *
+     * @group {{ model }} Management
      *
      * @param {{ restoreRequest }} $request
-     * @param {{ model }} ${{ modelVariable }}
-     * @return Response
+     * @param ${{ modelVariable }}
+     * @return JsonResponse
      */
-    public function restore({{ restoreRequest }} $request, {{ model }} ${{ modelVariable }})
+    public function restore({{ restoreRequest }} $request, ${{ modelVariable }}): JsonResponse
     {
-        //
+        $data = {{ model }}::withTrashed()->find(${{ modelVariable }})->restore();
+
+        event(new {{ restoreEvent }}($data));
+
+        return customResponse()
+            ->data($data)
+            ->message('Successfully restored record.')
+            ->success()
+            ->generate();
     }
 }

@@ -3,8 +3,8 @@
 namespace {{ namespace }};
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
  * Class {{ class }}
@@ -13,5 +13,20 @@ use Illuminate\Http\Response;
  */
 class {{ class }} extends Controller
 {
-    //
+    /**
+     * Method Description
+     *
+     * @group Uncategorized
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        return customResponse()
+            ->data([])
+            ->message('Successfully collected record.')
+            ->success()
+            ->generate();
+    }
 }

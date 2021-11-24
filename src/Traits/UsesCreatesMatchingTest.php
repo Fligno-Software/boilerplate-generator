@@ -21,9 +21,9 @@ trait UsesCreatesMatchingTest
      */
     protected function handleTestCreation($path): void
     {
-        if (! $this->option('test') && ! $this->option('pest')) {
-            return;
-        }
+//        if (! $this->option('test') && ! $this->option('pest')) {
+//            return;
+//        }
 
         $appPath = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
