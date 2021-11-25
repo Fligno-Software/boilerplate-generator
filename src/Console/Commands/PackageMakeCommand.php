@@ -58,6 +58,11 @@ class PackageMakeCommand extends Command
             $args['--yes'] = $this->option('yes');
 
             $this->call('fligno:start', $args);
+
+            $this->call('gen:routes', [
+                'vendor' => $this->vendor_name,
+                'package' => $this->package_name,
+            ]);
         }
     }
 

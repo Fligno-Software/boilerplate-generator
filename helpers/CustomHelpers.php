@@ -123,3 +123,16 @@ if (! function_exists('package_test_path')) {
     }
 }
 
+// Route Paths
+
+if (! function_exists('package_routes_path')) {
+    /**
+     * @param string|null $path
+     * @return string
+     */
+    function package_routes_path(string $path = null): string
+    {
+        return package_path($path) . '/routes';
+    }
+}
+

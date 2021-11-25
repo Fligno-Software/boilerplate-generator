@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator;
 
+use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCommand;
@@ -31,12 +32,14 @@ use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\MagicStarter;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
     protected array $commands = [
+        DocsGenCommand::class,
         ExtendedMakeCast::class,
         ExtendedMakeChannel::class,
         ExtendedMakeCommand::class,
@@ -66,6 +69,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         MagicStarter::class,
         PackageMakeCommand::class,
         RepositoryMakeCommand::class,
+        RouteMakeCommand::class,
         TraitMakeCommand::class,
     ];
 
