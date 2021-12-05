@@ -3,9 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -17,7 +19,7 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeFactory extends FactoryMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesEloquentModel;
 
     /**
      * The console command name.
@@ -35,6 +37,13 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addModelOptions();
+    }
+
     /**
      * @return bool|null
      * @throws FileNotFoundException
@@ -45,7 +54,30 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
         $this->setVendorAndPackage($this);
 
-        return parent::handle();
+        $this->setModelFields();
+
+        $res = parent::handle();
+
+        $this->createFactoryTrait();
+
+        return $res;
+    }
+
+    /**
+     * return void
+     */
+    protected function createFactoryTrait(): void
+    {
+        if ($this->package_name && $this->model_name)
+        {
+            $this->call('gen:trait', array_merge(
+                $this->getEloquentModelArgs(),
+                $this->getVendorPackageArgs(),
+                [
+                    'name' => 'Has' . $this->model_name . 'Factory'
+                ]
+            ));
+        }
     }
 
     /**
@@ -86,5 +118,19 @@ class ExtendedMakeFactory extends FactoryMakeCommand
         $path = $this->package_dir ? package_database_path($this->package_dir)  : $this->laravel->databasePath();
 
         return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRootNamespaceDuringReplaceNamespace(): string
+    {
+        $rootNameSpace = $this->rootNamespace();
+
+        if ($rootNameSpace !== $this->package_namespace) {
+            $rootNameSpace = '';
+        }
+
+        return $rootNameSpace;
     }
 }

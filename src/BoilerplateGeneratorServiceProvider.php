@@ -2,13 +2,13 @@
 
 namespace Fligno\BoilerplateGenerator;
 
+//use Fligno\BoilerplateGenerator\Console\Commands\PackageInstallCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeComponent;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController;
-use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeController1;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeEvent;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeException;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeFactory;
@@ -34,17 +34,17 @@ use Fligno\BoilerplateGenerator\Console\Commands\PackageMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
-use Illuminate\Support\ServiceProvider;
+use Fligno\StarterKit\Providers\AbstractStarterKitServiceProvider;
 
-class BoilerplateGeneratorServiceProvider extends ServiceProvider
+class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvider
 {
     protected array $commands = [
+//        PackageInstallCommand::class,
         DocsGenCommand::class,
         ExtendedMakeCast::class,
         ExtendedMakeChannel::class,
         ExtendedMakeCommand::class,
         ExtendedMakeComponent::class,
-        ExtendedMakeController1::class,
         ExtendedMakeController::class,
         ExtendedMakeEvent::class,
         ExtendedMakeException::class,
@@ -72,24 +72,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         RouteMakeCommand::class,
         TraitMakeCommand::class,
     ];
-
-    /**
-     * Perform post-registration booting of services.
-     *
-     * @return void
-     */
-    public function boot(): void
-    {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'fligno');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'fligno');
-         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
-        // Publishing is only necessary when using the CLI.
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
-        }
-    }
 
     /**
      * Register any package services.

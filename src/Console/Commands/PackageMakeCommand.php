@@ -52,7 +52,7 @@ class PackageMakeCommand extends Command
         }
 
         if ($initiate_boilerplate) {
-            $args = $this->getInitialArgs();
+            $args = $this->getVendorPackageArgs();
 
             $args['model'] = $this->package_name_studly;
             $args['--yes'] = $this->option('yes');

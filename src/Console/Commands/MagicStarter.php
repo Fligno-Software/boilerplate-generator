@@ -133,7 +133,7 @@ class MagicStarter extends Command
     {
         if ($this->modelExists() === FALSE) {
             $modelClass = $this->getModelClass();
-            $args = $this->getInitialArgs();
+            $args = $this->getVendorPackageArgs();
             $will_generate = FALSE;
 
             if($this->yes_to_questions || $this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
@@ -162,7 +162,7 @@ class MagicStarter extends Command
     public function generateResource(): void
     {
         if($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true))) {
-            $args = $this->getInitialArgs();
+            $args = $this->getVendorPackageArgs();
             $args['name'] = $this->getModelName() . 'Resource';
             $this->call('gen:resource', $args);
         }
@@ -177,7 +177,7 @@ class MagicStarter extends Command
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
-            $args = $this->getInitialArgs();
+            $args = $this->getVendorPackageArgs();
             $args['name'] = $folder . $model . '/' . $model . 'Test';
             $args['--model'] = $model;
             $args['--skip'] = true;

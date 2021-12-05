@@ -27,7 +27,7 @@ trait UsesCreatesMatchingTest
 
         $appPath = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = Str::of($path)->after($appPath)->beforeLast('.php')->append('Test')->replace('\\', '/');
         $args['--pest'] = $this->option('pest');
 

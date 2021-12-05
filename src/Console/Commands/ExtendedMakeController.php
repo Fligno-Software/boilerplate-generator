@@ -129,7 +129,7 @@ class ExtendedMakeController extends ControllerMakeCommand
         $parentModelClass = $this->parseModel($this->option('parent'));
 
         if (!class_exists($parentModelClass) && $this->confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", true)) {
-            $args = $this->getInitialArgs();
+            $args = $this->getVendorPackageArgs();
             $args['name'] = $parentModelClass;
             $this->call('gen:model', $args);
         }
@@ -158,7 +158,7 @@ class ExtendedMakeController extends ControllerMakeCommand
         $modelClass = $this->parseModel($this->option('model'));
 
         if (!class_exists($modelClass) && $this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
-            $args = $this->getInitialArgs();
+            $args = $this->getVendorPackageArgs();
             $args['name'] = $modelClass;
 
             $this->call('gen:model', $args);
@@ -199,7 +199,7 @@ class ExtendedMakeController extends ControllerMakeCommand
                 $requestClassPath = $model . '\\' . $request . $model;
                 $namespacedRequestClass = $this->package_namespace . 'Http\\Requests\\'. $requestClassPath;
 
-                $requestArgs = $this->getInitialArgs();
+                $requestArgs = $this->getVendorPackageArgs();
                 $requestArgs['name'] = $requestClassPath;
                 $this->call('gen:request', $requestArgs);
 
@@ -213,7 +213,7 @@ class ExtendedMakeController extends ControllerMakeCommand
                 $eventClassPath = $model . '\\' . $model . $event;
                 $namespacedEventClass = $this->package_namespace . 'Events\\'. $eventClassPath;
 
-                $eventArgs = $this->getInitialArgs();
+                $eventArgs = $this->getVendorPackageArgs();
                 $eventArgs['name'] = $eventClassPath;
                 $this->call('gen:event', $eventArgs);
 

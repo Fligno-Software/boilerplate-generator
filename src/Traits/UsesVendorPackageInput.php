@@ -88,7 +88,7 @@ trait UsesVendorPackageInput
     /**
      * @return array
      */
-    public function getInitialArgs(): array
+    public function getVendorPackageArgs(): array
     {
         $args = [];
 

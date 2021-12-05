@@ -55,29 +55,29 @@ class ExtendedMakeException extends ExceptionMakeCommand
      */
     protected function getStub(): string
     {
-        $exceptionRenderReportStub = '/../../../stubs/exception-render-report.custom.stub';
-        $exceptionRenderStub = '/../../../stubs/exception-render.custom.stub';
-        $exceptionReportStub = '/../../../stubs/exception-report.custom.stub';
-        $exceptionStub = '/../../../stubs/exception.custom.stub';
+        $exceptionRenderReportStub = __DIR__ . '/../../../stubs/exception-render-report.custom.stub';
+        $exceptionRenderStub = __DIR__ . '/../../../stubs/exception-render.custom.stub';
+        $exceptionReportStub = __DIR__ . '/../../../stubs/exception-report.custom.stub';
+        $exceptionStub = __DIR__ . '/../../../stubs/exception.custom.stub';
 
         if (
-            File::exists(__DIR__ . $exceptionRenderReportStub) === FALSE ||
-            File::exists(__DIR__ . $exceptionRenderStub) === FALSE ||
-            File::exists(__DIR__ . $exceptionReportStub) === FALSE ||
-            File::exists(__DIR__ . $exceptionStub) === FALSE
+            file_exists($exceptionRenderReportStub) === FALSE ||
+            file_exists($exceptionRenderStub) === FALSE ||
+            file_exists($exceptionReportStub) === FALSE ||
+            file_exists($exceptionStub) === FALSE
         ) {
             return parent::getStub();
         }
 
         if ($this->option('render')) {
             return $this->option('report')
-                ? __DIR__ . $exceptionRenderReportStub
-                : __DIR__ . $exceptionRenderStub;
+                ? $exceptionRenderReportStub
+                : $exceptionRenderStub;
         }
 
         return $this->option('report')
-            ? __DIR__ . $exceptionReportStub
-            : __DIR__ . $exceptionStub;
+            ? $exceptionReportStub
+            : $exceptionStub;
     }
 
     /**

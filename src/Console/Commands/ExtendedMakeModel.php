@@ -38,19 +38,15 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $this->setVendorAndPackage($this);
 
-        $res = parent::handle();
+        parent::handle();
 
-        if ($res) {
-            if ($this->option('all')) {
-                $this->input->setOption('repo', true);
-            }
-
-            if ($this->option('repo')) {
-                $this->createRepository();
-            }
+        if ($this->option('all')) {
+            $this->input->setOption('repo', true);
         }
 
-        return $res;
+        if ($this->option('repo')) {
+            $this->createRepository();
+        }
     }
 
 
@@ -67,7 +63,7 @@ class ExtendedMakeModel extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = "create_{$table}_table";
         $args['--create'] = $table;
 
@@ -83,7 +79,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $factory = Str::studly($this->argument('name'));
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = "{$factory}Factory";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
@@ -99,7 +95,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $seeder = Str::studly(class_basename($this->argument('name')));
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = "{$seeder}Seeder";
 
         $this->call('gen:seeder', $args);
@@ -116,7 +112,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = "{$controller}Controller";
         $args['--model'] = $this->option('resource') || $this->option('api') ? $modelName : null;
         $args['--api'] = $this->option('api');
@@ -135,7 +131,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $repository = Str::studly(class_basename($this->argument('name')));
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = "{$repository}Repository";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
@@ -151,7 +147,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $policy = Str::studly(class_basename($this->argument('name')));
 
-        $args = $this->getInitialArgs();
+        $args = $this->getVendorPackageArgs();
         $args['name'] = "{$policy}Policy";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
