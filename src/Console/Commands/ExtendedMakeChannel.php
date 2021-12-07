@@ -3,14 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Foundation\Console\CastMakeCommand;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ChannelMakeCommand;
-use Illuminate\Foundation\Console\EventMakeCommand;
-use Illuminate\Foundation\Console\ProviderMakeCommand;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeChannel
@@ -20,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeChannel extends ChannelMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -36,6 +33,19 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      */
     protected $description = 'Create a new channel class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -44,8 +54,6 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -63,16 +71,5 @@ class ExtendedMakeChannel extends ChannelMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 }

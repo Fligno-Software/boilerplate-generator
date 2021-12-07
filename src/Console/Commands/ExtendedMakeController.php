@@ -5,6 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Console\ControllerMakeCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -50,6 +51,19 @@ class ExtendedMakeController extends ControllerMakeCommand
     ];
 
     /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
+    /**
      * @param bool $isModelRestorable
      * @return Collection
      */
@@ -72,8 +86,6 @@ class ExtendedMakeController extends ControllerMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -113,8 +125,6 @@ class ExtendedMakeController extends ControllerMakeCommand
             return parent::getStub();
         }
 
-//        $this->info('Controller Stub: ' . $stub);
-
         return $stub;
     }
 
@@ -129,7 +139,7 @@ class ExtendedMakeController extends ControllerMakeCommand
         $parentModelClass = $this->parseModel($this->option('parent'));
 
         if (!class_exists($parentModelClass) && $this->confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", true)) {
-            $args = $this->getVendorPackageArgs();
+            $args = $this->getPackageArgs();
             $args['name'] = $parentModelClass;
             $this->call('gen:model', $args);
         }
@@ -158,7 +168,7 @@ class ExtendedMakeController extends ControllerMakeCommand
         $modelClass = $this->parseModel($this->option('model'));
 
         if (!class_exists($modelClass) && $this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
-            $args = $this->getVendorPackageArgs();
+            $args = $this->getPackageArgs();
             $args['name'] = $modelClass;
 
             $this->call('gen:model', $args);
@@ -199,7 +209,7 @@ class ExtendedMakeController extends ControllerMakeCommand
                 $requestClassPath = $model . '\\' . $request . $model;
                 $namespacedRequestClass = $this->package_namespace . 'Http\\Requests\\'. $requestClassPath;
 
-                $requestArgs = $this->getVendorPackageArgs();
+                $requestArgs = $this->getPackageArgs();
                 $requestArgs['name'] = $requestClassPath;
                 $this->call('gen:request', $requestArgs);
 
@@ -213,7 +223,7 @@ class ExtendedMakeController extends ControllerMakeCommand
                 $eventClassPath = $model . '\\' . $model . $event;
                 $namespacedEventClass = $this->package_namespace . 'Events\\'. $eventClassPath;
 
-                $eventArgs = $this->getVendorPackageArgs();
+                $eventArgs = $this->getPackageArgs();
                 $eventArgs['name'] = $eventClassPath;
                 $this->call('gen:event', $eventArgs);
 
@@ -236,7 +246,6 @@ class ExtendedMakeController extends ControllerMakeCommand
     {
         return array_merge(
             parent::getOptions(),
-            $this->getDefaultPackageOptions(false),
             [
                 ['repo', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
                 ['skip-model', null, InputOption::VALUE_NONE, 'Proceed as if model is already created.'],

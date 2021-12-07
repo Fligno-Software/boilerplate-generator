@@ -2,7 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use JetBrains\PhpStorm\Pure;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class FlignoTest extends Command
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The name of the console command.

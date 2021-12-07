@@ -3,8 +3,9 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ObserverMakeCommand;
 use JetBrains\PhpStorm\Pure;
 
@@ -16,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeObserver extends ObserverMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -32,6 +33,19 @@ class ExtendedMakeObserver extends ObserverMakeCommand
      */
     protected $description = 'Create a new observer class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+    
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -40,8 +54,6 @@ class ExtendedMakeObserver extends ObserverMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -65,16 +77,5 @@ class ExtendedMakeObserver extends ObserverMakeCommand
         return $this->option('model')
             ? $observerStub
             : $observerPlainStub;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 }
