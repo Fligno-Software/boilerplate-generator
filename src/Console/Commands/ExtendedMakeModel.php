@@ -4,6 +4,7 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,6 +33,19 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected $description = 'Create a new Eloquent model class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     public function handle()
@@ -49,7 +63,6 @@ class ExtendedMakeModel extends ModelMakeCommand
         }
     }
 
-
     /**
      * Create a migration file for the model.
      *
@@ -63,7 +76,7 @@ class ExtendedMakeModel extends ModelMakeCommand
             $table = Str::singular($table);
         }
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = "create_{$table}_table";
         $args['--create'] = $table;
 
@@ -79,7 +92,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $factory = Str::studly($this->argument('name'));
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = "{$factory}Factory";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
@@ -95,7 +108,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $seeder = Str::studly(class_basename($this->argument('name')));
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = "{$seeder}Seeder";
 
         $this->call('gen:seeder', $args);
@@ -112,7 +125,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = "{$controller}Controller";
         $args['--model'] = $this->option('resource') || $this->option('api') ? $modelName : null;
         $args['--api'] = $this->option('api');
@@ -131,7 +144,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $repository = Str::studly(class_basename($this->argument('name')));
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = "{$repository}Repository";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
@@ -147,7 +160,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         $policy = Str::studly(class_basename($this->argument('name')));
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = "{$policy}Policy";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
@@ -178,7 +191,6 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         return array_merge(
             parent::getOptions(),
-            $this->getDefaultPackageOptions(),
             [
                 ['repo', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
             ]

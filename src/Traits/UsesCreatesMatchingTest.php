@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  */
 trait UsesCreatesMatchingTest
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * Create the matching test case if requested.
@@ -21,13 +21,9 @@ trait UsesCreatesMatchingTest
      */
     protected function handleTestCreation($path): void
     {
-//        if (! $this->option('test') && ! $this->option('pest')) {
-//            return;
-//        }
-
         $appPath = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
-        $args = $this->getVendorPackageArgs();
+        $args = $this->getPackageArgs();
         $args['name'] = Str::of($path)->after($appPath)->beforeLast('.php')->append('Test')->replace('\\', '/');
         $args['--pest'] = $this->option('pest');
 

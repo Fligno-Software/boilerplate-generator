@@ -4,6 +4,7 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\NotificationMakeCommand;
 use Illuminate\Support\Facades\File;
 
@@ -31,6 +32,21 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      */
     protected $description = 'Create a new notification class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
+
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -38,8 +54,6 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      */
     public function handle(): void
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         parent::handle();
@@ -57,16 +71,5 @@ class ExtendedMakeNotification extends NotificationMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 }

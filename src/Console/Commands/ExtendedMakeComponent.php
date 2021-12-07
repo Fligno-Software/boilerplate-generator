@@ -3,11 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ComponentMakeCommand;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeChannel
@@ -17,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeComponent extends ComponentMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -33,6 +33,19 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      */
     protected $description = 'Create a new view component class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -40,8 +53,6 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -59,17 +70,6 @@ class ExtendedMakeComponent extends ComponentMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 
     /**

@@ -3,7 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RouteMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -48,8 +48,6 @@ class RouteMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         $routes = [];

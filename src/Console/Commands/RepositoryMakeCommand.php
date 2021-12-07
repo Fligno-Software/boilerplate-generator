@@ -3,9 +3,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -17,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RepositoryMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -40,6 +41,19 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected $type = 'Repository';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageArguments();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -48,8 +62,6 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -69,8 +81,7 @@ class RepositoryMakeCommand extends GeneratorCommand
     #[Pure] protected function getOptions(): array
     {
         return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(),[
+            [
                 ['model', null, InputOption::VALUE_REQUIRED, 'Eloquent Model to base the repository class from.']
             ]
         );

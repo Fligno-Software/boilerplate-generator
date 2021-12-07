@@ -4,7 +4,6 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Filesystem\Filesystem;
@@ -35,14 +34,19 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected $description = 'Create a new model factory in Laravel or in a specific package.';
 
-    /***** OVERRIDDEN FUNCTIONS *****/
-
+    /**
+     * @param Filesystem $files
+     */
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);
 
+        $this->addPackageOptions();
+
         $this->addModelOptions();
     }
+
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
@@ -50,8 +54,6 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         $this->setModelFields();
@@ -72,7 +74,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
         {
             $this->call('gen:trait', array_merge(
                 $this->getEloquentModelArgs(),
-                $this->getVendorPackageArgs(),
+                $this->getPackageArgs(),
                 [
                     'name' => 'Has' . $this->model_name . 'Factory'
                 ]
@@ -92,17 +94,6 @@ class ExtendedMakeFactory extends FactoryMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 
     /**

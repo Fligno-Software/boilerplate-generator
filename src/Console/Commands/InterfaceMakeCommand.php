@@ -3,10 +3,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use JetBrains\PhpStorm\Pure;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Class InterfaceMakeCommand
@@ -16,7 +16,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class InterfaceMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -39,6 +39,19 @@ class InterfaceMakeCommand extends GeneratorCommand
      */
     protected $type = 'Interface';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -47,8 +60,6 @@ class InterfaceMakeCommand extends GeneratorCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -60,17 +71,6 @@ class InterfaceMakeCommand extends GeneratorCommand
     protected function getStub(): string
     {
         return __DIR__ . '/../../../stubs/interface.custom.stub';
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 
     protected function getDefaultNamespace($rootNamespace): string

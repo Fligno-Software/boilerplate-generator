@@ -3,11 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\EventMakeCommand;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeEvent
@@ -17,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeEvent extends EventMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -33,6 +33,21 @@ class ExtendedMakeEvent extends EventMakeCommand
      */
     protected $description = 'Create a new event class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
+
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -41,8 +56,6 @@ class ExtendedMakeEvent extends EventMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -60,16 +73,5 @@ class ExtendedMakeEvent extends EventMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 }

@@ -7,7 +7,6 @@ use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class TraitMakeCommand
@@ -40,14 +39,16 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected $type = 'Trait';
 
-    /***** OVERRIDDEN FUNCTIONS *****/
-
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);
 
         $this->addModelOptions();
+
+        $this->addPackageOptions();
     }
+
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
@@ -55,9 +56,7 @@ class TraitMakeCommand extends GeneratorCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
-        $this->setVendorAndPackage($this);
+       $this->setVendorAndPackage($this);
 
         $this->setModelFields();
 
@@ -73,16 +72,9 @@ class TraitMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @return array
+     * @param $rootNamespace
+     * @return string
      */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
-    }
-
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '/Traits';

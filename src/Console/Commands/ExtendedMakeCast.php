@@ -3,13 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\CastMakeCommand;
-use Illuminate\Foundation\Console\EventMakeCommand;
-use Illuminate\Foundation\Console\ProviderMakeCommand;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeCast
@@ -19,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeCast extends CastMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -35,6 +33,19 @@ class ExtendedMakeCast extends CastMakeCommand
      */
     protected $description = 'Create a new custom Eloquent cast class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -43,8 +54,6 @@ class ExtendedMakeCast extends CastMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -62,16 +71,5 @@ class ExtendedMakeCast extends CastMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 }

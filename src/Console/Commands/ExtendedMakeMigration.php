@@ -4,9 +4,8 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\ExtendedMigrationCreator;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeMigration
@@ -16,7 +15,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeMigration extends MigrateMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command signature.
@@ -25,7 +24,6 @@ class ExtendedMakeMigration extends MigrateMakeCommand
      */
     protected $signature = 'gen:migration {name : The name of the migration}
         {--create= : The table to be created}
-        {--package= : Target package to generate the files (e.g., `vendor-name/package-name`).}
         {--table= : The table to migrate}
         {--path= : The location where the migration file should be created}
         {--realpath : Indicate any provided migration file paths are pre-resolved absolute paths}
@@ -38,8 +36,6 @@ class ExtendedMakeMigration extends MigrateMakeCommand
      */
     protected $description = 'Create a new migration file in Laravel or in a specific package.';
 
-    /***** OVERRIDDEN FUNCTIONS *****/
-
     public function __construct()
     {
         $realPath = dirname(__DIR__, 3) . '/stubs';
@@ -47,33 +43,23 @@ class ExtendedMakeMigration extends MigrateMakeCommand
         $creator = new ExtendedMigrationCreator(app('files'), $realPath);
 
         parent::__construct($creator, app('composer'));
+
+        $this->addPackageOptions();
     }
+
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return void
      */
     public function handle(): void
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
-        // Set MigrationCreator $package_path
-        if ($this->package_dir && $this->creator instanceof ExtendedMigrationCreator) {
+       if ($this->package_dir && $this->creator instanceof ExtendedMigrationCreator) {
             $this->creator->setPackagePath($this->package_dir);
         }
 
         parent::handle();
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 }

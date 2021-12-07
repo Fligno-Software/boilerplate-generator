@@ -3,12 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Foundation\Console\EventMakeCommand;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ProviderMakeCommand;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeProvider
@@ -18,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeProvider extends ProviderMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -34,6 +33,19 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      */
     protected $description = 'Create a new service provider class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -42,8 +54,6 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -61,16 +71,5 @@ class ExtendedMakeProvider extends ProviderMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 }

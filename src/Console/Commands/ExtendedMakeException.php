@@ -3,13 +3,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Foundation\Console\ComponentMakeCommand;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ExceptionMakeCommand;
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeException
@@ -19,7 +16,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeException extends ExceptionMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -35,6 +32,21 @@ class ExtendedMakeException extends ExceptionMakeCommand
      */
     protected $description = 'Create a new custom exception class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
+
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -43,8 +55,6 @@ class ExtendedMakeException extends ExceptionMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -78,16 +88,5 @@ class ExtendedMakeException extends ExceptionMakeCommand
         return $this->option('report')
             ? $exceptionReportStub
             : $exceptionStub;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 }

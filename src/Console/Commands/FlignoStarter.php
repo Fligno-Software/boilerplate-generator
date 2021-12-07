@@ -2,7 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -11,14 +11,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class MagicStarter
+ * Class FlignoStarter
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-09
  */
-class MagicStarter extends Command
+class FlignoStarter extends Command
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The name of the console command.
@@ -52,7 +52,21 @@ class MagicStarter extends Command
      *
      * @var string
      */
-    protected $description = 'Create model, migration file, controller, request, event, and resource classes automagically!';
+    protected $description = 'Create a model with migration, API controller, request, event, and resource files.';
+
+    /**
+     * Create a new console command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->addPackageOptions();
+    }
+
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * Execute the console command.
@@ -120,27 +134,26 @@ class MagicStarter extends Command
         // Create Resource File
         $this->generateResource();
 
-//        // Create Tests
-//        $this->generateTests();
+        // Create Tests
+        $this->generateTests();
     }
 
     /***** COMMANDS *****/
 
     /**
-     *
+     * This will auto-generate a model class.
      */
     protected function generateModel(): void
     {
         if ($this->modelExists() === FALSE) {
             $modelClass = $this->getModelClass();
-            $args = $this->getVendorPackageArgs();
+            $args = $this->getPackageArgs();
             $will_generate = FALSE;
 
             if($this->yes_to_questions || $this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
                 $args['name'] = $this->model_name;
                 $args['--all'] = true;
                 $args['--repo'] = true;
-                $args['--test'] = true;
                 $args['--api'] = true;
                 $will_generate = TRUE;
             }
@@ -162,7 +175,7 @@ class MagicStarter extends Command
     public function generateResource(): void
     {
         if($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true))) {
-            $args = $this->getVendorPackageArgs();
+            $args = $this->getPackageArgs();
             $args['name'] = $this->getModelName() . 'Resource';
             $this->call('gen:resource', $args);
         }
@@ -177,7 +190,7 @@ class MagicStarter extends Command
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
-            $args = $this->getVendorPackageArgs();
+            $args = $this->getPackageArgs();
             $args['name'] = $folder . $model . '/' . $model . 'Test';
             $args['--model'] = $model;
             $args['--skip'] = true;
@@ -245,7 +258,6 @@ class MagicStarter extends Command
     {
         return array_merge(
             parent::getOptions(),
-            $this->getDefaultPackageOptions(),
             [
                 ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.']
             ]

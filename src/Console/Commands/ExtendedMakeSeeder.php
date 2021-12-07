@@ -3,10 +3,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Database\Console\Seeds\SeederMakeCommand;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeSeeder
@@ -16,7 +16,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakeSeeder extends SeederMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -32,6 +32,19 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected $description = 'Create a new seeder class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -39,8 +52,6 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     public function handle(): void
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         parent::handle();
@@ -58,17 +69,6 @@ class ExtendedMakeSeeder extends SeederMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
-use Illuminate\Console\GeneratorCommand;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -14,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 trait UsesEloquentModel
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * @var bool

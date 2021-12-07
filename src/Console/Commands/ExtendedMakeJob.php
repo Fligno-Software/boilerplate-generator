@@ -5,9 +5,9 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\JobMakeCommand;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeJob
@@ -33,6 +33,19 @@ class ExtendedMakeJob extends JobMakeCommand
      */
     protected $description = 'Create a new job class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -41,8 +54,6 @@ class ExtendedMakeJob extends JobMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -67,39 +78,4 @@ class ExtendedMakeJob extends JobMakeCommand
             ? __DIR__ . $jobStub
             : __DIR__ . $queuedJobStub;
     }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
-    }
-
-//    /**
-//     * Create the matching test case if requested.
-//     *
-//     * @param  string  $path
-//     * @return void
-//     */
-//    protected function handleTestCreation($path): void
-//    {
-//        if (! $this->option('test') && ! $this->option('pest')) {
-//            return;
-//        }
-//
-//        $args = [
-//            'name' => Str::of($path)->after($this->laravel['path'])->beforeLast('.php')->append('Test')->replace('\\', '/'),
-//            '--pest' => $this->option('pest'),
-//        ];
-//
-//        if ($this->package_dir) {
-//            $args['--package'] = $this->package_dir;
-//        }
-//
-//        $this->call('gen:test', $args);
-//    }
 }

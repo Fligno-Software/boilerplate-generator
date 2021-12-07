@@ -3,7 +3,8 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ResourceMakeCommand;
 use Illuminate\Support\Facades\File;
 
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\File;
  */
 class ExtendedMakeResource extends ResourceMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -31,6 +32,19 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     protected $description = 'Create a new resource file in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -38,8 +52,6 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     public function handle(): void
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         parent::handle();
@@ -57,16 +69,5 @@ class ExtendedMakeResource extends ResourceMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 }

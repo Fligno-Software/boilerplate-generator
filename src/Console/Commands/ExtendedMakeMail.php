@@ -4,9 +4,9 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\MailMakeCommand;
 use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeMail
@@ -32,6 +32,19 @@ class ExtendedMakeMail extends MailMakeCommand
      */
     protected $description = 'Create a new email class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -39,8 +52,6 @@ class ExtendedMakeMail extends MailMakeCommand
      */
     public function handle(): void
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         parent::handle();
@@ -64,17 +75,6 @@ class ExtendedMakeMail extends MailMakeCommand
         return $this->option('markdown') !== FALSE ? $markdownMailStub : $mailStub;
     }
 
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
-    }
-
 //    /**
 //     * Write the Markdown template for the mailable.
 //     *
@@ -91,29 +91,5 @@ class ExtendedMakeMail extends MailMakeCommand
 //        }
 //
 //        $this->files->put($path, file_get_contents(__DIR__.'/stubs/markdown.stub'));
-//    }
-
-//    /**
-//     * Create the matching test case if requested.
-//     *
-//     * @param  string  $path
-//     * @return void
-//     */
-//    protected function handleTestCreation($path): void
-//    {
-//        if (! $this->option('test') && ! $this->option('pest')) {
-//            return;
-//        }
-//
-//        $args = [
-//            'name' => Str::of($path)->after($this->laravel['path'])->beforeLast('.php')->append('Test')->replace('\\', '/'),
-//            '--pest' => $this->option('pest'),
-//        ];
-//
-//        if ($this->package_dir) {
-//            $args['--package'] = $this->package_dir;
-//        }
-//
-//        $this->call('gen:test', $args);
 //    }
 }

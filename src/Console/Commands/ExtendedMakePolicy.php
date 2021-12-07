@@ -3,10 +3,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\PolicyMakeCommand;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class ExtendedMakeListener
@@ -16,7 +16,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class ExtendedMakePolicy extends PolicyMakeCommand
 {
-    use UsesVendorPackageInput;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -32,6 +32,19 @@ class ExtendedMakePolicy extends PolicyMakeCommand
      */
     protected $description = 'Create a new policy class in Laravel or in a specific package.';
 
+    /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -40,8 +53,6 @@ class ExtendedMakePolicy extends PolicyMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         return parent::handle();
@@ -65,16 +76,5 @@ class ExtendedMakePolicy extends PolicyMakeCommand
         return $this->option('model')
             ? $policyStub
             : $policyPlainStub;
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions(false)
-        );
     }
 }

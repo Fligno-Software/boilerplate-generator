@@ -4,13 +4,12 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageInput;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\TestMakeCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ExtendedMakeTest
@@ -20,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ExtendedMakeTest extends TestMakeCommand
 {
-    use UsesVendorPackageInput, UsesEloquentModel;
+    use UsesVendorPackage, UsesEloquentModel;
 
     /**
      * The console command name.
@@ -48,6 +47,8 @@ class ExtendedMakeTest extends TestMakeCommand
         parent::__construct($files);
 
         $this->addModelOptions();
+
+        $this->addPackageOptions();
     }
 
     /**
@@ -56,8 +57,6 @@ class ExtendedMakeTest extends TestMakeCommand
      */
     public function handle(): ?bool
     {
-        // Initiate Stuff
-
         $this->setVendorAndPackage($this);
 
         $this->setModelFields();
@@ -77,17 +76,6 @@ class ExtendedMakeTest extends TestMakeCommand
         }
 
         return $path;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions(): array
-    {
-        return array_merge(
-            parent::getOptions(),
-            $this->getDefaultPackageOptions()
-        );
     }
 
     /**

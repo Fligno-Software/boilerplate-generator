@@ -2,17 +2,18 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 /**
- * Trait UsesVendorPackageInput
+ * Trait UsesVendorPackage
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-11
  */
-trait UsesVendorPackageInput
+trait UsesVendorPackage
 {
     /**
      * @var string|null
@@ -46,20 +47,27 @@ trait UsesVendorPackageInput
 
     /**
      * @param bool $has_ddd
-     * @return array
+     * @return void
      */
-    public function getDefaultPackageOptions(bool $has_ddd = true): array
+    public function addPackageOptions(bool $has_ddd = false): void
     {
-        $options = ['package', null, InputOption::VALUE_REQUIRED, 'Target package to generate the files (e.g., `vendor-name/package-name`).'];
+        $this->getDefinition()->addOption(new InputOption(
+            'package', null, InputOption::VALUE_REQUIRED, 'Target package to generate the files (e.g., `vendor-name/package-name`).'
+        ));
 
         if ($has_ddd) {
-            return [
-                $options,
-                ['ddd', null, InputOption::VALUE_NONE, 'Follow Domain-Driven Development pattern for files generation.'],
-            ];
+            $this->getDefinition()->addOption(new InputOption(
+                'ddd', null, InputOption::VALUE_NONE, 'Follow Domain-Driven Development pattern for files generation.'
+            ));
         }
+    }
 
-        return [ $options ];
+    public function addPackageArguments(): void
+    {
+        $this->getDefinition()->addArguments([
+            new InputArgument('vendor', InputArgument::REQUIRED, 'The name of the vendor.'),
+            new InputArgument('package', InputArgument::REQUIRED, 'The name of the package.'),
+        ]);
     }
 
     public function setVendorAndPackage(Command $command): void
@@ -88,7 +96,7 @@ trait UsesVendorPackageInput
     /**
      * @return array
      */
-    public function getVendorPackageArgs(): array
+    public function getPackageArgs(): array
     {
         $args = [];
 
