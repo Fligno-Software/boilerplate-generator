@@ -7,7 +7,11 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require fligno/boilerplate-generator
+$ composer config repositories.git.fligno.com/440 '{"type": "composer", "url": "https://git.fligno.com/api/v4/group/440/-/packages/composer/packages.json"}'
+```
+
+```bash
+$ composer req fligno/boilerplate-generator:^1.0.0 --dev
 ```
 
 ## Usage

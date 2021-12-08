@@ -75,6 +75,11 @@ class FlignoPackageCreateCommand extends Command
                 'vendor' => $this->vendor_name,
                 'package' => $this->package_name,
             ]);
+
+            $this->call('gen:gitlab', [
+                'vendor' => $this->vendor_name,
+                'package' => $this->package_name,
+            ]);
         }
     }
 

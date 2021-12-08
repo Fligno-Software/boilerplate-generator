@@ -135,7 +135,7 @@ class FlignoStarter extends Command
         $this->generateResource();
 
         // Create Tests
-        $this->generateTests();
+//        $this->generateTests();
     }
 
     /***** COMMANDS *****/
