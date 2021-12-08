@@ -33,6 +33,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackagePublishCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageRemoveCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoTest;
+use Fligno\BoilerplateGenerator\Console\Commands\GitlabCIMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoStarter;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
@@ -77,6 +78,7 @@ class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvi
         FlignoPackagePublishCommand::class,
         FlignoPackageRemoveCommand::class,
         FlignoTest::class,
+        GitlabCIMakeCommand::class,
         FlignoStarter::class,
         RepositoryMakeCommand::class,
         RouteMakeCommand::class,

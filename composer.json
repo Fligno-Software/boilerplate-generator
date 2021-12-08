@@ -15,7 +15,7 @@
         "php": "^8.0",
         "illuminate/support": "~7|~8",
         "jeroen-g/laravel-packager": "master",
-        "fligno/starter-kit": "^1.0.x-dev"
+        "fligno/starter-kit": "^1.0.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
@@ -49,9 +49,9 @@
         }
     },
     "repositories": {
-        "fligno/starter-kit": {
-            "type": "vcs",
-            "url": "git@git.fligno.com:marketplace/laravel-packaging/fligno-starter-kit-for-laravel.git"
+        "git.fligno.com/440": {
+            "type": "composer",
+            "url": "https://git.fligno.com/api/v4/group/440/-/packages/composer/packages.json"
         }
     }
 }
