@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator;
 
+use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
@@ -45,6 +46,7 @@ use Fligno\StarterKit\Providers\AbstractStarterKitServiceProvider;
 class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvider
 {
     protected array $commands = [
+        ClassMakeCommand::class,
         DocsGenCommand::class,
         ExtendedMakeCast::class,
         ExtendedMakeChannel::class,
