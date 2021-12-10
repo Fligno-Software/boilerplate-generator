@@ -7,10 +7,10 @@ namespace {{ namespace }};
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-abstract class {{ class }}
+class {{ class }}
 {
-    public function __construct()
+    public function __invoke()
     {
-        // TODO: Implement __construct() method.
+        // TODO: Implement __invoke() method.
     }
 }

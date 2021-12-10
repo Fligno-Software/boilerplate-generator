@@ -46,12 +46,20 @@ class ClassMakeCommand extends GeneratorCommand
         $this->addPackageOptions();
 
         if ($this->getDefinition()->hasOption('abstract') === false) {
-            $this->getDefinition()->addOption(new InputOption(
-                'abstract',
-                'a',
-                InputOption::VALUE_NONE,
-                'Set class as abstract.'
-            ));
+            $this->getDefinition()->addOptions([
+                new InputOption(
+                    'abstract',
+                    'a',
+                    InputOption::VALUE_NONE,
+                    'Generate an abstract class.'
+                ),
+                new InputOption(
+                    'invokable',
+                    'i',
+                    InputOption::VALUE_NONE,
+                    'Generate a single method, invokable class.'
+                )
+            ]);
         }
     }
 
@@ -73,6 +81,15 @@ class ClassMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/class' . ($this->option('abstract') ? '.abstract' : '') .'.custom.stub';
+        $type = '';
+
+        if($this->option('abstract')) {
+            $type = '.abstract';
+        }
+        elseif ($this->option('invokable')) {
+            $type = '.invokable';
+        }
+
+        return __DIR__ . '/../../../stubs/class' . $type .'.custom.stub';
     }
 }
