@@ -3,10 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\NotificationMakeCommand;
 use Illuminate\Support\Facades\File;
+use JsonException;
 
 /**
  * Class ExtendedMakeNotification
@@ -51,12 +53,23 @@ class ExtendedMakeNotification extends NotificationMakeCommand
 
     /**
      * @return void
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Notification');
     }
 
     /**

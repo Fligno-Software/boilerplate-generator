@@ -2,9 +2,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use JsonException;
 
 /**
  * Class GitlabCIMakeCommand
@@ -46,10 +48,11 @@ class GitlabCIMakeCommand extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): int
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $file = '.gitlab-ci.yml';
 

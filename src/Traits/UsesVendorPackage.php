@@ -2,6 +2,11 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
+use Fligno\ApiKeysVault\Exceptions\InvalidVendorPackageException;
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Console\Command;
@@ -52,7 +57,7 @@ trait UsesVendorPackage
     public function addPackageOptions(bool $has_ddd = false): void
     {
         $this->getDefinition()->addOption(new InputOption(
-            'package', null, InputOption::VALUE_REQUIRED, 'Target package to generate the files (e.g., `vendor-name/package-name`).'
+            'package', null, InputOption::VALUE_OPTIONAL, 'Target package to generate the files (e.g., `vendor-name/package-name`).'
         ));
 
         if ($has_ddd) {
@@ -62,6 +67,9 @@ trait UsesVendorPackage
         }
     }
 
+    /**
+     * @return void
+     */
     public function addPackageArguments(): void
     {
         $this->getDefinition()->addArguments([
@@ -70,13 +78,22 @@ trait UsesVendorPackage
         ]);
     }
 
-    public function setVendorAndPackage(Command $command): void
+    /**
+     * @throws PackageNotFoundException|JsonException
+     */
+    public function setVendorAndPackage(): void
     {
-        $package = $this->hasOption('package') ? $command->option('package') : null;
+        $package = $this->hasOption('package') ? $this->option('package') : null;
 
-        if ($command->hasArgument('vendor') && $command->hasArgument('package')) {
+        if ($this->hasArgument('vendor') && $this->hasArgument('package')) {
             $package = $this->argument('vendor') . '/' . $this->argument('package');
         }
+
+        if (is_null($this->option('package'))) {
+            $package = $this->choice('Choose target package', $this->getAllPackages()->prepend('Laravel')->toArray(), 0);
+        }
+
+        $package = $package === 'Laravel' ? null : $package;
 
         if ($package && str_contains($package, '/')) {
             [$this->vendor_name, $this->package_name] = explode('/', $package);
@@ -89,6 +106,11 @@ trait UsesVendorPackage
                 $this->package_name_studly = Str::studly($this->package_name);
                 $this->package_namespace = $this->vendor_name_studly . '\\' . $this->package_name_studly . '\\';
                 $this->package_dir = $this->vendor_name . '/' . $this->package_name;
+
+                // Check if folder exists
+                if (file_exists(package_path($this->package_dir)) === false) {
+                    throw new PackageNotFoundException($this->package_name);
+                }
             }
         }
     }
@@ -98,13 +120,20 @@ trait UsesVendorPackage
      */
     public function getPackageArgs(): array
     {
-        $args = [];
-
-        if ($this->vendor_name && $this->package_name) {
-            $args['--package'] = $this->package_dir;
-        }
+        $args['--package'] = $this->package_dir ?? 'Laravel';
 
         return $args;
+    }
+
+    /**
+     * Get the validated desired class name from the input.
+     *
+     * @param string $classType
+     * @return string
+     */
+    protected function getValidatedNameInput(string $classType): string
+    {
+        return Str::of(trim($this->argument('name')))->before($classType) . $classType;
     }
 
     /**
@@ -128,5 +157,78 @@ trait UsesVendorPackage
     protected function rootNamespace(): string
     {
         return $this->package_namespace ?: parent::rootNamespace();
+    }
+
+    public function getAllPackages(): Collection
+    {
+        $allPackages = collect();
+
+        foreach ($this->getDirectories(package_path()) as $vendor) {
+            foreach ($this->getDirectories(package_path($vendor)) as $package) {
+                $allPackages->add($vendor . '/' .$package);
+            }
+        }
+
+        return $allPackages;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function getPackageChoices(): Collection
+    {
+        $enabled = collect($this->getEnabledPackages())->map(function ($value) {
+            return $value . ' <fg=white;bg=green>[ENABLED]</>';
+        });
+
+        $disabled = collect($this->getDisabledPackages())->map(function ($value) {
+            return $value . ' <fg=white;bg=red>[DISABLED]</>';
+        });
+
+        return $enabled->merge($disabled)->prepend('Laravel');
+    }
+
+    /**
+     * Get all the packages installed with Packager.
+     *
+     * @return Collection
+     * @throws JsonException
+     */
+    public function getEnabledPackages(): Collection
+    {
+        $composerFile = json_decode(file_get_contents(base_path('composer.json')), true, 512, JSON_THROW_ON_ERROR);
+        $packagesPath = base_path('packages/');
+        $repositories = $composerFile['repositories'] ?? [];
+        $enabledPackages = collect();
+        $pattern = '{'.addslashes($packagesPath).'(.*)$}';
+        foreach ($repositories as $name => $info) {
+            $path = $info['url'];
+            if (preg_match($pattern, $path, $match)) {
+                $enabledPackages->add($match[1]);
+            }
+        }
+
+        return $enabledPackages;
+    }
+
+    /**
+     * @return Collection
+     * @throws JsonException
+     */
+    public function getDisabledPackages(): Collection
+    {
+        $enabledPackages = $this->getEnabledPackages();
+        $allPackages = $this->getAllPackages();
+
+        return $allPackages->diff($enabledPackages);
+    }
+
+    /**
+     * @param string $directory
+     * @return array|false
+     */
+    public function getDirectories(string $directory): bool|array
+    {
+        return array_values(array_diff(scandir($directory), ['..', '.']));
     }
 }

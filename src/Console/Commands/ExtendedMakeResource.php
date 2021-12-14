@@ -3,10 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ResourceMakeCommand;
 use Illuminate\Support\Facades\File;
+use JsonException;
 
 /**
  * Class ExtendedMakeResource
@@ -49,12 +51,23 @@ class ExtendedMakeResource extends ResourceMakeCommand
 
     /**
      * @return void
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Resource');
     }
 
     /**

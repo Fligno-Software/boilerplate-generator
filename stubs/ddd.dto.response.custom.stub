@@ -1,0 +1,30 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Support\Collection;
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+class {{ class }}
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // TODO: Implement __construct() method.
+    }
+
+    /**
+     * @param Collection $collection
+     * @return static
+     */
+    public static function fromResponse(Collection $collection): self
+    {
+        return new static();
+    }
+}

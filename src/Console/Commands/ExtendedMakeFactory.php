@@ -3,12 +3,14 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use JsonException;
 
 /**
  * Class ExtendedMakeFactory
@@ -50,11 +52,11 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException|PackageNotFoundException|JsonException
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $this->setModelFields();
 
@@ -63,6 +65,16 @@ class ExtendedMakeFactory extends FactoryMakeCommand
         $this->createFactoryTrait();
 
         return $res;
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Factory');
     }
 
     /**

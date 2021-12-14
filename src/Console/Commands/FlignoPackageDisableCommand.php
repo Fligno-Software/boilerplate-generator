@@ -2,8 +2,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
+use JsonException;
 
 /**
  * Class FlignoPackageDisableCommand
@@ -43,10 +45,11 @@ class FlignoPackageDisableCommand extends Command
 
     /**
      * Execute the console command.
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $this->call('packager:disable', [
             'vendor' => $this->vendor_name,

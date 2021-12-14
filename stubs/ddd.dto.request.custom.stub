@@ -1,0 +1,30 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Foundation\Http\FormRequest;
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+class {{ class }}
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // TODO: Implement __construct() method.
+    }
+
+    /**
+     * @param FormRequest $formRequest
+     * @return static
+     */
+    public static function fromRequest(FormRequest $formRequest): self
+    {
+        return new static();
+    }
+}

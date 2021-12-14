@@ -3,10 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Str;
+use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -48,15 +50,19 @@ class ExtendedMakeModel extends ModelMakeCommand
 
     /***** OVERRIDDEN FUNCTIONS *****/
 
-    public function handle()
+    /**
+     * @return void
+     * @throws PackageNotFoundException|JsonException
+     */
+    public function handle(): void
     {
-        $this->setVendorAndPackage($this);
-
-        parent::handle();
+        $this->setVendorAndPackage();
 
         if ($this->option('all')) {
             $this->input->setOption('repo', true);
         }
+
+        parent::handle();
 
         if ($this->option('repo')) {
             $this->createRepository();
@@ -161,7 +167,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $policy = Str::studly(class_basename($this->argument('name')));
 
         $args = $this->getPackageArgs();
-        $args['name'] = "{$policy}Policy";
+        $args['name'] = $policy;
         $args['--model'] = $this->qualifyClass($this->getNameInput());
 
         $this->call('gen:policy', $args);
