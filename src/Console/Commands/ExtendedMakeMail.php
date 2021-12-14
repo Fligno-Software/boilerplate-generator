@@ -3,10 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\MailMakeCommand;
 use Illuminate\Support\Facades\File;
+use JsonException;
 
 /**
  * Class ExtendedMakeMail
@@ -49,12 +51,23 @@ class ExtendedMakeMail extends MailMakeCommand
 
     /**
      * @return void
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Mail');
     }
 
     /**
@@ -74,22 +87,4 @@ class ExtendedMakeMail extends MailMakeCommand
 
         return $this->option('markdown') !== FALSE ? $markdownMailStub : $mailStub;
     }
-
-//    /**
-//     * Write the Markdown template for the mailable.
-//     *
-//     * @return void
-//     */
-//    protected function writeMarkdownTemplate()
-//    {
-//        $path = $this->viewPath(
-//            str_replace('.', '/', $this->getView()).'.blade.php'
-//        );
-//
-//        if (! $this->files->isDirectory(dirname($path))) {
-//            $this->files->makeDirectory(dirname($path), 0755, true);
-//        }
-//
-//        $this->files->put($path, file_get_contents(__DIR__.'/stubs/markdown.stub'));
-//    }
 }

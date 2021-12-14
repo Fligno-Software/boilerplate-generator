@@ -3,9 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\ExtendedMigrationCreator;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
+use JsonException;
 
 /**
  * Class ExtendedMakeMigration
@@ -51,10 +53,11 @@ class ExtendedMakeMigration extends MigrateMakeCommand
 
     /**
      * @return void
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
        if ($this->package_dir && $this->creator instanceof ExtendedMigrationCreator) {
             $this->creator->setPackagePath($this->package_dir);

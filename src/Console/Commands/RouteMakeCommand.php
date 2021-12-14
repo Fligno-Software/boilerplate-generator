@@ -3,10 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
+use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -45,10 +47,11 @@ class RouteMakeCommand extends GeneratorCommand
 
     /**
      * @throws FileNotFoundException
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle()
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $routes = [];
 
@@ -82,7 +85,6 @@ class RouteMakeCommand extends GeneratorCommand
 
             $this->info($this->type.' created successfully.');
         }
-
     }
 
     /**

@@ -3,6 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -11,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
+use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -82,13 +84,23 @@ class ExtendedMakeController extends ControllerMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException|PackageNotFoundException|JsonException
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         return parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Controller');
     }
 
     /**
@@ -205,9 +217,9 @@ class ExtendedMakeController extends ControllerMakeCommand
             $model = Str::of($modelClass)->afterLast('\\');
             $this->getControllerMethods()->each(function ($event, $request) use ($model, $result) {
                 // Generate Request
-                $requestClass = $request . $model;
-                $requestClassPath = $model . '\\' . $request . $model;
-                $namespacedRequestClass = $this->package_namespace . 'Http\\Requests\\'. $requestClassPath;
+                $requestClass = $request . $model . 'Request';
+                $requestClassPath = $model . '\\' . $requestClass;
+                $namespacedRequestClass = $this->rootNamespace() . 'Http\\Requests\\'. $requestClassPath;
 
                 $requestArgs = $this->getPackageArgs();
                 $requestArgs['name'] = $requestClassPath;
@@ -219,9 +231,9 @@ class ExtendedMakeController extends ControllerMakeCommand
                 $result->put('{{' . Str::camel('namespaced'. $request . 'Request') . '}}', $namespacedRequestClass);
 
                 // Generate Event
-                $eventClass = $model . $event;
-                $eventClassPath = $model . '\\' . $model . $event;
-                $namespacedEventClass = $this->package_namespace . 'Events\\'. $eventClassPath;
+                $eventClass = $model . $event . 'Event';
+                $eventClassPath = $model . '\\' . $eventClass;
+                $namespacedEventClass = $this->rootNamespace() . 'Events\\'. $eventClassPath;
 
                 $eventArgs = $this->getPackageArgs();
                 $eventArgs['name'] = $eventClassPath;

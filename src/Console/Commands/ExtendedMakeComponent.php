@@ -3,11 +3,13 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ComponentMakeCommand;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\File;
+use JsonException;
 
 /**
  * Class ExtendedMakeChannel
@@ -50,12 +52,23 @@ class ExtendedMakeComponent extends ComponentMakeCommand
 
     /**
      * @return bool|null
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         return parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Component');
     }
 
     /**

@@ -3,6 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -10,6 +11,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\TestMakeCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use JsonException;
 
 /**
  * Class ExtendedMakeTest
@@ -53,15 +55,25 @@ class ExtendedMakeTest extends TestMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException|PackageNotFoundException|JsonException
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $this->setModelFields();
 
         return parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Test');
     }
 
     /**

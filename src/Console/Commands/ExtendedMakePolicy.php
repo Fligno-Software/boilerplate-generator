@@ -3,10 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\PolicyMakeCommand;
+use JsonException;
 
 /**
  * Class ExtendedMakeListener
@@ -50,12 +52,23 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     /**
      * @return bool|null
      * @throws FileNotFoundException
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         return parent::handle();
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getValidatedNameInput('Policy');
     }
 
     /**

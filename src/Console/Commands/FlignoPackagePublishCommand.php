@@ -2,8 +2,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
+use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -48,10 +50,11 @@ class FlignoPackagePublishCommand extends Command
 
     /**
      * Execute the console command.
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $this->call('packager:publish', [
             'vendor' => $this->vendor_name,

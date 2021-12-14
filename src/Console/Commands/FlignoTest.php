@@ -2,10 +2,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use JetBrains\PhpStorm\Pure;
+use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -34,10 +35,11 @@ class FlignoTest extends Command
 
     /**
      * Execute the console command.
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage($this);
+        $this->setVendorAndPackage();
 
         $testPackages = false;
         $normalTest = true;
