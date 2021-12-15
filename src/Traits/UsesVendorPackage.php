@@ -3,6 +3,7 @@
 namespace Fligno\BoilerplateGenerator\Traits;
 
 use Fligno\ApiKeysVault\Exceptions\InvalidVendorPackageException;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -51,6 +52,16 @@ trait UsesVendorPackage
     protected ?string $package_dir = null;
 
     /**
+     * @var string
+     */
+    protected string $defaultPackage = 'Laravel';
+
+    /**
+     * @var bool
+     */
+    protected bool $isPackageArgument = false;
+
+    /**
      * @param bool $has_ddd
      * @return void
      */
@@ -76,6 +87,8 @@ trait UsesVendorPackage
             new InputArgument('vendor', InputArgument::REQUIRED, 'The name of the vendor.'),
             new InputArgument('package', InputArgument::REQUIRED, 'The name of the package.'),
         ]);
+
+        $this->isPackageArgument = true;
     }
 
     /**
@@ -89,11 +102,11 @@ trait UsesVendorPackage
             $package = $this->argument('vendor') . '/' . $this->argument('package');
         }
 
-        if (is_null($this->option('package'))) {
-            $package = $this->choice('Choose target package', $this->getAllPackages()->prepend('Laravel')->toArray(), 0);
+        if (is_null($package)) {
+            $package = $this->choice('Choose target package', $this->getAllPackages()->prepend($this->defaultPackage)->toArray(), 0);
         }
 
-        $package = $package === 'Laravel' ? null : $package;
+        $package = $package === $this->defaultPackage ? null : $package;
 
         if ($package && str_contains($package, '/')) {
             [$this->vendor_name, $this->package_name] = explode('/', $package);
@@ -108,8 +121,22 @@ trait UsesVendorPackage
                 $this->package_dir = $this->vendor_name . '/' . $this->package_name;
 
                 // Check if folder exists
-                if (file_exists(package_path($this->package_dir)) === false) {
-                    throw new PackageNotFoundException($this->package_name);
+                if ($this instanceof FlignoPackageCreateCommand === false && file_exists(package_path($this->package_dir)) === false) {
+                    if ($this->option('no-interaction')) {
+                        throw new PackageNotFoundException($this->package_dir);
+                    }
+
+                    $this->error('Package not found! Please choose an existing package.');
+
+                    if ($this->isPackageArgument) {
+                        $this->input->setArgument('vendor', null);
+                        $this->input->setArgument('package', null);
+                    }
+                    else {
+                        $this->input->setOption('package', null);
+                    }
+
+                    $this->setVendorAndPackage();
                 }
             }
         }
@@ -120,7 +147,7 @@ trait UsesVendorPackage
      */
     public function getPackageArgs(): array
     {
-        $args['--package'] = $this->package_dir ?? 'Laravel';
+        $args['--package'] = $this->package_dir ?? $this->defaultPackage;
 
         return $args;
     }
@@ -185,7 +212,7 @@ trait UsesVendorPackage
             return $value . ' <fg=white;bg=red>[DISABLED]</>';
         });
 
-        return $enabled->merge($disabled)->prepend('Laravel');
+        return $enabled->merge($disabled)->prepend($this->defaultPackage);
     }
 
     /**
@@ -217,10 +244,7 @@ trait UsesVendorPackage
      */
     public function getDisabledPackages(): Collection
     {
-        $enabledPackages = $this->getEnabledPackages();
-        $allPackages = $this->getAllPackages();
-
-        return $allPackages->diff($enabledPackages);
+        return $this->getAllPackages()->diff($this->getEnabledPackages());
     }
 
     /**
