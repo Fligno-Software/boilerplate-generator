@@ -297,6 +297,25 @@ trait UsesVendorPackage
     }
 
     /**
+     * @return array
+     * @throws JsonException
+     */
+    public function getPackagesRows(): array
+    {
+        $enabled = collect($this->getEnabledPackages())->map(function ($value) {
+            return [ $value, '<fg=white;bg=green>[ ENABLED ]</>' ];
+        });
+
+        $disabled = collect($this->getDisabledPackages())->map(function ($value) {
+            return [ $value, '<fg=white;bg=red>[ DISABLED ]</>' ];
+        });
+
+//        dd($enabled->merge($disabled)->toArray());
+
+        return $enabled->merge($disabled)->toArray();
+    }
+
+    /**
      * Get all the packages installed with Packager.
      *
      * @return Collection

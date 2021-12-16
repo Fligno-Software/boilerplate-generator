@@ -31,14 +31,16 @@ class FlignoPackageListCommand extends Command
 
     /**
      * Execute the console command.
+     * @throws \JsonException
      */
     public function handle(): void
     {
         $this->table(
             [
-                'Package'
+                'Package',
+                'Status'
             ],
-            $this->getAllPackages()->toArray()
+            $this->getPackagesRows()
         );
     }
 
