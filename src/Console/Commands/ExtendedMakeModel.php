@@ -3,6 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
@@ -52,7 +53,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
     /**
      * @return void
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
      */
     public function handle(): void
     {
@@ -93,6 +94,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a model factory for the model.
      *
      * @return void
+     * @throws MissingNameArgumentException
      */
     protected function createFactory(): void
     {
@@ -124,6 +126,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a controller for the model.
      *
      * @return void
+     * @throws MissingNameArgumentException
      */
     protected function createController(): void
     {
@@ -145,6 +148,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a policy file for the model.
      *
      * @return void
+     * @throws MissingNameArgumentException
      */
     protected function createRepository(): void
     {
@@ -161,6 +165,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a policy file for the model.
      *
      * @return void
+     * @throws MissingNameArgumentException
      */
     protected function createPolicy(): void
     {
@@ -201,5 +206,15 @@ class ExtendedMakeModel extends ModelMakeCommand
                 ['repo', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
             ]
         );
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return null;
     }
 }

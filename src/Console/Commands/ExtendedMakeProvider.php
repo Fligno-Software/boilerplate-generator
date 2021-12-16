@@ -62,16 +62,6 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Provider');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -83,5 +73,15 @@ class ExtendedMakeProvider extends ProviderMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Provider';
     }
 }

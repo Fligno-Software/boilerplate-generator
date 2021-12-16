@@ -62,16 +62,6 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Policy');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -89,5 +79,15 @@ class ExtendedMakePolicy extends PolicyMakeCommand
         return $this->option('model')
             ? $policyStub
             : $policyPlainStub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Policy';
     }
 }

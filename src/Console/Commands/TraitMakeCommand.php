@@ -68,17 +68,6 @@ class TraitMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Trait');
-    }
-
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -93,5 +82,15 @@ class TraitMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '/Traits';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Trait';
     }
 }

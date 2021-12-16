@@ -66,16 +66,6 @@ class ExtendedMakeRule extends RuleMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Rule');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -87,5 +77,15 @@ class ExtendedMakeRule extends RuleMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Rule';
     }
 }

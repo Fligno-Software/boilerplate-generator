@@ -47,8 +47,6 @@ class ExtendedMakeNotification extends NotificationMakeCommand
         $this->addPackageOptions();
     }
 
-
-
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
@@ -63,16 +61,6 @@ class ExtendedMakeNotification extends NotificationMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Notification');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -84,5 +72,15 @@ class ExtendedMakeNotification extends NotificationMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Notification';
     }
 }

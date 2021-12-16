@@ -61,16 +61,6 @@ class ExtendedMakeResource extends ResourceMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Resource');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -82,5 +72,15 @@ class ExtendedMakeResource extends ResourceMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Resource';
     }
 }

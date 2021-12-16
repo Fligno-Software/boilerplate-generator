@@ -8,6 +8,7 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use JsonException;
 
 /**
  * Class DddControllerMakeCommand
@@ -54,7 +55,7 @@ class DddControllerMakeCommand extends GeneratorCommand
      * @return bool|null
      *
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException
+     * @throws PackageNotFoundException|JsonException
      */
     public function handle(): ?bool
     {
@@ -128,16 +129,6 @@ class DddControllerMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Controller');
-    }
-
-    /**
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
@@ -146,5 +137,15 @@ class DddControllerMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\Http\Controllers';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Controller';
     }
 }

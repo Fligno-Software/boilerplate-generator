@@ -62,16 +62,6 @@ class ExtendedMakeRequest extends RequestMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Request');
-    }
-
-    /**
      * Get the stub file for the generator.
      *
      * @return string
@@ -85,5 +75,15 @@ class ExtendedMakeRequest extends RequestMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Request';
     }
 }

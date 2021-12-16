@@ -62,16 +62,6 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Middleware');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -83,5 +73,15 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
         }
 
         return $stub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Middleware';
     }
 }

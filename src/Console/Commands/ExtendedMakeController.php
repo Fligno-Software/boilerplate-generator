@@ -94,16 +94,6 @@ class ExtendedMakeController extends ControllerMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Controller');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -263,5 +253,15 @@ class ExtendedMakeController extends ControllerMakeCommand
                 ['skip-model', null, InputOption::VALUE_NONE, 'Proceed as if model is already created.'],
             ]
         );
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Controller';
     }
 }

@@ -62,16 +62,6 @@ class ExtendedMakeListener extends ListenerMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Listener');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -99,5 +89,15 @@ class ExtendedMakeListener extends ListenerMakeCommand
         return $this->option('event')
             ? $listenerStub
             : $listenerDuckStub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Listener';
     }
 }

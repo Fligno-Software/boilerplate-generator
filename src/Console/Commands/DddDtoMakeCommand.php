@@ -159,4 +159,14 @@ class DddDtoMakeCommand extends GeneratorCommand
 
         return $defaultStub;
     }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Data';
+    }
 }

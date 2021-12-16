@@ -62,16 +62,6 @@ class ExtendedMakeJob extends JobMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Job');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -89,5 +79,15 @@ class ExtendedMakeJob extends JobMakeCommand
         return $this->option('sync')
             ? __DIR__ . $jobStub
             : __DIR__ . $queuedJobStub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Job';
     }
 }

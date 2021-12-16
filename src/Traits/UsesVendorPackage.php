@@ -2,15 +2,17 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
-use Fligno\ApiKeysVault\Exceptions\InvalidVendorPackageException;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Illuminate\Support\Arr;
+use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Collection;
 use JsonException;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 /**
@@ -92,10 +94,30 @@ trait UsesVendorPackage
     }
 
     /**
-     * @throws PackageNotFoundException|JsonException
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments(): array
+    {
+        if ($this->isGeneratorSubclass()) {
+            return [
+                ['name', InputArgument::OPTIONAL, 'The name of the class'],
+            ];
+        }
+
+        return parent::getArguments();
+    }
+
+    /**
+     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
      */
     public function setVendorAndPackage(): void
     {
+        if ($this->isGeneratorSubclass()) {
+            $this->info('<fg=white;bg=green>[ ONGOING ]</> Creating ' . $this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null));
+        }
+
         $package = $this->hasOption('package') ? $this->option('package') : null;
 
         if ($this->hasArgument('vendor') && $this->hasArgument('package')) {
@@ -121,22 +143,25 @@ trait UsesVendorPackage
                 $this->package_dir = $this->vendor_name . '/' . $this->package_name;
 
                 // Check if folder exists
-                if ($this instanceof FlignoPackageCreateCommand === false && file_exists(package_path($this->package_dir)) === false) {
-                    if ($this->option('no-interaction')) {
-                        throw new PackageNotFoundException($this->package_dir);
-                    }
+                if ($this instanceof FlignoPackageCreateCommand === false &&
+                    $this instanceof FlignoPackageCloneCommand === false &&
+                    file_exists(package_path($this->package_dir)) === false)
+                {
+                        if ($this->option('no-interaction')) {
+                            throw new PackageNotFoundException($this->package_dir);
+                        }
 
-                    $this->error('Package not found! Please choose an existing package.');
+                        $this->error('Package not found! Please choose an existing package.');
 
-                    if ($this->isPackageArgument) {
-                        $this->input->setArgument('vendor', null);
-                        $this->input->setArgument('package', null);
-                    }
-                    else {
-                        $this->input->setOption('package', null);
-                    }
+                        if ($this->isPackageArgument) {
+                            $this->input->setArgument('vendor', null);
+                            $this->input->setArgument('package', null);
+                        }
+                        else {
+                            $this->input->setOption('package', null);
+                        }
 
-                    $this->setVendorAndPackage();
+                        $this->setVendorAndPackage();
                 }
             }
         }
@@ -153,15 +178,79 @@ trait UsesVendorPackage
     }
 
     /**
-     * Get the validated desired class name from the input.
-     *
-     * @param string $classType
      * @return string
      */
-    protected function getValidatedNameInput(string $classType): string
+    protected function rootNamespace(): string
     {
-        return Str::of(trim($this->argument('name')))->before($classType) . $classType;
+        return $this->package_namespace ?: parent::rootNamespace();
     }
+
+    /***** NAME INPUT *****/
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    abstract protected function getClassType(): ?string;
+
+    /**
+     * Get the validated desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getValidatedNameInput(): string
+    {
+        $classType = $this->getClassType();
+        $name = trim($this->argument('name'));
+
+        if ($classType) {
+            return Str::of($name)->before($classType) . $classType;
+        }
+
+        return $name;
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string|null
+     * @throws MissingNameArgumentException
+     */
+    protected function getNameInput(): ?string
+    {
+        if ($this->isGeneratorSubclass()) {
+
+            if ($this instanceof RouteMakeCommand) {
+                return null;
+            }
+
+            if (is_null($this->argument('name')))
+            {
+                if ($this->option('no-interaction')) {
+                    throw new MissingNameArgumentException();
+                }
+
+                $this->error('You need to specify the class name.');
+                $this->input->setArgument('name', $this->ask("What's the name of the class?"));
+                return $this->getNameInput();
+            }
+
+            return $this->getValidatedNameInput();
+        }
+
+        return trim($this->argument('name')) ?? '';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGeneratorSubclass(): bool
+    {
+        return is_subclass_of($this, GeneratorCommand::class);
+    }
+
+    /***** Package List *****/
 
     /**
      * Get the destination class path.
@@ -176,14 +265,6 @@ trait UsesVendorPackage
         $path = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
         return $path.'/'.str_replace('\\', '/', $name).'.php';
-    }
-
-    /**
-     * @return string
-     */
-    protected function rootNamespace(): string
-    {
-        return $this->package_namespace ?: parent::rootNamespace();
     }
 
     public function getAllPackages(): Collection

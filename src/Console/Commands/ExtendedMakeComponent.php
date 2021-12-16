@@ -62,16 +62,6 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Component');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -117,5 +107,15 @@ class ExtendedMakeComponent extends ComponentMakeCommand
 <!-- '.Inspiring::quote().' -->
 </div>'
         );
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Component';
     }
 }
