@@ -6,6 +6,8 @@ This is where your description should go. Take a look at [contributing.md](contr
 
 Via Composer
 
+Note: If you haven't setup your Gitlab Personal Access Token for Composer yet, please follow this [instruction](setup-gitlab-pat.md).
+
 ``` bash
 $ composer config repositories.git.fligno.com/440 '{"type": "composer", "url": "https://git.fligno.com/api/v4/group/440/-/packages/composer/packages.json"}'
 ```
