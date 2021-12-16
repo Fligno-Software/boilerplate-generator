@@ -310,8 +310,6 @@ trait UsesVendorPackage
             return [ $value, '<fg=white;bg=red>[ DISABLED ]</>' ];
         });
 
-//        dd($enabled->merge($disabled)->toArray());
-
         return $enabled->merge($disabled)->toArray();
     }
 
