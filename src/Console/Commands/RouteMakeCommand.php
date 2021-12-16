@@ -159,9 +159,23 @@ class RouteMakeCommand extends GeneratorCommand
         ];
     }
 
-
-    protected function getStub()
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub()
+    {
+        return '';
     }
 }

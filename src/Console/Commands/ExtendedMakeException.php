@@ -64,16 +64,6 @@ class ExtendedMakeException extends ExceptionMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Exception');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -101,5 +91,15 @@ class ExtendedMakeException extends ExceptionMakeCommand
         return $this->option('report')
             ? $exceptionReportStub
             : $exceptionStub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Exception';
     }
 }

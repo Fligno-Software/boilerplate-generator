@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
 
 /**
@@ -12,6 +13,8 @@ use Illuminate\Console\Command;
  */
 class FlignoPackageListCommand extends Command
 {
+    use UsesVendorPackage;
+
     /**
      * The name of the console command.
      *
@@ -31,8 +34,21 @@ class FlignoPackageListCommand extends Command
      */
     public function handle(): void
     {
-        $this->call('packager:list', [
-            '--git' => true
-        ]);
+        $this->table(
+            [
+                'Package'
+            ],
+            $this->getAllPackages()->toArray()
+        );
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return null;
     }
 }

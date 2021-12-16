@@ -61,16 +61,6 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Observer');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -88,5 +78,15 @@ class ExtendedMakeObserver extends ObserverMakeCommand
         return $this->option('model')
             ? $observerStub
             : $observerPlainStub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Observer';
     }
 }

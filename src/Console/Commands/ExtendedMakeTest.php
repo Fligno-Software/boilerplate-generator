@@ -67,16 +67,6 @@ class ExtendedMakeTest extends TestMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Test');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -103,5 +93,15 @@ class ExtendedMakeTest extends TestMakeCommand
         $path = $this->package_dir ? package_test_path($this->package_dir).DIRECTORY_SEPARATOR : base_path('tests');
 
         return $path.str_replace('\\', '/', $name).'.php';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Test';
     }
 }

@@ -61,16 +61,6 @@ class ExtendedMakeMail extends MailMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Mail');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -86,5 +76,15 @@ class ExtendedMakeMail extends MailMakeCommand
         }
 
         return $this->option('markdown') !== FALSE ? $markdownMailStub : $mailStub;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Mail';
     }
 }

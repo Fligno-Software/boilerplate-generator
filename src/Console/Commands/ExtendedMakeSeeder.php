@@ -61,16 +61,6 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Seeder');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -99,5 +89,15 @@ class ExtendedMakeSeeder extends SeederMakeCommand
         }
 
         return $path.'/seeders/'.$name.'.php';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Seeder';
     }
 }

@@ -77,4 +77,14 @@ class FlignoTest extends Command
             ['packages', 'p', InputOption::VALUE_NONE, 'Run all tests within packages.'],
         ];
     }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return null;
+    }
 }

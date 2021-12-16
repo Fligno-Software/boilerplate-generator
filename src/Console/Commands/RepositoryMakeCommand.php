@@ -70,16 +70,6 @@ class RepositoryMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Repository');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -102,5 +92,15 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '/Repositories';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Repository';
     }
 }

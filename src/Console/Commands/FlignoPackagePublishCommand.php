@@ -62,4 +62,14 @@ class FlignoPackagePublishCommand extends Command
             'url' => $this->argument('url')
         ]);
     }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return null;
+    }
 }

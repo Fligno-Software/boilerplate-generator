@@ -63,16 +63,6 @@ class ExtendedMakeCast extends CastMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Cast');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -84,5 +74,15 @@ class ExtendedMakeCast extends CastMakeCommand
         }
 
         return $path;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Cast';
     }
 }

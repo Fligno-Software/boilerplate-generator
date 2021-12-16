@@ -68,16 +68,6 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Factory');
-    }
-
-    /**
      * return void
      */
     protected function createFactoryTrait(): void
@@ -135,5 +125,15 @@ class ExtendedMakeFactory extends FactoryMakeCommand
         }
 
         return $rootNameSpace;
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Factory';
     }
 }

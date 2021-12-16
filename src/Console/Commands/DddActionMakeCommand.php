@@ -129,16 +129,6 @@ class DddActionMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Controller');
-    }
-
-    /**
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
@@ -147,5 +137,15 @@ class DddActionMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\Http\Controllers';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Action';
     }
 }

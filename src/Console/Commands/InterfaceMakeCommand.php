@@ -68,16 +68,6 @@ class InterfaceMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getValidatedNameInput('Interface');
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
@@ -88,5 +78,15 @@ class InterfaceMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '/Interfaces';
+    }
+
+    /**
+     * Class type to append on filename.
+     *
+     * @return string|null
+     */
+    protected function getClassType(): ?string
+    {
+        return 'Interface';
     }
 }
