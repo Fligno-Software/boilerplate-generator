@@ -110,9 +110,12 @@ trait UsesVendorPackage
     }
 
     /**
-     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @param bool $showPackageChoices
+     * @return void
+     * @throws MissingNameArgumentException
+     * @throws PackageNotFoundException
      */
-    public function setVendorAndPackage(): void
+    public function setVendorAndPackage(bool $showPackageChoices = true): void
     {
         if ($this->isGeneratorSubclass()) {
             $this->info('<fg=white;bg=green>[ ONGOING ]</> Creating ' . $this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null));
@@ -124,7 +127,7 @@ trait UsesVendorPackage
             $package = $this->argument('vendor') . '/' . $this->argument('package');
         }
 
-        if (is_null($package)) {
+        if ($showPackageChoices && is_null($package)) {
             $package = $this->choice('Choose target package', $this->getAllPackages()->prepend($this->defaultPackage)->toArray(), 0);
         }
 

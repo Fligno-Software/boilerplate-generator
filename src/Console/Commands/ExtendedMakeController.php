@@ -45,7 +45,7 @@ class ExtendedMakeController extends ControllerMakeCommand
      * @var array|string[]
      */
     public array $controllerMethods = [
-        'Index' => 'Collected',
+        'PackagesIndex' => 'Collected',
         'Store' => 'Created',
         'Show' => 'Shown',
         'Update' => 'Updated',

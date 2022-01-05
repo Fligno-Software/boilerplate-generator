@@ -7,11 +7,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 /**
- * Class ChoiceCommandTest
+ * Class HelperMakeCommandTest
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-class ChoiceCommandTest extends TestCase
+class HelperMakeCommandTest extends BaseGenCommandTest
 {
     /**
      * Example Test
@@ -20,8 +20,12 @@ class ChoiceCommandTest extends TestCase
      */
     public function example(): void
     {
+        $this->beforeGenTest();
+
         $response = $this->get('/');
 
         $response->assertStatus(200);
+
+        $this->afterGenTest();
     }
 }
