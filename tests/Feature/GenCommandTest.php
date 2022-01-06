@@ -66,4 +66,34 @@ class GenCommandTest extends TestCase
     }
 
     /***** ExtendedMakeCast *****/
+
+    /**
+     * @return void
+     *
+     * @test
+     */
+    public function canCreateRandomCastWithoutSpecifiedPackage(): void
+    {
+        $this->artisan('gen:cast', [
+            'name' => 'Random/RandomWithoutSpecifiedPackage',
+        ])
+            ->expectsQuestion('Choose target package', 'dummy/package')
+            ->expectsOutput('Cast created successfully.')
+            ->assertSuccessful();
+    }
+
+    /**
+     * @return void
+     *
+     * @test
+     */
+    public function canCreateRandomCastWithSpecifiedPackage(): void
+    {
+        $this->artisan('gen:cast', [
+            'name' => 'Random/RandomWithSpecifiedPackage',
+            '--package' => 'dummy/package'
+        ])
+            ->expectsOutput('Cast created successfully.')
+            ->assertSuccessful();
+    }
 }
