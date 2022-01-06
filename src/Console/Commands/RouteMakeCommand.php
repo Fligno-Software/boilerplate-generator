@@ -3,6 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
@@ -47,7 +48,7 @@ class RouteMakeCommand extends GeneratorCommand
 
     /**
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
      */
     public function handle()
     {
