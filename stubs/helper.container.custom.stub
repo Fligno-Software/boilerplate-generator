@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+
+use {{ namespaced_container }};
+
+if (! function_exists('{{ camel_cased_container }}'))
+{
+    /**
+     * @return {{ container }}
+     */
+    function {{ camel_cased_container }}(): {{ container }}
+    {
+        return resolve('{{ slug_cased_container }}');
+    }
+}
+
+if (! function_exists('{{ snake_cased_container }}'))
+{
+    /**
+     * @return {{ container }}
+     */
+    function {{ snake_cased_container }}(): {{ container }}
+    {
+        return {{ camel_cased_container }}();
+    }
+}

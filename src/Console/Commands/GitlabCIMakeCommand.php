@@ -2,11 +2,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class GitlabCIMakeCommand
@@ -48,7 +48,7 @@ class GitlabCIMakeCommand extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): int
     {

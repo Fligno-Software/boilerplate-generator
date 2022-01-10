@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use {{ namespacedUserModel }};
+use {{ namespaced_user_model }};
 
 /**
  * Class {{ class }}
@@ -24,10 +24,10 @@ class {{ class }}
     /**
      * Authenticate the user's access to the channel.
      *
-     * @param {{ userModel }} $user
+     * @param {{ user_model }} $user
      * @return array|bool
      */
-    public function join({{ userModel }} $user)
+    public function join({{ user_model }} $user)
     {
         //
     }

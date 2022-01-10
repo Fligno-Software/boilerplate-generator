@@ -3,11 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\ExtendedMigrationCreator;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use JsonException;
 
 /**
  * Class ExtendedMakeMigration
@@ -53,7 +53,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
 
     /**
      * @return void
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {

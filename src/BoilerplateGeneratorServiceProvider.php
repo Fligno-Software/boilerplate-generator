@@ -37,6 +37,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackagePublishCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageRemoveCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoTest;
 use Fligno\BoilerplateGenerator\Console\Commands\GitlabCIMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoStarter;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
@@ -49,9 +50,10 @@ class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvi
 {
     protected array $commands = [
         ClassMakeCommand::class,
+//        DddActionMakeCommand::class,
         DddControllerMakeCommand::class,
-        DocsGenCommand::class,
         DddDtoMakeCommand::class,
+        DocsGenCommand::class,
         ExtendedMakeCast::class,
         ExtendedMakeChannel::class,
         ExtendedMakeCommand::class,
@@ -83,9 +85,11 @@ class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvi
         FlignoPackageListCommand::class,
         FlignoPackagePublishCommand::class,
         FlignoPackageRemoveCommand::class,
+        FlignoStarter::class,
         FlignoTest::class,
         GitlabCIMakeCommand::class,
-        FlignoStarter::class,
+        HelperMakeCommand::class,
+        InterfaceMakeCommand::class,
         RepositoryMakeCommand::class,
         RouteMakeCommand::class,
         TraitMakeCommand::class,

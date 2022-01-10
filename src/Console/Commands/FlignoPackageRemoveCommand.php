@@ -6,7 +6,6 @@ use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
-use JsonException;
 
 /**
  * Class FlignoPackageRemoveCommand
@@ -46,7 +45,7 @@ class FlignoPackageRemoveCommand extends Command
 
     /**
      * Execute the console command.
-     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {

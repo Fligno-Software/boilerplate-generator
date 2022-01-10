@@ -3,6 +3,8 @@
 namespace Fligno\BoilerplateGenerator\Traits;
 
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -158,37 +160,17 @@ trait UsesEloquentModel
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
-     * Overriding to inject more namespace.
-     * Replace the namespace for the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $name
-     * @return $this
+     * @return array
      */
-    protected function replaceNamespace(&$stub, $name): static
+    #[Pure]
+    #[ArrayShape(['ModelName' => "null|string", 'ModelClass' => "null|string", 'ModelKebab' => "null|string", 'ModelSnake' => "null|string"])]
+    protected function getAdditionalReplaceNamespace(): array
     {
-        $searches = [
-            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'ModelName', 'ModelClass', 'ModelKebab', 'ModelSnake'],
-            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ model_name }}', '{{ model_class }}', '{{ model_kebab }}', '{{ model_snake }}'],
-            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{model_name}}', '{{model_class}}', '{{model_kebab}}', '{{model_snake}}'],
+        return [
+            'ModelName' => $this->getModelName(),
+            'ModelClass' => $this->getModelClass(),
+            'ModelKebab' => $this->getModelKebab(),
+            'ModelSnake' => $this->getModelSnake(),
         ];
-
-        foreach ($searches as $search) {
-            $stub = str_replace(
-                $search,
-                [$this->getNamespace($name), $this->getRootNamespaceDuringReplaceNamespace(), $this->userProviderModel(), $this->getModelName(), $this->getModelClass(), $this->getModelKebab(), $this->getModelSnake()],
-                $stub
-            );
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRootNamespaceDuringReplaceNamespace(): string
-    {
-        return $this->rootNamespace();
     }
 }
