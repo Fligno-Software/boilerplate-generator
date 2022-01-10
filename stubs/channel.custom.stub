@@ -24,11 +24,11 @@ class {{ class }}
     /**
      * Authenticate the user's access to the channel.
      *
-     * @param {{ user_model }} $user
+     * @param {{ userModel }} $user
      * @return array|bool
      */
-    public function join({{ user_model }} $user)
+    public function join({{ userModel }} $user): bool|array
     {
-        //
+        return false;
     }
 }
