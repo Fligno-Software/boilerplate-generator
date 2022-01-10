@@ -3,12 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Database\Console\Seeds\SeederMakeCommand;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class ExtendedMakeSeeder
@@ -51,7 +50,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
 
     /**
      * @return void
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {
@@ -65,13 +64,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/seeder.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/seeder.custom.stub';
     }
 
     /**

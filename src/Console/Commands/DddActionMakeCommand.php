@@ -2,13 +2,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
-use JsonException;
 
 /**
  * Class DddActionMakeCommand
@@ -55,7 +54,7 @@ class DddActionMakeCommand extends GeneratorCommand
      * @return bool|null
      *
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -74,58 +73,6 @@ class DddActionMakeCommand extends GeneratorCommand
     protected function getStub(): string
     {
         return __DIR__ . '/../../../stubs/controller.ddd.custom.stub';
-    }
-
-    /**
-     * Build the class with the given name.
-     *
-     * @param  string  $name
-     * @return string
-     *
-     * @throws FileNotFoundException
-     */
-    protected function buildClass($name): string
-    {
-        $stub = $this->files->get($this->getStub());
-
-        return $this->replaceNamespace($stub, $name)->replaceRequestNamespace($stub, $name)->replaceClass($stub, $name);
-    }
-
-    /**
-     * Overriding to inject more namespace.
-     * Replace the namespace for the given stub.
-     *
-     * @param string $stub
-     * @param string $name
-     * @return $this
-     */
-    protected function replaceRequestNamespace(string &$stub, string $name): static
-    {
-        $action = Str::of($name)->afterLast('\\')->before('Controller');
-
-        // Generate Request
-        $requestClass = $action . 'Request';
-        $requestClassPath = ($this->model_exists ? $this->model_class . '\\' : '') . $requestClass;
-        $namespacedRequestClass = $this->rootNamespace() . 'Http\\Requests\\'. $requestClassPath;
-
-        $requestArgs = $this->getPackageArgs();
-        $requestArgs['name'] = $requestClassPath;
-        $this->call('gen:request', $requestArgs);
-
-        $searches = [
-            ['{{ actionRequest }}', '{{ namespacedActionRequest }}'],
-            ['{{actionRequest}}', '{{namespacedActionRequest}}'],
-        ];
-
-        foreach ($searches as $search) {
-            $stub = str_replace(
-                $search,
-                [$requestClass, $namespacedRequestClass],
-                $stub
-            );
-        }
-
-        return $this;
     }
 
     /**

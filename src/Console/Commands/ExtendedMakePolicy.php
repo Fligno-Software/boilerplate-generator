@@ -3,12 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\PolicyMakeCommand;
-use JsonException;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Class ExtendedMakeListener
@@ -52,7 +52,7 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     /**
      * @return bool|null
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -66,19 +66,9 @@ class ExtendedMakePolicy extends PolicyMakeCommand
      */
     protected function getStub(): string
     {
-        $policyStub = __DIR__ . '/../../../stubs/policy.custom.stub';
-        $policyPlainStub = __DIR__ . '/../../../stubs/policy.plain.custom.stub';
-
-        if (
-            file_exists($policyStub) === FALSE ||
-            file_exists($policyPlainStub) === FALSE
-        ) {
-            return parent::getStub();
-        }
-
         return $this->option('model')
-            ? $policyStub
-            : $policyPlainStub;
+            ? __DIR__ . '/../../../stubs/policy.custom.stub'
+            : __DIR__ . '/../../../stubs/policy.plain.custom.stub';
     }
 
     /**

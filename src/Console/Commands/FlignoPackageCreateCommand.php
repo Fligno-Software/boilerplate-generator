@@ -48,7 +48,7 @@ class FlignoPackageCreateCommand extends Command
 
     /**
      * Execute the console command.
-     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {
@@ -76,6 +76,11 @@ class FlignoPackageCreateCommand extends Command
             $this->call('gen:gitlab', [
                 'vendor' => $this->vendor_name,
                 'package' => $this->package_name,
+            ]);
+
+            $this->call('gen:helper', [
+                'name' => $this->package_name,
+                '--package' => $this->package_dir
             ]);
         }
     }

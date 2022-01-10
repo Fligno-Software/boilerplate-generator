@@ -3,14 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\EventMakeCommand;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-use JsonException;
 
 /**
  * Class ExtendedMakeEvent
@@ -53,7 +51,7 @@ class ExtendedMakeEvent extends EventMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -67,13 +65,7 @@ class ExtendedMakeEvent extends EventMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/event.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/event.custom.stub';
     }
 
     /**

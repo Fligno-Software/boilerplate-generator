@@ -2,10 +2,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
-use JsonException;
 
 /**
  * Class FlignoPackageDisableCommand
@@ -45,7 +45,7 @@ class FlignoPackageDisableCommand extends Command
 
     /**
      * Execute the console command.
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {

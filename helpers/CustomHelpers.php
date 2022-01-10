@@ -136,3 +136,16 @@ if (! function_exists('package_routes_path')) {
     }
 }
 
+// Helper Paths
+
+if (! function_exists('package_helpers_path')) {
+    /**
+     * @param string|null $path
+     * @return string
+     */
+    function package_helpers_path(string $path = null): string
+    {
+        return package_path($path) . '/helpers';
+    }
+}
+

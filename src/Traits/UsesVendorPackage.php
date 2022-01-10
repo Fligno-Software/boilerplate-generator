@@ -4,10 +4,12 @@ namespace Fligno\BoilerplateGenerator\Traits;
 
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonException;
 use RuntimeException;
@@ -62,6 +64,11 @@ trait UsesVendorPackage
      * @var bool
      */
     protected bool $isPackageArgument = false;
+
+    /**
+     * @var Collection|null
+     */
+    protected ?Collection $additionalReplaceNamespace = null;
 
     /**
      * @param bool $has_ddd
@@ -267,7 +274,7 @@ trait UsesVendorPackage
 
         $path = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
-        return $path.'/'.str_replace('\\', '/', $name).'.php';
+        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
     public function getAllPackages(): Collection
@@ -317,7 +324,7 @@ trait UsesVendorPackage
     }
 
     /**
-     * Get all the packages installed with Packager.
+     * Get all the packages installed with Package.
      *
      * @return Collection
      * @throws JsonException
@@ -355,5 +362,56 @@ trait UsesVendorPackage
     public function getDirectories(string $directory): bool|array
     {
         return array_values(array_diff(scandir($directory), ['..', '.']));
+    }
+
+    /**
+     * Overriding to inject more namespace.
+     * Replace the namespace for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $name
+     * @return $this
+     */
+    protected function replaceNamespace(&$stub, $name): static
+    {
+        $searches = [
+            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel'],
+            ['{{ namespace }}', '{{ root_namespace }}', '{{ namespaced_user_model }}'],
+            ['{{namespace}}', '{{root_namespace}}', '{{namespaced_user_model}}'],
+        ];
+
+        $replacements = [$this->getNamespace($name), $this->getRootNamespaceDuringReplaceNamespace(), $this->userProviderModel()];
+
+        if ($this->additionalReplaceNamespace && Arr::isAssoc($this->additionalReplaceNamespace->toArray())) {
+            $this->additionalReplaceNamespace->each(function ($item, $key) use (&$searches, &$replacements) {
+                $item = trim($item);
+                $key = trim($key);
+
+                if ($item && $key) {
+                    $searches[0][] = Str::studly($key);
+                    $searches[1][] = '{{ ' . Str::snake($key) . ' }}';
+                    $searches[2][] = '{{' . Str::snake($key) . '}}';
+                    $replacements[] = $item;
+                }
+            });
+        }
+
+        foreach ($searches as $search) {
+            $stub = str_replace(
+                $search,
+                $replacements,
+                $stub
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRootNamespaceDuringReplaceNamespace(): string
+    {
+        return $this->rootNamespace();
     }
 }

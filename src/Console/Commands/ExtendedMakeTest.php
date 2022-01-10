@@ -3,6 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
@@ -11,7 +12,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\TestMakeCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use JsonException;
 
 /**
  * Class ExtendedMakeTest
@@ -55,7 +55,7 @@ class ExtendedMakeTest extends TestMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -71,13 +71,7 @@ class ExtendedMakeTest extends TestMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/test' . ($this->option('unit') ? '.unit' : null). ($this->option('model') ? '.model' : null) . '.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return '/../../../stubs/test' . ($this->option('unit') ? '.unit' : null). ($this->option('model') ? '.model' : null) . '.custom.stub';
     }
 
     /**
@@ -90,9 +84,9 @@ class ExtendedMakeTest extends TestMakeCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_test_path($this->package_dir).DIRECTORY_SEPARATOR : base_path('tests');
+        $path = $this->package_dir ? package_test_path($this->package_dir) : base_path('tests');
 
-        return $path.str_replace('\\', '/', $name).'.php';
+        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
     /**

@@ -66,7 +66,7 @@ class DddDtoMakeCommand extends GeneratorCommand
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle()
     {

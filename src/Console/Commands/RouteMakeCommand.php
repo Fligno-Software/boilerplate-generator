@@ -9,7 +9,6 @@ use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
-use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -48,7 +47,7 @@ class RouteMakeCommand extends GeneratorCommand
 
     /**
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle()
     {
@@ -109,13 +108,11 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getRouteStub(string $route): string
     {
-        $defaultStub = __DIR__ . '/../../../stubs/api.custom.stub';
-
         if (file_exists($temp = __DIR__ . '/../../../stubs/' . $route . '.custom.stub')) {
             return $temp;
         }
 
-        return $defaultStub;
+        return __DIR__ . '/../../../stubs/api.custom.stub';
     }
 
     /**
@@ -128,9 +125,9 @@ class RouteMakeCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_routes_path($this->package_dir).DIRECTORY_SEPARATOR : base_path('routes');
+        $path = $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
 
-        return $path.str_replace('\\', '/', $name).'.php';
+        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
     protected function getDefaultNamespace($rootNamespace): string
@@ -175,7 +172,7 @@ class RouteMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return '';
     }
