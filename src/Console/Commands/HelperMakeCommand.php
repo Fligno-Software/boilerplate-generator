@@ -52,7 +52,7 @@ class HelperMakeCommand extends GeneratorCommand
         $this->addPackageOptions();
 
         $this->getDefinition()->addOption(new InputOption(
-            'container', 'c', InputOption::VALUE_REQUIRED, 'Service Container class create helper functions for.'
+            'container', 'c', InputOption::VALUE_REQUIRED, 'Service Container class to create helper functions for.'
         ));
     }
 
@@ -80,7 +80,7 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/helper.container.custom.stub';
+        return $this->additionalReplaceNamespace ? __DIR__ . '/../../../stubs/helper.container.custom.stub' : __DIR__ . '/../../../stubs/helper.custom.stub';
     }
 
     /**
