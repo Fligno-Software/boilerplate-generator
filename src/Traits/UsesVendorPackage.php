@@ -4,10 +4,12 @@ namespace Fligno\BoilerplateGenerator\Traits;
 
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonException;
 use RuntimeException;
@@ -49,6 +51,11 @@ trait UsesVendorPackage
     protected ?string $package_namespace = null;
 
     /**
+     * @var bool
+     */
+    protected bool $is_package_namespace_disabled = false;
+
+    /**
      * @var string|null
      */
     protected ?string $package_dir = null;
@@ -62,6 +69,11 @@ trait UsesVendorPackage
      * @var bool
      */
     protected bool $isPackageArgument = false;
+
+    /**
+     * @var Collection|null
+     */
+    protected ?Collection $additionalReplaceNamespace = null;
 
     /**
      * @param bool $has_ddd
@@ -110,9 +122,12 @@ trait UsesVendorPackage
     }
 
     /**
-     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @param bool $showPackageChoices
+     * @return void
+     * @throws MissingNameArgumentException
+     * @throws PackageNotFoundException
      */
-    public function setVendorAndPackage(): void
+    public function setVendorAndPackage(bool $showPackageChoices = true): void
     {
         if ($this->isGeneratorSubclass()) {
             $this->info('<fg=white;bg=green>[ ONGOING ]</> Creating ' . $this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null));
@@ -124,7 +139,7 @@ trait UsesVendorPackage
             $package = $this->argument('vendor') . '/' . $this->argument('package');
         }
 
-        if (is_null($package)) {
+        if ($showPackageChoices && is_null($package)) {
             $package = $this->choice('Choose target package', $this->getAllPackages()->prepend($this->defaultPackage)->toArray(), 0);
         }
 
@@ -182,7 +197,11 @@ trait UsesVendorPackage
      */
     protected function rootNamespace(): string
     {
-        return $this->package_namespace ?: parent::rootNamespace();
+        if ($this->is_package_namespace_disabled || ! $this->package_namespace) {
+            return parent::rootNamespace();
+        }
+
+        return $this->package_namespace;
     }
 
     /***** NAME INPUT *****/
@@ -264,7 +283,7 @@ trait UsesVendorPackage
 
         $path = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
-        return $path.'/'.str_replace('\\', '/', $name).'.php';
+        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
     public function getAllPackages(): Collection
@@ -314,7 +333,7 @@ trait UsesVendorPackage
     }
 
     /**
-     * Get all the packages installed with Packager.
+     * Get all the packages installed with Package.
      *
      * @return Collection
      * @throws JsonException
@@ -352,5 +371,93 @@ trait UsesVendorPackage
     public function getDirectories(string $directory): bool|array
     {
         return array_values(array_diff(scandir($directory), ['..', '.']));
+    }
+
+    /**
+     * @return Collection|null
+     */
+    public function getAdditionalReplaceNamespace(): ?Collection
+    {
+        return $this->additionalReplaceNamespace;
+    }
+
+    /**
+     * @param Collection|array $additional
+     * @return Collection
+     */
+    public function insertAdditionalReplaceNamespace(Collection|array $additional): Collection
+    {
+        if (count($additional)) {
+            if (! $this->additionalReplaceNamespace) {
+                $this->additionalReplaceNamespace = collect($additional);
+            }
+            else {
+                $this->additionalReplaceNamespace = $this->additionalReplaceNamespace->merge($additional);
+            }
+        }
+
+        return $this->additionalReplaceNamespace;
+    }
+
+    /**
+     * Overriding to inject more namespace.
+     * Replace the namespace for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $name
+     * @return $this
+     */
+    protected function replaceNamespace(&$stub, $name): static
+    {
+        $searches = [
+            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel'],
+            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}'],
+        ];
+
+        $replacements = [$this->getNamespace($name), $this->getRootNamespaceDuringReplaceNamespace(), $this->userProviderModel()];
+
+        if ($this->additionalReplaceNamespace && Arr::isAssoc($this->additionalReplaceNamespace->toArray())) {
+            $this->additionalReplaceNamespace->each(function ($item, $key) use (&$searches, &$replacements) {
+                $item = trim($item);
+                $key = trim($key);
+
+                if ($item && $key) {
+                    $searches[0][] = Str::studly($key);
+                    $searches[1][] = '{{ ' . Str::camel($key) . ' }}';
+                    $searches[2][] = '{{' . Str::camel($key) . '}}';
+                    $replacements[] = $item;
+                }
+            });
+        }
+
+        foreach ($searches as $search) {
+            $stub = str_replace(
+                $search,
+                $replacements,
+                $stub
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRootNamespaceDuringReplaceNamespace(): string
+    {
+        return $this->rootNamespace();
+    }
+
+    /**
+     * @param string $classNamespace
+     * @return array|string
+     */
+    protected function cleanClassNamespace(string $classNamespace): array|string
+    {
+        $classNamespace = ltrim($classNamespace, '\\/');
+
+        return str_replace('/', '\\', $classNamespace);
     }
 }

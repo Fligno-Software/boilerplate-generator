@@ -1,22 +1,22 @@
 <?php
 
-namespace {{ namespace }};
+namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Illuminate\Console\Command;
 
 /**
- * Class {{ class }}
+ * Class FlignoPackageRequireCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-class {{ class }} extends Command
+class FlignoPackageRequireCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = '{{ command }}';
+    protected $signature = 'command:name';
 
     /**
      * The console command description.
@@ -26,21 +26,11 @@ class {{ class }} extends Command
     protected $description = 'Command description';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         return self::SUCCESS;
     }

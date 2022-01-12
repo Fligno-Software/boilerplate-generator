@@ -4,6 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
+use JsonException;
 
 /**
  * Class FlignoPackageListCommand
@@ -31,7 +32,7 @@ class FlignoPackageListCommand extends Command
 
     /**
      * Execute the console command.
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function handle(): void
     {

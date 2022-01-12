@@ -20,9 +20,9 @@ class {{ class }} extends JsonResource
      */
     public function toArray($request): array
     {
-        return array_filter_recursive([
+        return [
             //
-        ]);
+        ];
     }
 }
 

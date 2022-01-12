@@ -3,14 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ListenerMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
-
 /**
  * Class ExtendedMakeListener
  *
@@ -52,7 +50,7 @@ class ExtendedMakeListener extends ListenerMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -66,29 +64,15 @@ class ExtendedMakeListener extends ListenerMakeCommand
      */
     protected function getStub(): string
     {
-        $listenerQueuedStub = __DIR__ . '/../../../stubs/listener-queued.custom.stub';
-        $listenerQueuedDuckStub = __DIR__ . '/../../../stubs/listener-queued-duck.custom.stub';
-        $listenerStub = __DIR__ . '/../../../stubs/listener.custom.stub';
-        $listenerDuckStub = __DIR__ . '/../../../stubs/listener-duck.custom.stub';
-
-        if (
-            File::exists($listenerQueuedStub) === FALSE ||
-            File::exists($listenerQueuedDuckStub) === FALSE ||
-            File::exists($listenerStub) === FALSE ||
-            File::exists($listenerDuckStub) === FALSE
-        ) {
-            return parent::getStub();
-        }
-
         if ($this->option('queued')) {
             return $this->option('event')
-                ? $listenerQueuedStub
-                : $listenerQueuedDuckStub;
+                ? __DIR__ . '/../../../stubs/listener-queued.custom.stub'
+                : __DIR__ . '/../../../stubs/listener-queued-duck.custom.stub';
         }
 
         return $this->option('event')
-            ? $listenerStub
-            : $listenerDuckStub;
+            ? __DIR__ . '/../../../stubs/listener.custom.stub'
+            : __DIR__ . '/../../../stubs/listener-duck.custom.stub';
     }
 
     /**

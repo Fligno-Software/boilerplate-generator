@@ -3,12 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ObserverMakeCommand;
-use JsonException;
 
 /**
  * Class ExtendedMakeListener
@@ -51,7 +51,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -65,19 +65,9 @@ class ExtendedMakeObserver extends ObserverMakeCommand
      */
     protected function getStub(): string
     {
-        $observerStub = __DIR__ . '/../../../stubs/observer.custom.stub';
-        $observerPlainStub = __DIR__ . '/../../../stubs/observer.plain.custom.stub';
-
-        if (
-            file_exists($observerStub) === FALSE ||
-            file_exists($observerPlainStub) === FALSE
-        ) {
-            return parent::getStub();
-        }
-
         return $this->option('model')
-            ? $observerStub
-            : $observerPlainStub;
+            ? __DIR__ . '/../../../stubs/observer.custom.stub'
+            : __DIR__ . '/../../../stubs/observer.plain.custom.stub';
     }
 
     /**
