@@ -3,8 +3,6 @@
 namespace Fligno\BoilerplateGenerator\Traits;
 
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -69,22 +67,32 @@ trait UsesEloquentModel
         $this->skip_model_check = $this->option('skip');
 
         if ($this->hasOption('model') && $model = $this->option('model')) {
-            $model_copy = $model;
-            if ($this->model_exists = (is_eloquent_model($model) || is_eloquent_model($model = $this->package_namespace . 'Models' . '\\' . $model) || $this->skip_model_check)) {
+            if ($this->skip_model_check ||
+                ($this->isGeneratorSubclass() && (
+                    $this->checkModelExists($model, false) ||
+                    $this->checkModelExists($model, true, true) ||
+                    $this->checkModelExists($model)
+                    )
+                )
+            ) {
                 $this->setModelClass($model);
                 $this->setModelName($model);
-                $this->setModelKebab($model_copy);
-                $this->setModelSnake($model_copy);
+                $this->setModelKebab($model);
+                $this->setModelSnake($model);
             }
         }
     }
 
     /**
-     * @param string|null $model_class
+     * @param string|null $str
      */
-    public function setModelClass(?string $model_class): void
+    public function setModelClass(?string $str): void
     {
-        $this->model_class = $model_class;
+        $this->model_class = $str;
+
+        $this->insertAdditionalReplaceNamespace([
+            'ModelClass' => $this->model_class
+        ]);
     }
 
     /**
@@ -101,14 +109,10 @@ trait UsesEloquentModel
     public function setModelSnake(?string $str): void
     {
         $this->model_snake = Str::snake($str);
-    }
 
-    /**
-     * @return string|null
-     */
-    public function getModelSnake(): ?string
-    {
-        return $this->model_snake;
+        $this->insertAdditionalReplaceNamespace([
+            'ModelSnake' => $this->model_snake
+        ]);
     }
 
     /**
@@ -117,30 +121,22 @@ trait UsesEloquentModel
     public function setModelKebab(?string $str): void
     {
         $this->model_kebab = Str::kebab($str);
+
+        $this->insertAdditionalReplaceNamespace([
+            'ModelKebab' => $this->model_kebab
+        ]);
     }
 
     /**
-     * @return string|null
+     * @param string|null $str
      */
-    public function getModelKebab(): ?string
+    public function setModelName(?string $str): void
     {
-        return $this->model_kebab;
-    }
+        $this->model_name = Str::of($str)->afterLast('\\');
 
-    /**
-     * @param string|null $model_name
-     */
-    public function setModelName(?string $model_name): void
-    {
-        $this->model_name = Str::of($model_name)->afterLast('\\');
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModelName(): ?string
-    {
-        return $this->model_name;
+        $this->insertAdditionalReplaceNamespace([
+            'ModelName' => $this->model_name
+        ]);
     }
 
     /**
@@ -157,20 +153,48 @@ trait UsesEloquentModel
         return $args;
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /**
+     * Qualify the given model class base name.
+     *
+     * @param  string  $model
+     * @return string
+     */
+    protected function qualifyModel(string $model): string
+    {
+        $model = (string) $this->cleanClassNamespace($model);
+
+        $rootNamespace = $this->rootNamespace();
+
+        if (Str::startsWith($model, $rootNamespace)) {
+            return $model;
+        }
+
+        return is_dir(app_path('Models'))
+            ? $rootNamespace.'Models\\'.$model
+            : $rootNamespace.$model;
+    }
 
     /**
-     * @return array
+     * @param string $model
+     * @param bool $qualifyModel
+     * @param bool $disablePackageNamespaceTemporarily
+     * @return bool
      */
-    #[Pure]
-    #[ArrayShape(['ModelName' => "null|string", 'ModelClass' => "null|string", 'ModelKebab' => "null|string", 'ModelSnake' => "null|string"])]
-    protected function getAdditionalReplaceNamespace(): array
+    protected function checkModelExists(string &$model, bool $qualifyModel = true, bool $disablePackageNamespaceTemporarily = false): bool
     {
-        return [
-            'ModelName' => $this->getModelName(),
-            'ModelClass' => $this->getModelClass(),
-            'ModelKebab' => $this->getModelKebab(),
-            'ModelSnake' => $this->getModelSnake(),
-        ];
+        if ($disablePackageNamespaceTemporarily) {
+            $this->is_package_namespace_disabled = true;
+        }
+
+        if ($qualifyModel) {
+            $model = $this->qualifyModel($model);
+        }
+        else {
+            $model = (string) $this->cleanClassNamespace($model);
+        }
+
+        $this->is_package_namespace_disabled = false;
+
+        return $this->model_exists = is_eloquent_model($model);
     }
 }

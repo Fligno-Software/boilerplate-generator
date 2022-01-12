@@ -71,7 +71,7 @@ class ExtendedMakeTest extends TestMakeCommand
      */
     protected function getStub(): string
     {
-        return '/../../../stubs/test' . ($this->option('unit') ? '.unit' : null). ($this->option('model') ? '.model' : null) . '.custom.stub';
+        return __DIR__ . '/../../../stubs/test' . ($this->option('unit') ? '.unit' : null). ($this->option('model') ? '.model' : null) . '.custom.stub';
     }
 
     /**

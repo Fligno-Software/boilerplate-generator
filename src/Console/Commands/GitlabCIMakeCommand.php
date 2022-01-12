@@ -7,6 +7,7 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class GitlabCIMakeCommand
@@ -22,7 +23,7 @@ class GitlabCIMakeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'gen:gitlab';
+    protected $name = 'gen:gitlab';
 
     /**
      * The console command description.
@@ -40,7 +41,7 @@ class GitlabCIMakeCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageArguments();
+        $this->addPackageOptions();
     }
 
 
@@ -62,13 +63,29 @@ class GitlabCIMakeCommand extends Command
 
         $target = $packagePath . '/' . $file;
 
-        if (file_exists($target) === FALSE) {
-            return File::copy($source, $target);
+        if ($this->option('force') || file_exists($target) === FALSE) {
+            File::copy($source, $target);
+
+            $this->info('Gitlab file created successfully.');
+
+            return self::SUCCESS;
         }
 
-        $this->warn('File already exists!');
+        $this->warn('Gitlab file already exists!');
 
-        return false;
+        return self::FAILURE;
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions(): array
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Force create Gitlab CI yml file.']
+        ];
     }
 
     /**

@@ -51,6 +51,11 @@ trait UsesVendorPackage
     protected ?string $package_namespace = null;
 
     /**
+     * @var bool
+     */
+    protected bool $is_package_namespace_disabled = false;
+
+    /**
      * @var string|null
      */
     protected ?string $package_dir = null;
@@ -192,7 +197,11 @@ trait UsesVendorPackage
      */
     protected function rootNamespace(): string
     {
-        return $this->package_namespace ?: parent::rootNamespace();
+        if ($this->is_package_namespace_disabled || ! $this->package_namespace) {
+            return parent::rootNamespace();
+        }
+
+        return $this->package_namespace;
     }
 
     /***** NAME INPUT *****/
@@ -365,6 +374,32 @@ trait UsesVendorPackage
     }
 
     /**
+     * @return Collection|null
+     */
+    public function getAdditionalReplaceNamespace(): ?Collection
+    {
+        return $this->additionalReplaceNamespace;
+    }
+
+    /**
+     * @param Collection|array $additional
+     * @return Collection
+     */
+    public function insertAdditionalReplaceNamespace(Collection|array $additional): Collection
+    {
+        if (count($additional)) {
+            if (! $this->additionalReplaceNamespace) {
+                $this->additionalReplaceNamespace = collect($additional);
+            }
+            else {
+                $this->additionalReplaceNamespace = $this->additionalReplaceNamespace->merge($additional);
+            }
+        }
+
+        return $this->additionalReplaceNamespace;
+    }
+
+    /**
      * Overriding to inject more namespace.
      * Replace the namespace for the given stub.
      *
@@ -376,8 +411,8 @@ trait UsesVendorPackage
     {
         $searches = [
             ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel'],
-            ['{{ namespace }}', '{{ root_namespace }}', '{{ namespaced_user_model }}'],
-            ['{{namespace}}', '{{root_namespace}}', '{{namespaced_user_model}}'],
+            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}'],
         ];
 
         $replacements = [$this->getNamespace($name), $this->getRootNamespaceDuringReplaceNamespace(), $this->userProviderModel()];
@@ -389,8 +424,8 @@ trait UsesVendorPackage
 
                 if ($item && $key) {
                     $searches[0][] = Str::studly($key);
-                    $searches[1][] = '{{ ' . Str::snake($key) . ' }}';
-                    $searches[2][] = '{{' . Str::snake($key) . '}}';
+                    $searches[1][] = '{{ ' . Str::camel($key) . ' }}';
+                    $searches[2][] = '{{' . Str::camel($key) . '}}';
                     $replacements[] = $item;
                 }
             });
@@ -413,5 +448,16 @@ trait UsesVendorPackage
     protected function getRootNamespaceDuringReplaceNamespace(): string
     {
         return $this->rootNamespace();
+    }
+
+    /**
+     * @param string $classNamespace
+     * @return array|string
+     */
+    protected function cleanClassNamespace(string $classNamespace): array|string
+    {
+        $classNamespace = ltrim($classNamespace, '\\/');
+
+        return str_replace('/', '\\', $classNamespace);
     }
 }

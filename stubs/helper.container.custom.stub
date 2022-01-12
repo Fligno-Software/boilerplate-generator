@@ -4,26 +4,26 @@
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
 
-use {{ namespaced_container }};
+use {{ namespacedContainer }};
 
-if (! function_exists('{{ camel_cased_container }}'))
+if (! function_exists('{{ containerCamel }}'))
 {
     /**
-     * @return {{ container }}
+     * @return {{ containerClass }}
      */
-    function {{ camel_cased_container }}(): {{ container }}
+    function {{ containerCamel }}(): {{ containerClass }}
     {
-        return resolve('{{ slug_cased_container }}');
+        return resolve('{{ containerSlug }}');
     }
 }
 
-if (! function_exists('{{ snake_cased_container }}'))
+if (! function_exists('{{ containerSnake }}'))
 {
     /**
-     * @return {{ container }}
+     * @return {{ containerClass }}
      */
-    function {{ snake_cased_container }}(): {{ container }}
+    function {{ containerSnake }}(): {{ containerClass }}
     {
-        return {{ camel_cased_container }}();
+        return {{ containerCamel }}();
     }
 }

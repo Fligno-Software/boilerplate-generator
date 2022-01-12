@@ -5,7 +5,7 @@ namespace {{ namespace }};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use {{ model_class }};
+use {{ modelClass }};
 
 /**
  * Class {{ class }}
@@ -15,13 +15,13 @@ use {{ model_class }};
 class {{ class }} extends TestCase
 {
     /**
-     * Index Route for {{ model_class }}
+     * Index Route for {{ modelClass }}
      *
      * @test
      */
-    public function can_get_{{ model_snake }}_list(): void
+    public function can_get_{{ modelSnake }}_list(): void
     {
-        $response = $this->json('GET', '/api/{{ model_kebab }}');
+        $response = $this->json('GET', '/api/{{ modelKebab }}');
 
         $assertJson = [
             'key' => 'value'
@@ -33,17 +33,17 @@ class {{ class }} extends TestCase
     }
 
     /**
-     * Create Route for {{ model_class }}
+     * Create Route for {{ modelClass }}
      *
      * @test
      */
-    public function can_create_one_{{ model_snake }}_model(): void
+    public function can_create_one_{{ modelSnake }}_model(): void
     {
         $data = [
             'key' => 'value'
         ];
 
-        $response = $this->json('POST', '/api/{{ model_kebab }}', $data);
+        $response = $this->json('POST', '/api/{{ modelKebab }}', $data);
 
         $assertJson = [
             'key' => 'value'
@@ -55,13 +55,13 @@ class {{ class }} extends TestCase
     }
 
     /**
-     * Show Route for {{ model_class }}
+     * Show Route for {{ modelClass }}
      *
      * @test
      */
-    public function can_get_one_{{ model_snake }}_model(): void
+    public function can_get_one_{{ modelSnake }}_model(): void
     {
-        $response = $this->json('GET', '/api/{{ model_kebab }}/1');
+        $response = $this->json('GET', '/api/{{ modelKebab }}/1');
 
         $assertJson = [
             'key' => 'value'
@@ -73,13 +73,13 @@ class {{ class }} extends TestCase
     }
 
     /**
-     * Update Route for {{ model_class }}
+     * Update Route for {{ modelClass }}
      *
      * @test
      */
-    public function can_update_one_{{ model_snake }}_model(): void
+    public function can_update_one_{{ modelSnake }}_model(): void
     {
-        $response = $this->json('PUT', '/api/{{ model_kebab }}/1');
+        $response = $this->json('PUT', '/api/{{ modelKebab }}/1');
 
         $assertJson = [
             'key' => 'value'
@@ -91,14 +91,14 @@ class {{ class }} extends TestCase
     }
 
     /**
-     * Delete Route for {{ model_class }}
+     * Delete Route for {{ modelClass }}
      * Note: Archive means Soft Delete
      *
      * @test
      */
-    public function can_archive_one_{{ model_snake }}_model(): void
+    public function can_archive_one_{{ modelSnake }}_model(): void
     {
-        $response = $this->json('DELETE', '/api/{{ model_kebab }}/1');
+        $response = $this->json('DELETE', '/api/{{ modelKebab }}/1');
 
         $assertJson = [
             'key' => 'value'
@@ -110,13 +110,13 @@ class {{ class }} extends TestCase
     }
 
     /**
-     * Restore Route for {{ model_class }}
+     * Restore Route for {{ modelClass }}
      *
      * @test
      */
-    public function can_restore_one_{{ model_snake }}_model(): void
+    public function can_restore_one_{{ modelSnake }}_model(): void
     {
-        $response = $this->json('POST', '/api/{{ model_kebab }}/1/restore');
+        $response = $this->json('POST', '/api/{{ modelKebab }}/1/restore');
 
         $assertJson = [
             'key' => 'value'

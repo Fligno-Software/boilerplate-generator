@@ -69,13 +69,11 @@ class FlignoPackageCreateCommand extends Command
             $this->call('fligno:start', $args);
 
             $this->call('gen:routes', [
-                'vendor' => $this->vendor_name,
-                'package' => $this->package_name,
+                '--package' => $this->package_dir
             ]);
 
             $this->call('gen:gitlab', [
-                'vendor' => $this->vendor_name,
-                'package' => $this->package_name,
+                '--package' => $this->package_dir
             ]);
 
             $this->call('gen:helper', [

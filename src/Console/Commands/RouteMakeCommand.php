@@ -8,8 +8,8 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -46,10 +46,23 @@ class RouteMakeCommand extends GeneratorCommand
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
+    /**
      * @throws FileNotFoundException
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
-    public function handle()
+    public function handle(): bool|int|null
     {
         $this->setVendorAndPackage();
 
@@ -68,10 +81,13 @@ class RouteMakeCommand extends GeneratorCommand
             $routes[] = 'api';
         }
 
+        $ctr = 0;
+
         foreach ($routes as $name) {
             $path = $this->getPath($name);
 
-            if (file_exists($path)) {
+            if ($this->option('force') === false && file_exists($path)) {
+                $ctr++;
                 $this->error(Str::ucfirst($name) . ' route already exists!');
                 continue;
             }
@@ -85,6 +101,8 @@ class RouteMakeCommand extends GeneratorCommand
 
             $this->info($this->type.' created successfully.');
         }
+
+        return $ctr ? self::FAILURE : self::SUCCESS;
     }
 
     /**
@@ -138,22 +156,12 @@ class RouteMakeCommand extends GeneratorCommand
     /**
      * @return array
      */
-    protected function getArguments(): array
-    {
-        return [
-            ['vendor', InputArgument::REQUIRED, 'The name of the vendor.'],
-            ['package', InputArgument::REQUIRED, 'The name of the target package.'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
     protected function getOptions(): array
     {
         return [
             ['api', null, InputOption::VALUE_NONE, 'Generate api route.'],
             ['web', null, InputOption::VALUE_NONE, 'Generate web route.'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Force create Gitlab CI yml file.']
         ];
     }
 
