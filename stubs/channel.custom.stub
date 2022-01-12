@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use {{ namespaced_user_model }};
+use {{ namespacedUserModel }};
 
 /**
  * Class {{ class }}

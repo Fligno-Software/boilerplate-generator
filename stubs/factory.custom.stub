@@ -3,18 +3,18 @@
 namespace {{ rootNamespace }}Database\Factories;
 
 // Model
-use {{ namespacedModel }};
+use {{ modelClass }};
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * Class {{ class }}
+ * Class {{ modelName }}
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
 class {{ factory }}Factory extends Factory
 {
-    protected $model = {{ model }}::class;
+    protected $model = {{ modelName }}::class;
 
     /**
      * Define the model's default state.

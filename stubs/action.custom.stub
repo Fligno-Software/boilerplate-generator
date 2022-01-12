@@ -3,7 +3,7 @@
 namespace Domain\Integrations\Gateways\Latipay\Actions;
 
 // Model
-use {{ namespaced_model }};
+use {{ namespacedModel }};
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -11,14 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 class LatipaySaveTransactionAction
 {
     /**
-     * @param {{ request_data }} $requestData
-     * @param {{ response_data }} $responseData
+     * @param {{ requestData }} $requestData
+     * @param {{ responseData }} $responseData
      * @param User $user
      * @return void
      */
     public function execute(
-        {{ request_data }} $requestData,
-        {{ response_data }} $responseData,
+        {{ requestData }} $requestData,
+        {{ responseData }} $responseData,
         User $user
     ): void {
 
@@ -41,14 +41,14 @@ class LatipaySaveTransactionAction
     }
 
     /**
-     * @param {{ request_data }} $requestData
-     * @param {{ response_data }} $responseData
+     * @param {{ requestData }} $requestData
+     * @param {{ responseData }} $responseData
      * @param User $user
      * @return Model|Collection
      */
     public function __invoke(
-        {{ request_data }} $requestData,
-        {{ response_data }} $responseData,
+        {{ requestData }} $requestData,
+        {{ responseData }} $responseData,
         User $user
     ): Model|Collection {
 

@@ -68,16 +68,17 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /**
      * return void
+     * @throws MissingNameArgumentException
      */
     protected function createFactoryTrait(): void
     {
         if ($this->package_name && $this->model_name)
         {
             $this->call('gen:trait', array_merge(
-                $this->getEloquentModelArgs(),
                 $this->getPackageArgs(),
                 [
-                    'name' => 'Has' . $this->model_name . 'Factory'
+                    'name' => 'Has' . $this->getNameInput(),
+                    '--factory' => $this->getNameInput()
                 ]
             ));
         }

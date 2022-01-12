@@ -136,22 +136,19 @@ class HelperMakeCommand extends GeneratorCommand
 
         $containerClass = Str::of($namespacedContainer)->afterLast('\\');
 
+        info('Package: ' . $namespacedContainer . ' (' . (class_exists($container) ? 'exists' : 'does not exists') . ')');
+
         try {
             if (class_exists($container)) {
                 $additional = [
                     'NamespacedContainer' => $namespacedContainer,
-                    'Container' => $containerClass,
-                    'SnakeCasedContainer' => $containerClass->snake(),
-                    'SlugCasedContainer' => $containerClass->slug(),
-                    'CamelCasedContainer' => $containerClass->camel(),
+                    'ContainerClass' => $containerClass,
+                    'ContainerSnake' => $containerClass->snake(),
+                    'ContainerSlug' => $containerClass->slug(),
+                    'ContainerCamel' => $containerClass->camel(),
                 ];
 
-                if (! $this->additionalReplaceNamespace) {
-                    $this->additionalReplaceNamespace = collect($additional);
-                }
-                else {
-                    $this->additionalReplaceNamespace = $this->additionalReplaceNamespace->merge($additional);
-                }
+                $this->insertAdditionalReplaceNamespace(collect($additional));
             }
         }
         catch (\Exception $exception) {
