@@ -2,16 +2,16 @@
 
 namespace {{ namespace }};
 
-use {{ rootNamespace }}Database\Factories\{{ model_name }}Factory;
+use {{ factoryClass }};
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Trait Has{{ model_name }}Factory
+ * Trait {{ class }}
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-trait Has{{ model_name }}Factory
+trait {{ class }}
 {
     use HasFactory;
 
@@ -22,7 +22,7 @@ trait Has{{ model_name }}Factory
      */
     protected static function newFactory(): Factory
     {
-        return {{ model_name }}Factory::new();
+        return {{ factoryName }}::new();
     }
 }
 

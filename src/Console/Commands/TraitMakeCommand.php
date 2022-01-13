@@ -3,13 +3,15 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use JsonException;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class TraitMakeCommand
@@ -19,7 +21,7 @@ use JsonException;
  */
 class TraitMakeCommand extends GeneratorCommand
 {
-    use UsesEloquentModel;
+    use UsesVendorPackage;
 
     /**
      * The console command name.
@@ -42,13 +44,28 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected $type = 'Trait';
 
+    /**
+     * @var string|null
+     */
+    protected ?string $factory_class = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $factory_name = null;
+
+    /**
+     * @var bool
+     */
+    protected bool $factory_exists = false;
+
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);
 
-        $this->addModelOptions();
-
         $this->addPackageOptions();
+
+        $this->addFactoryOptions();
     }
 
     /***** OVERRIDDEN FUNCTIONS *****/
@@ -56,15 +73,42 @@ class TraitMakeCommand extends GeneratorCommand
     /**
      * @return bool|null
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
        $this->setVendorAndPackage();
 
-        $this->setModelFields();
+       $this->setFactoryFields();
 
-        return parent::handle();
+       return parent::handle();
+    }
+
+    /**
+     * @return void
+     */
+    protected function addFactoryOptions(): void
+    {
+        $this->getDefinition()->addOption(new InputOption(
+            'factory', 'f', InputOption::VALUE_REQUIRED, 'Factory to be included.'
+        ));
+    }
+
+    /**
+     * @return void
+     */
+    protected function setFactoryFields(): void
+    {
+        if(
+            ($factory = $this->option('factory')) && (
+                $this->checkFactoryExists($factory, false) ||
+                $this->checkFactoryExists($factory, true, true)||
+                $this->checkFactoryExists($factory)
+            )
+        ) {
+            $this->setFactoryClass($factory);
+            $this->setFactoryName($factory);
+        }
     }
 
     /**
@@ -72,7 +116,7 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/trait' . ($this->option('model') ? '.factory' : '') . '.custom.stub';
+        return __DIR__ . '/../../../stubs/trait' . ($this->option('factory') ? '.factory' : '') . '.custom.stub';
     }
 
     /**
@@ -92,5 +136,101 @@ class TraitMakeCommand extends GeneratorCommand
     protected function getClassType(): ?string
     {
         return 'Trait';
+    }
+
+    /***** SETTERS & GETTERS *****/
+
+    /**
+     * @param string|null $factory_class
+     */
+    public function setFactoryClass(?string $factory_class): void
+    {
+        $this->factory_class = $factory_class;
+
+        $this->insertAdditionalReplaceNamespace([
+            'FactoryClass' => $this->factory_class
+        ]);
+    }
+
+    /**
+     * @param string|null $factory_name
+     */
+    public function setFactoryName(?string $factory_name): void
+    {
+        $this->factory_name = Str::of($factory_name)->afterLast('\\');
+
+        $this->insertAdditionalReplaceNamespace([
+            'FactoryName' => $this->factory_name
+        ]);
+    }
+
+    /**
+     * @param string $factory
+     * @param bool $qualifyFactoryClass
+     * @param bool $disablePackageNamespaceTemporarily
+     * @return bool
+     */
+    protected function checkFactoryExists(string &$factory, bool $qualifyFactoryClass = true, bool $disablePackageNamespaceTemporarily = false): bool
+    {
+        if ($disablePackageNamespaceTemporarily) {
+            $this->is_package_namespace_disabled = true;
+        }
+
+        if ($qualifyFactoryClass) {
+            $factory = $this->qualifyFactoryClass($factory);
+        }
+        else {
+            $factory = (string) $this->cleanClassNamespace($factory);
+        }
+
+        $this->is_package_namespace_disabled = false;
+
+        return $this->factory_exists = class_exists($factory);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRootNamespaceDuringReplaceNamespace(): string
+    {
+        $rootNameSpace = $this->rootNamespace();
+
+        if ($rootNameSpace !== $this->package_namespace) {
+            $rootNameSpace = '';
+        }
+
+        return $rootNameSpace;
+    }
+
+    /**
+     * Parse the class name and format according to the root namespace.
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function qualifyFactoryClass(string $name): string
+    {
+        $name = (string) $this->cleanClassNamespace($name);
+
+        $rootNamespace = $this->rootFactoryNamespace();
+
+        if (!$rootNamespace || Str::startsWith($name, $rootNamespace)) {
+            return $name;
+        }
+
+        return $this->qualifyFactoryClass(trim($rootNamespace, '\\').'\\'.$name);
+    }
+
+    /**
+     * @return string
+     */
+    protected function rootFactoryNamespace(): string
+    {
+        $default = 'Database\\Factories';
+        if ($this->is_package_namespace_disabled || ! $this->package_namespace) {
+            return $default;
+        }
+
+        return $this->package_namespace;
     }
 }

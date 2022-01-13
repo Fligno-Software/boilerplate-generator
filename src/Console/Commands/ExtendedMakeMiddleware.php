@@ -3,13 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Console\MiddlewareMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Class ExtendedMakeListener
@@ -52,7 +51,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -66,13 +65,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = __DIR__ . '/../../../stubs/middleware.custom.stub';
-
-        if (File::exists($stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $stub;
+        return __DIR__ . '/../../../stubs/middleware.custom.stub';
     }
 
     /**

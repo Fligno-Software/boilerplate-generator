@@ -3,13 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Filesystem\Filesystem;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Foundation\Console\ExceptionMakeCommand;
-use Illuminate\Support\Str;
-use JsonException;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Class ExtendedMakeException
@@ -48,13 +47,11 @@ class ExtendedMakeException extends ExceptionMakeCommand
         $this->addPackageOptions();
     }
 
-
-
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {

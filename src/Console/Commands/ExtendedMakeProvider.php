@@ -3,13 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ProviderMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class ExtendedMakeProvider
@@ -52,7 +51,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -66,13 +65,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/provider.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/provider.custom.stub';
     }
 
     /**

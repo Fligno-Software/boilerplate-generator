@@ -3,14 +3,13 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use JsonException;
 
 /**
  * Class ExtendedMakeFactory
@@ -52,7 +51,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -69,16 +68,17 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /**
      * return void
+     * @throws MissingNameArgumentException
      */
     protected function createFactoryTrait(): void
     {
         if ($this->package_name && $this->model_name)
         {
             $this->call('gen:trait', array_merge(
-                $this->getEloquentModelArgs(),
                 $this->getPackageArgs(),
                 [
-                    'name' => 'Has' . $this->model_name . 'Factory'
+                    'name' => 'Has' . $this->getNameInput(),
+                    '--factory' => $this->getNameInput()
                 ]
             ));
         }
@@ -89,13 +89,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/factory.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/factory.custom.stub';
     }
 
     /**

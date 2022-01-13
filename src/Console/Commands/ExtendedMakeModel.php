@@ -9,7 +9,6 @@ use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Str;
-use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -53,7 +52,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
     /**
      * @return void
-     * @throws PackageNotFoundException|JsonException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {

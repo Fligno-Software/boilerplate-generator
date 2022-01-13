@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
@@ -47,26 +48,19 @@ class FlignoPackageCreateCommand extends Command
 
     /**
      * Execute the console command.
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {
         $this->setVendorAndPackage();
 
-        $initiate_boilerplate = TRUE;
+        $this->call('packager:new', [
+            'vendor' => $this->vendor_name,
+            'name' => $this->package_name,
+            '--i' => true
+        ]);
 
-        try {
-            $this->call('packager:new', [
-                'vendor' => $this->vendor_name,
-                'name' => $this->package_name,
-                '--i' => true
-            ]);
-        }
-        catch (\Exception $exception) {
-            $initiate_boilerplate = FALSE;
-        }
-
-        if ($initiate_boilerplate) {
+        if ($this->option('no-interaction') === FALSE) {
             $args = $this->getPackageArgs();
 
             $args['model'] = $this->package_name_studly;
@@ -75,13 +69,16 @@ class FlignoPackageCreateCommand extends Command
             $this->call('fligno:start', $args);
 
             $this->call('gen:routes', [
-                'vendor' => $this->vendor_name,
-                'package' => $this->package_name,
+                '--package' => $this->package_dir
             ]);
 
             $this->call('gen:gitlab', [
-                'vendor' => $this->vendor_name,
-                'package' => $this->package_name,
+                '--package' => $this->package_dir
+            ]);
+
+            $this->call('gen:helper', [
+                'name' => $this->package_name,
+                '--package' => $this->package_dir
             ]);
         }
     }

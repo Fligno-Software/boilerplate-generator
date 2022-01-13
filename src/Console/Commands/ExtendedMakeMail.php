@@ -3,12 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\MailMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class ExtendedMakeMail
@@ -51,7 +50,7 @@ class ExtendedMakeMail extends MailMakeCommand
 
     /**
      * @return void
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {
@@ -65,17 +64,7 @@ class ExtendedMakeMail extends MailMakeCommand
      */
     protected function getStub(): string
     {
-        $mailStub = __DIR__ . '/../../../stubs/mail.custom.stub';
-        $markdownMailStub = __DIR__ . '/../../../stubs/markdown-mail.custom.stub';
-
-        if (
-            File::exists($mailStub) === FALSE ||
-            File::exists($markdownMailStub) === FALSE
-        ) {
-            return parent::getStub();
-        }
-
-        return $this->option('markdown') !== FALSE ? $markdownMailStub : $mailStub;
+        return $this->option('markdown') !== FALSE ? __DIR__ . '/../../../stubs/markdown-mail.custom.stub' : __DIR__ . '/../../../stubs/mail.custom.stub';
     }
 
     /**

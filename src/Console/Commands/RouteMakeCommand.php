@@ -3,13 +3,13 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use JsonException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -46,10 +46,23 @@ class RouteMakeCommand extends GeneratorCommand
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
-     * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException
+     * Create a new controller creator command instance.
+     *
+     * @param Filesystem $files
+     * @return void
      */
-    public function handle()
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct($files);
+
+        $this->addPackageOptions();
+    }
+
+    /**
+     * @throws FileNotFoundException
+     * @throws PackageNotFoundException|MissingNameArgumentException
+     */
+    public function handle(): bool|int|null
     {
         $this->setVendorAndPackage();
 
@@ -68,10 +81,13 @@ class RouteMakeCommand extends GeneratorCommand
             $routes[] = 'api';
         }
 
+        $ctr = 0;
+
         foreach ($routes as $name) {
             $path = $this->getPath($name);
 
-            if (file_exists($path)) {
+            if ($this->option('force') === false && file_exists($path)) {
+                $ctr++;
                 $this->error(Str::ucfirst($name) . ' route already exists!');
                 continue;
             }
@@ -85,6 +101,8 @@ class RouteMakeCommand extends GeneratorCommand
 
             $this->info($this->type.' created successfully.');
         }
+
+        return $ctr ? self::FAILURE : self::SUCCESS;
     }
 
     /**
@@ -108,13 +126,11 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getRouteStub(string $route): string
     {
-        $defaultStub = __DIR__ . '/../../../stubs/api.custom.stub';
-
         if (file_exists($temp = __DIR__ . '/../../../stubs/' . $route . '.custom.stub')) {
             return $temp;
         }
 
-        return $defaultStub;
+        return __DIR__ . '/../../../stubs/api.custom.stub';
     }
 
     /**
@@ -127,9 +143,9 @@ class RouteMakeCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_routes_path($this->package_dir).DIRECTORY_SEPARATOR : base_path('routes');
+        $path = $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
 
-        return $path.str_replace('\\', '/', $name).'.php';
+        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
     protected function getDefaultNamespace($rootNamespace): string
@@ -140,22 +156,12 @@ class RouteMakeCommand extends GeneratorCommand
     /**
      * @return array
      */
-    protected function getArguments(): array
-    {
-        return [
-            ['vendor', InputArgument::REQUIRED, 'The name of the vendor.'],
-            ['package', InputArgument::REQUIRED, 'The name of the target package.'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
     protected function getOptions(): array
     {
         return [
             ['api', null, InputOption::VALUE_NONE, 'Generate api route.'],
             ['web', null, InputOption::VALUE_NONE, 'Generate web route.'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Force create Gitlab CI yml file.']
         ];
     }
 
@@ -174,7 +180,7 @@ class RouteMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return '';
     }

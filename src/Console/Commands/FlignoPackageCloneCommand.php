@@ -2,10 +2,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
-use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -50,7 +50,7 @@ class FlignoPackageCloneCommand extends Command
 
     /**
      * Execute the console command.
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {

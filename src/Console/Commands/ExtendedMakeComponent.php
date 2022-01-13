@@ -3,14 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ComponentMakeCommand;
 use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\File;
-use JsonException;
-
 /**
  * Class ExtendedMakeChannel
  *
@@ -52,7 +50,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
 
     /**
      * @return bool|null
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -66,13 +64,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/view-component.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/view-component.custom.stub';
     }
 
     /**

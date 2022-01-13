@@ -55,9 +55,39 @@ Please see the [changelog](changelog.md) for more information on what has change
 
 ## Testing
 
-``` bash
-$ composer test
-```
+There would be 2 Packages inside your Laravel Project:
+```boilerplate-generator``` and ```<dummy package you will create>```.
+
+1. Create a Dummy Package for Testing:
+    ```bash 
+    $ php artisan fligno:package:create Dummy Package
+    ```
+
+2. Proceed to Testing
+    ``` bash
+    $ php artisan fligno:test
+    ```
+    or
+    ``` bash
+    $ php artisan fligno:test -p
+    ```
+
+    It would probably be the same as below
+    ``` bash
+    Choose target package [Laravel]:
+    
+    [0] Laravel
+    [1] dummy/package
+    [2] fligno/boilerplate-generator
+    ```
+    Choose the ```dummy/package``` you created earlier by entering its corresponding number. In this case, ```[1]```.
+
+3. Wait for the Test to Finish. To further verify, your ```dummy/package``` Package should contain "Random"-named Files including ```Class```, ```Event```, ```Route```, etc.
+
+4. Upon successful testing, you can now remove the Dummy Package you create by using
+   ``` bash
+    $ php artisan fligno:package:remove Dummy Package
+    ```
 
 ## Contributing
 

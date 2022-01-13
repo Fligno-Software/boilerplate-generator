@@ -3,13 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\JobMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class ExtendedMakeJob
@@ -52,7 +51,7 @@ class ExtendedMakeJob extends JobMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -66,19 +65,9 @@ class ExtendedMakeJob extends JobMakeCommand
      */
     protected function getStub(): string
     {
-        $jobStub = '/../../../stubs/job.custom.stub';
-        $queuedJobStub = '/../../../stubs/job.queued.custom.stub';
-
-        if (
-            File::exists(__DIR__ . $jobStub) === FALSE ||
-            File::exists(__DIR__ . $queuedJobStub) === FALSE
-        ) {
-            return parent::getStub();
-        }
-
         return $this->option('sync')
-            ? __DIR__ . $jobStub
-            : __DIR__ . $queuedJobStub;
+            ? __DIR__ . '/../../../stubs/job.custom.stub'
+            : __DIR__ . '/../../../stubs/job.queued.custom.stub';
     }
 
     /**
