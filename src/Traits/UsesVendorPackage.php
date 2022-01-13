@@ -290,9 +290,11 @@ trait UsesVendorPackage
     {
         $allPackages = collect();
 
-        foreach ($this->getDirectories(package_path()) as $vendor) {
-            foreach ($this->getDirectories(package_path($vendor)) as $package) {
-                $allPackages->add($vendor . '/' .$package);
+        if (file_exists(package_path())) {
+            foreach ($this->getDirectories(package_path()) as $vendor) {
+                foreach ($this->getDirectories(package_path($vendor)) as $package) {
+                    $allPackages->add($vendor . '/' .$package);
+                }
             }
         }
 
