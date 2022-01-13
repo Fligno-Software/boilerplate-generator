@@ -4,7 +4,7 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Composer.gitlab-ci.yml
 
-# Publishes a tag/branch to Composer Packages of the current project
+# Publishes a tag/branch to Composer PackagesIndex of the current project
 publish:
   image: curlimages/curl:latest
   stage: build

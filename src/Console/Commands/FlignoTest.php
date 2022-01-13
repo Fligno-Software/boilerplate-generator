@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\Command;
@@ -34,12 +35,29 @@ class FlignoTest extends Command
     protected $description = 'Run the application and package tests.';
 
     /**
-     * Execute the console command.
-     * @throws PackageNotFoundException|JsonException
+     * Create a new console command instance.
+     *
+     * @return void
      */
-    public function handle(): void
+    public function __construct()
     {
-        $this->setVendorAndPackage();
+        parent::__construct();
+
+        $this->addPackageOptions();
+    }
+
+
+    /**
+     * @return int
+     * @throws MissingNameArgumentException
+     * @throws PackageNotFoundException
+     * @throws JsonException
+     */
+    public function handle(): int
+    {
+        $showPackageChoices = ! $this->option('packages') && ! $this->option('all');
+
+        $this->setVendorAndPackage($showPackageChoices);
 
         $testPackages = false;
         $normalTest = true;
@@ -48,7 +66,7 @@ class FlignoTest extends Command
         {
             $testPackages = true;
         }
-        else if ($this->option('packages') || $this->option('package'))
+        else if ($this->package_dir || $this->option('packages'))
         {
             $testPackages = true;
             $normalTest = false;
@@ -56,23 +74,31 @@ class FlignoTest extends Command
 
         if ($testPackages)
         {
-            exec('php artisan test' . ' packages' . ($this->package_dir ? '/' . $this->package_dir : null));
+            if ($this->package_dir) {
+                $this->executeTests($this->package_dir);
+            }
+            else {
+                $this->getEnabledPackages()->each(function ($package_name) {
+                    $this->executeTests($package_name);
+                });
+            }
         }
 
         if ($normalTest)
         {
-            $this->call('test');
+            $this->executeTests();
         }
 
+        return 0;
     }
 
     /**
      * @return array
      */
-    #[Pure] protected function getOptions(): array
+    #[Pure]
+    protected function getOptions(): array
     {
         return [
-            ['package', null, InputOption::VALUE_REQUIRED, 'Run all tests of a specific package (e.g., `vendor-name/package-name`).'],
             ['all', 'a', InputOption::VALUE_NONE, 'Run all Laravel tests and tests within packages.'],
             ['packages', 'p', InputOption::VALUE_NONE, 'Run all tests within packages.'],
         ];
@@ -86,5 +112,15 @@ class FlignoTest extends Command
     protected function getClassType(): ?string
     {
         return null;
+    }
+
+    /**
+     * @param string|null $package_name
+     * @return void
+     */
+    public function executeTests(string $package_name = null): void
+    {
+        $this->info('<fg=white;bg=green>[ ONGOING ]</> Running tests for ' . ($package_name ?? 'Laravel') . '...');
+        exec('php artisan test' . ($package_name ? ' packages' . '/' . $package_name : null));
     }
 }

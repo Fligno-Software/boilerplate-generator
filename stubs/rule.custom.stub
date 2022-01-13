@@ -30,7 +30,7 @@ class {{ class }} implements {{ ruleType }}
      */
     public function passes($attribute, $value): bool
     {
-        //
+        return true;
     }
 
     /**

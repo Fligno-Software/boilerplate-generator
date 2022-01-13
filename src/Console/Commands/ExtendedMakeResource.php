@@ -3,12 +3,11 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ResourceMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class ExtendedMakeResource
@@ -51,7 +50,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
 
     /**
      * @return void
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {
@@ -65,13 +64,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/resource.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/resource.custom.stub';
     }
 
     /**

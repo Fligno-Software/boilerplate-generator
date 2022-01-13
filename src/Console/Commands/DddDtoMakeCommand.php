@@ -3,6 +3,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
@@ -65,7 +66,7 @@ class DddDtoMakeCommand extends GeneratorCommand
     /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle()
     {

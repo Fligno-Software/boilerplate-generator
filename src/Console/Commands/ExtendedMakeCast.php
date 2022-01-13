@@ -3,13 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\CastMakeCommand;
-use Illuminate\Support\Facades\File;
-use JsonException;
 
 /**
  * Class ExtendedMakeCast
@@ -53,7 +52,7 @@ class ExtendedMakeCast extends CastMakeCommand
     /**
      * @return bool|null
      * @throws FileNotFoundException
-     * @throws PackageNotFoundException|JsonException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -67,13 +66,7 @@ class ExtendedMakeCast extends CastMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/cast.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/cast.custom.stub';
     }
 
     /**

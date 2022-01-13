@@ -3,17 +3,12 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Console\CastMakeCommand;
-use Illuminate\Foundation\Console\EventMakeCommand;
-use Illuminate\Foundation\Console\ProviderMakeCommand;
 use Illuminate\Foundation\Console\RuleMakeCommand;
-use Illuminate\Support\Facades\File;
-use JetBrains\PhpStorm\Pure;
-use JsonException;
 
 /**
  * Class ExtendedMakeRule
@@ -56,7 +51,7 @@ class ExtendedMakeRule extends RuleMakeCommand
 
     /**
      * @return bool|null
-     * @throws FileNotFoundException|PackageNotFoundException|JsonException
+     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
@@ -70,13 +65,7 @@ class ExtendedMakeRule extends RuleMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/rule.custom.stub';
-
-        if (File::exists($path = __DIR__ . $stub) === FALSE) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/rule.custom.stub';
     }
 
     /**
