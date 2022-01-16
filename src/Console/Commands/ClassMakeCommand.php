@@ -32,7 +32,7 @@ class ClassMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new class in Laravel or in a specific package.';
+    protected $description = 'Create a new PHP class in Laravel or in a specific package.';
 
     /**
      * The type of class being generated.

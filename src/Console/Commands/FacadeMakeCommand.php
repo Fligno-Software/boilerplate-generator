@@ -8,14 +8,14 @@ use Fligno\BoilerplateGenerator\Traits\UsesContainerTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 
 /**
- * Class HelperMakeCommand
+ * Class FacadeMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ * @since 2022-01-17
  */
-class HelperMakeCommand extends GeneratorCommand
+class FacadeMakeCommand extends GeneratorCommand
 {
     use UsesContainerTrait;
 
@@ -24,19 +24,19 @@ class HelperMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:helper';
+    protected $name = 'gen:facade';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new helper file in Laravel or in a specific package.';
+    protected $description = 'Create a new facade in Laravel or in a specific package.';
 
     /**
      * @var string
      */
-    protected $type = 'Helper';
+    protected $type = 'Facade';
 
     /**
      * Create a new controller creator command instance.
@@ -77,7 +77,16 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return $this->moreReplaceNamespace ? __DIR__ . '/../../../stubs/helper.container.custom.stub' : __DIR__ . '/../../../stubs/helper.custom.stub';
+        return $this->moreReplaceNamespace ? __DIR__ . '/../../../stubs/facade.container.custom.stub' : __DIR__ . '/../../../stubs/facade.custom.stub';
+    }
+
+    /**
+     * @param $rootNamespace
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return $rootNamespace . '/Facades';
     }
 
     /**
@@ -87,38 +96,6 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getClassType(): ?string
     {
-        return 'Helper';
-    }
-
-    /**
-     * Get the validated desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getValidatedNameInput(): string
-    {
-        $classType = $this->getClassType();
-        $name = trim($this->argument('name'));
-
-        if ($classType) {
-            return Str::of($name)->before($classType)->append($classType)->snake('-');
-        }
-
-        return $name;
-    }
-
-    /**
-     * Get the destination class path.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function getPath($name): string
-    {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-
-        $path = $this->package_dir ? package_helpers_path($this->package_dir) : base_path('helpers');
-
-        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
+        return null;
     }
 }

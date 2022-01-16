@@ -29,6 +29,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRule;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
+use Fligno\BoilerplateGenerator\Console\Commands\FacadeMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageDisableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageEnableCommand;
@@ -43,6 +44,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\FlignoStarter;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ContainerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
 use Fligno\StarterKit\Providers\AbstractStarterKitServiceProvider;
 
@@ -77,7 +79,7 @@ class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvi
         ExtendedMakeRule::class,
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
-        InterfaceMakeCommand::class,
+        FacadeMakeCommand::class,
         FlignoPackageCloneCommand::class,
         FlignoPackageCreateCommand::class,
         FlignoPackageDisableCommand::class,
@@ -92,6 +94,7 @@ class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvi
         InterfaceMakeCommand::class,
         RepositoryMakeCommand::class,
         RouteMakeCommand::class,
+        ContainerMakeCommand::class,
         TraitMakeCommand::class,
     ];
 
