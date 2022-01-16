@@ -5,7 +5,6 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
 use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -185,8 +184,6 @@ class TraitMakeCommand extends GeneratorCommand
         $this->is_package_namespace_disabled = false;
 
         $this->factory_exists = class_exists($factory);
-
-        $this->info('TraitMakeCommand @ checkFactoryExists: ' . $factory . ' (' . ($this->factory_exists ? 'true' : 'false') . ')');
 
         return $this->factory_exists;
     }
