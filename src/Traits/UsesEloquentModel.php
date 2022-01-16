@@ -90,7 +90,7 @@ trait UsesEloquentModel
     {
         $this->model_class = $str;
 
-        $this->insertAdditionalReplaceNamespace([
+        $this->addMoreReplaceNamespace([
             'ModelClass' => $this->model_class
         ]);
     }
@@ -110,7 +110,7 @@ trait UsesEloquentModel
     {
         $this->model_snake = Str::snake($str);
 
-        $this->insertAdditionalReplaceNamespace([
+        $this->addMoreReplaceNamespace([
             'ModelSnake' => $this->model_snake
         ]);
     }
@@ -122,7 +122,7 @@ trait UsesEloquentModel
     {
         $this->model_kebab = Str::kebab($str);
 
-        $this->insertAdditionalReplaceNamespace([
+        $this->addMoreReplaceNamespace([
             'ModelKebab' => $this->model_kebab
         ]);
     }
@@ -134,7 +134,7 @@ trait UsesEloquentModel
     {
         $this->model_name = Str::of($str)->afterLast('\\');
 
-        $this->insertAdditionalReplaceNamespace([
+        $this->addMoreReplaceNamespace([
             'ModelName' => $this->model_name
         ]);
     }

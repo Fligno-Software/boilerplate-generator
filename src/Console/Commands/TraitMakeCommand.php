@@ -106,8 +106,7 @@ class TraitMakeCommand extends GeneratorCommand
                 $this->checkFactoryExists($factory)
             )
         ) {
-            $this->setFactoryClass($factory);
-            $this->setFactoryName($factory);
+            $this->addMoreCasedReplaceNamespace($factory, 'Factory');
         }
     }
 
@@ -147,7 +146,7 @@ class TraitMakeCommand extends GeneratorCommand
     {
         $this->factory_class = $factory_class;
 
-        $this->insertAdditionalReplaceNamespace([
+        $this->addMoreReplaceNamespace([
             'FactoryClass' => $this->factory_class
         ]);
     }
@@ -159,7 +158,7 @@ class TraitMakeCommand extends GeneratorCommand
     {
         $this->factory_name = Str::of($factory_name)->afterLast('\\');
 
-        $this->insertAdditionalReplaceNamespace([
+        $this->addMoreReplaceNamespace([
             'FactoryName' => $this->factory_name
         ]);
     }
@@ -185,7 +184,11 @@ class TraitMakeCommand extends GeneratorCommand
 
         $this->is_package_namespace_disabled = false;
 
-        return $this->factory_exists = class_exists($factory);
+        $this->factory_exists = class_exists($factory);
+
+        $this->info('TraitMakeCommand @ checkFactoryExists: ' . $factory . ' (' . ($this->factory_exists ? 'true' : 'false') . ')');
+
+        return $this->factory_exists;
     }
 
     /**

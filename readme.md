@@ -18,36 +18,59 @@ $ composer req fligno/boilerplate-generator:^1.0.0 --dev
 
 ## Usage
 
-| File Type | Laravel | Fligno | Description | Status |
-| --------- | :-----: | :----: | ------ | ----------- |
-| Cast | `make:cast` | `gen:cast` | Create a new custom Eloquent cast class in Laravel or in a specific package. | 100% |
-| Channel | `make:channel` | `gen:channel` | Create a new channel class in Laravel or in a specific package. | 100% |
-| Command | `make:command` | `gen:command` | Create a new Artisan command in Laravel or in a specific package. | 100% |
-| Component | `make:component` | `gen:component` | Create a new view component class in Laravel or in a specific package. | 100% |
-| Controller | `make:controller` | `gen:controller` | Create a new controller class in Laravel or in a specific package. | 100% |
-| Event | `make:event` | `gen:event` | Create a new event class in Laravel or in a specific package. | 100% |
-| Exception | `make:exception` | `gen:exception` | Create a new custom exception class in Laravel or in a specific package. | 100% |
-| Factory | `make:factory` | `gen:factory` | Create a new model factory in Laravel or in a specific package. | 100% |
-| Job | `make:job` | `gen:job` | Create a new job class in Laravel or in a specific package. | 100% |
-| Interface |  | `gen:interface` | Create a new interface in Laravel or in a specific package. | 100% |
-| Listener | `make:listener` | `gen:listener` | Create a new event listener class in Laravel or in a specific package. | 100% |
-| Mail | `make:mail` | `gen:mail` | Create a new email class in Laravel or in a specific package. | 100% |
-| Middleware | `make:middleware` | `gen:middleware` | Create a new middleware class in Laravel or in a specific package. | 100% |
-| Migration | `make:migration` | `gen:migration` | Create a new migration file in Laravel or in a specific package. | 100% |
-| Model | `make:model` | `gen:model` | Create a new Eloquent model class in Laravel or in a specific package. | 100% |
-| Notification | `make:notification` | `gen:notification` | Create a new notification class in Laravel or in a specific package. | 100% |
-| Observer | `make:observer` | `gen:observer` | Create a new observer class in Laravel or in a specific package. | 100% |
-| Package |  | `gen:package` | Create a Laravel package. [Wrapper for `packager:new` of Jeroen-G/laravel-packager] | 100% |
-| Policy | `make:policy` | `gen:policy` | Create a new policy class in Laravel or in a specific package. | 100% |
-| Provider | `make:provider` | `gen:provider` | Create a new service provider class in Laravel or in a specific package. | 100% |
-| Repository |  | `gen:repository` | Create a new repository class in Laravel or in a specific package. | 100% |
-| Request | `make:request` | `gen:request` | Create a new form request class in Laravel or in a specific package. | 100% |
-| Resource | `make:resource` | `gen:resource` | Create a new resource file in Laravel or in a specific package. | 100% |
-| Rule | `make:rule` | `gen:rule` | Create a new validation rule in Laravel or in a specific package. | 100% |
-| Seeder | `make:seeder` | `gen:seeder` | Create a new seeder class in Laravel or in a specific package. | 100% |
-| Start | | `gen:start` | | 100% |
-| Test | `make:test` | `gen:test` | Create a new test class in Laravel or in a specific package. | 100% |
-| Trait | | `gen:trait` | Create a new interface in Laravel or in a specific package. | 100% |
+### List of `fligno` commands
+
+| Name            | Command                  | Description                                                                        |
+|-----------------|--------------------------|------------------------------------------------------------------------------------|
+| Package List    | `fligno:package:list`    | List all locally installed packages.                                               |
+| Package Create  | `fligno:package:create`  | Create a new Laravel package.                                                      |
+| Package Remove  | `fligno:package:remove`  | Remove a Laravel package.                                                          |
+| Package Enable  | `fligno:package:enable`  | Enable a Laravel package.                                                          |
+| Package Disable | `fligno:package:disable` | Disable a Laravel package.                                                         |
+| Package Clone   | `fligno:package:clone`   | Clone a Laravel package using Git.                                                 |
+| Package Publish | `fligno:package:publish` | Publish a Laravel package using Git.                                               |
+| Test            | `fligno:test`            | Run the application and package tests.                                             |
+| Start           | `fligno:start`           | Create a model with migration, API controller, request, event, and resource files. |
+
+
+### List of `gen` commands
+
+| File Type    |      Command       | Laravel Counterprt  | Description                                                                  |
+|--------------|:------------------:|:-------------------:|:-----------------------------------------------------------------------------|
+| Cast         |     `gen:cast`     |     `make:cast`     | Create a new custom Eloquent cast class in Laravel or in a specific package. |
+| Channel      |   `gen:channel`    |   `make:channel`    | Create a new channel class in Laravel or in a specific package.              |
+| Class        |   `gen:channel`    |                     | Create a new PHP class in Laravel or in a specific package.                  |
+| Command      |   `gen:command`    |   `make:command`    | Create a new Artisan command in Laravel or in a specific package.            |
+| Component    |  `gen:component`   |  `make:component`   | Create a new view component class in Laravel or in a specific package.       |
+| Container    |  `gen:container`   |                     | Create a new service container in Laravel or in a specific package.          |
+| Controller   |  `gen:controller`  |  `make:controller`  | Create a new controller class in Laravel or in a specific package.           |
+| Docs         |     `gen:docs`     |  `make:controller`  | Generate Scribe documentations.                                              |
+| Event        |    `gen:event`     |    `make:event`     | Create a new event class in Laravel or in a specific package.                |
+| Exception    |  `gen:exception`   |  `make:exception`   | Create a new custom exception class in Laravel or in a specific package.     |
+| Facade       |    `gen:facade`    |                     | Create a new facade in Laravel or in a specific package.                     |
+| Factory      |   `gen:factory`    |   `make:factory`    | Create a new model factory in Laravel or in a specific package.              |
+| Gitlab CI    |    `gen:gitlab`    |                     | Create a Gitlab CI YML file in a specific package.                           |
+| Helper       |    `gen:helper`    |                     | Create a new helper file in Laravel or in a specific package.                |
+| Interface    |  `gen:interface`   |                     | Create a new interface in Laravel or in a specific package.                  |
+| Job          |     `gen:job`      |     `make:job`      | Create a new job class in Laravel or in a specific package.                  |
+| Interface    |  `gen:interface`   |                     | Create a new interface in Laravel or in a specific package.                  |
+| Listener     |   `gen:listener`   |   `make:listener`   | Create a new event listener class in Laravel or in a specific package.       |
+| Mail         |     `gen:mail`     |     `make:mail`     | Create a new email class in Laravel or in a specific package.                |
+| Middleware   |  `gen:middleware`  |  `make:middleware`  | Create a new middleware class in Laravel or in a specific package.           |
+| Migration    |  `gen:migration`   |  `make:migration`   | Create a new migration file in Laravel or in a specific package.             |
+| Model        |    `gen:model`     |    `make:model`     | Create a new Eloquent model class in Laravel or in a specific package.       |
+| Notification | `gen:notification` | `make:notification` | Create a new notification class in Laravel or in a specific package.         |
+| Observer     |   `gen:observer`   |   `make:observer`   | Create a new observer class in Laravel or in a specific package.             |
+| Policy       |    `gen:policy`    |    `make:policy`    | Create a new policy class in Laravel or in a specific package.               |
+| Provider     |   `gen:provider`   |   `make:provider`   | Create a new service provider class in Laravel or in a specific package.     |
+| Repository   |  `gen:repository`  |                     | Create a new repository class in Laravel or in a specific package.           |
+| Request      |   `gen:request`    |   `make:request`    | Create a new form request class in Laravel or in a specific package.         |
+| Resource     |   `gen:resource`   |   `make:resource`   | Create a new resource file in Laravel or in a specific package.              |
+| Routes       |    `gen:routes`    |                     | Create web and/or api route files in a specific package.                     |
+| Rule         |     `gen:rule`     |     `make:rule`     | Create a new validation rule in Laravel or in a specific package.            |
+| Seeder       |    `gen:seeder`    |    `make:seeder`    | Create a new seeder class in Laravel or in a specific package.               |
+| Test         |     `gen:test`     |     `make:test`     | Create a new test class in Laravel or in a specific package.                 |
+| Trait        |    `gen:trait`     |                     | Create a new interface in Laravel or in a specific package.                  |
 
 ## Change log
 

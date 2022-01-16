@@ -1,0 +1,14 @@
+<?php
+
+namespace {{ namespace }};
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+
+class {{ class }}
+{
+    // Build wonderful things
+}

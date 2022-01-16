@@ -4,7 +4,6 @@ namespace Fligno\BoilerplateGenerator\Traits;
 
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
@@ -12,7 +11,6 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonException;
-use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Support\Str;
@@ -73,7 +71,7 @@ trait UsesVendorPackage
     /**
      * @var Collection|null
      */
-    protected ?Collection $additionalReplaceNamespace = null;
+    protected ?Collection $moreReplaceNamespace = null;
 
     /**
      * @param bool $has_ddd
@@ -378,27 +376,51 @@ trait UsesVendorPackage
     /**
      * @return Collection|null
      */
-    public function getAdditionalReplaceNamespace(): ?Collection
+    public function getMoreReplaceNamespace(): ?Collection
     {
-        return $this->additionalReplaceNamespace;
+        return $this->moreReplaceNamespace;
     }
 
     /**
-     * @param Collection|array $additional
+     * @param Collection|array $more
      * @return Collection
      */
-    public function insertAdditionalReplaceNamespace(Collection|array $additional): Collection
+    public function addMoreReplaceNamespace(Collection|array $more): Collection
     {
-        if (count($additional)) {
-            if (! $this->additionalReplaceNamespace) {
-                $this->additionalReplaceNamespace = collect($additional);
+        if (count($more)) {
+            if (! $this->moreReplaceNamespace) {
+                $this->moreReplaceNamespace = collect($more);
             }
             else {
-                $this->additionalReplaceNamespace = $this->additionalReplaceNamespace->merge($additional);
+                $this->moreReplaceNamespace = $this->moreReplaceNamespace->merge($more);
             }
         }
 
-        return $this->additionalReplaceNamespace;
+        return $this->moreReplaceNamespace ?? collect();
+    }
+
+    /**
+     * @param string $namespacedClass
+     * @param string|null $classType
+     * @return Collection
+     */
+    protected function addMoreCasedReplaceNamespace(string $namespacedClass, string $classType = null): Collection
+    {
+        $class = Str::of($namespacedClass)->afterLast('\\')->studly();
+
+        $key = $classType ?? $class->jsonSerialize();
+
+        $more = collect([
+            'Namespaced' . $key => $namespacedClass,
+            $key . 'Class' => $class,
+            $key . 'Snake' => $class->snake(),
+            $key . 'Slug' => $class->snake('-'),
+            $key . 'Camel' => $class->camel(),
+        ]);
+
+        $this->addMoreReplaceNamespace($more);
+
+        return $more;
     }
 
     /**
@@ -419,8 +441,8 @@ trait UsesVendorPackage
 
         $replacements = [$this->getNamespace($name), $this->getRootNamespaceDuringReplaceNamespace(), $this->userProviderModel()];
 
-        if ($this->additionalReplaceNamespace && Arr::isAssoc($this->additionalReplaceNamespace->toArray())) {
-            $this->additionalReplaceNamespace->each(function ($item, $key) use (&$searches, &$replacements) {
+        if ($this->moreReplaceNamespace && Arr::isAssoc($this->moreReplaceNamespace->toArray())) {
+            $this->moreReplaceNamespace->each(function ($item, $key) use (&$searches, &$replacements) {
                 $item = trim($item);
                 $key = trim($key);
 
