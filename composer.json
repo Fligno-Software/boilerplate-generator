@@ -48,11 +48,5 @@
             "dev-master": "1.0.x-dev",
             "dev-develop": "1.0.x-dev"
         }
-    },
-    "repositories": {
-        "git.fligno.com/440": {
-            "type": "composer",
-            "url": "https://git.fligno.com/api/v4/group/440/-/packages/composer/packages.json"
-        }
     }
 }
