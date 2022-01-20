@@ -46,9 +46,9 @@ use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ContainerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
-use Fligno\StarterKit\Providers\AbstractStarterKitServiceProvider;
+use Fligno\StarterKit\Providers\BaseStarterKitServiceProvider as ServiceProvider;
 
-class BoilerplateGeneratorServiceProvider extends AbstractStarterKitServiceProvider
+class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
     protected array $commands = [
         ClassMakeCommand::class,

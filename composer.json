@@ -24,7 +24,7 @@
     },
     "autoload": {
         "files": [
-            "helpers/CustomHelpers.php"
+          "helpers/boilerplate-generator-helper.php"
         ],
         "psr-4": {
             "Fligno\\BoilerplateGenerator\\": "src/"
