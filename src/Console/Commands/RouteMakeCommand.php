@@ -5,7 +5,8 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesOverwriteFileTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -20,7 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RouteMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait, UsesOverwriteFileTrait;
 
     /**
      * The console command name.
@@ -56,6 +57,8 @@ class RouteMakeCommand extends GeneratorCommand
         parent::__construct($files);
 
         $this->addPackageOptions();
+
+        $this->addOverwriteFileOptions();
     }
 
     /**
@@ -86,7 +89,7 @@ class RouteMakeCommand extends GeneratorCommand
         foreach ($routes as $name) {
             $path = $this->getPath($name);
 
-            if ($this->option('force') === false && file_exists($path)) {
+            if (! $this->shouldOverwrite() && file_exists($path)) {
                 $ctr++;
                 $this->error(Str::ucfirst($name) . ' route already exists!');
                 continue;
@@ -160,8 +163,7 @@ class RouteMakeCommand extends GeneratorCommand
     {
         return [
             ['api', null, InputOption::VALUE_NONE, 'Generate api route.'],
-            ['web', null, InputOption::VALUE_NONE, 'Generate web route.'],
-            ['force', 'f', InputOption::VALUE_NONE, 'Force create Gitlab CI yml file.']
+            ['web', null, InputOption::VALUE_NONE, 'Generate web route.']
         ];
     }
 

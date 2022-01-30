@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
+use Fligno\BoilerplateGenerator\Traits\UsesEloquentModelTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -16,7 +16,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class DddActionMakeCommand extends GeneratorCommand
 {
-    use UsesEloquentModel;
+    use UsesEloquentModelTrait;
 
     /**
      * The name of the console command.

@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\NotificationMakeCommand;
 
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Console\NotificationMakeCommand;
  */
 class ExtendedMakeNotification extends NotificationMakeCommand
 {
-    use UsesCreatesMatchingTest;
+    use UsesCreatesMatchingTestTrait;
 
     /**
      * The console command name.

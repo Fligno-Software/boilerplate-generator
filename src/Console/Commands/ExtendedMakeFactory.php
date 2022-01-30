@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
+use Fligno\BoilerplateGenerator\Traits\UsesEloquentModelTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Filesystem\Filesystem;
@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeFactory extends FactoryMakeCommand
 {
-    use UsesEloquentModel;
+    use UsesEloquentModelTrait;
 
     /**
      * The console command name.

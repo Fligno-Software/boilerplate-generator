@@ -16,12 +16,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Support\Str;
 
 /**
- * Trait UsesVendorPackage
+ * Trait UsesVendorPackageTrait
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-11
  */
-trait UsesVendorPackage
+trait UsesVendorPackageTrait
 {
     /**
      * @var string|null
@@ -289,8 +289,8 @@ trait UsesVendorPackage
         $allPackages = collect();
 
         if (file_exists(package_path())) {
-            foreach ($this->getDirectories(package_path()) as $vendor) {
-                foreach ($this->getDirectories(package_path($vendor)) as $package) {
+            foreach (getFilesOrDirectories(package_path()) as $vendor) {
+                foreach (getFilesOrDirectories(package_path($vendor)) as $package) {
                     $allPackages->add($vendor . '/' .$package);
                 }
             }
@@ -362,15 +362,6 @@ trait UsesVendorPackage
     public function getDisabledPackages(): Collection
     {
         return $this->getAllPackages()->diff($this->getEnabledPackages());
-    }
-
-    /**
-     * @param string $directory
-     * @return array|false
-     */
-    public function getDirectories(string $directory): bool|array
-    {
-        return array_values(array_diff(scandir($directory), ['..', '.']));
     }
 
     /**

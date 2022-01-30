@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 trait UsesContainerTrait
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * @var bool

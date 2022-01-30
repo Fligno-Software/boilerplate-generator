@@ -10,9 +10,9 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-trait UsesEloquentModel
+trait UsesEloquentModelTrait
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * @var bool
