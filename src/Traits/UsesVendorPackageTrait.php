@@ -289,8 +289,8 @@ trait UsesVendorPackageTrait
         $allPackages = collect();
 
         if (file_exists(package_path())) {
-            foreach (getFilesOrDirectories(package_path()) as $vendor) {
-                foreach (getFilesOrDirectories(package_path($vendor)) as $package) {
+            foreach (get_files_or_directories(package_path()) as $vendor) {
+                foreach (get_files_or_directories(package_path($vendor)) as $package) {
                     $allPackages->add($vendor . '/' .$package);
                 }
             }

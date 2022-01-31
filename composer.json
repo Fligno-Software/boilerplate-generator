@@ -23,9 +23,6 @@
         "orchestra/testbench": "~5|~6"
     },
     "autoload": {
-        "files": [
-          "helpers/boilerplate-generator-helper.php"
-        ],
         "psr-4": {
             "Fligno\\BoilerplateGenerator\\": "src/"
         }
