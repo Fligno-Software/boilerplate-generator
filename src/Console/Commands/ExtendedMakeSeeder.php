@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Database\Console\Seeds\SeederMakeCommand;
 use Illuminate\Filesystem\Filesystem;
 
@@ -17,7 +17,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class ExtendedMakeSeeder extends SeederMakeCommand
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * The console command name.

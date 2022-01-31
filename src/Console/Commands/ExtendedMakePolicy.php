@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Console\PolicyMakeCommand;
 use Illuminate\Filesystem\Filesystem;
@@ -18,7 +18,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class ExtendedMakePolicy extends PolicyMakeCommand
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * The console command name.

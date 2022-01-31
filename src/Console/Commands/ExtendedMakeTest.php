@@ -5,8 +5,8 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesEloquentModel;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesEloquentModelTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\TestMakeCommand;
@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeTest extends TestMakeCommand
 {
-    use UsesVendorPackage, UsesEloquentModel;
+    use UsesVendorPackageTrait, UsesEloquentModelTrait;
 
     /**
      * The console command name.

@@ -105,6 +105,8 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        parent::register();
+
         $this->mergeConfigFrom(__DIR__.'/../config/boilerplate-generator.php', 'boilerplate-generator');
     }
 

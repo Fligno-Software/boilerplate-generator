@@ -5,6 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesContainerTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesOverwriteFileTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -17,7 +18,7 @@ use Illuminate\Support\Str;
  */
 class HelperMakeCommand extends GeneratorCommand
 {
-    use UsesContainerTrait;
+    use UsesContainerTrait, UsesOverwriteFileTrait;
 
     /**
      * The name and signature of the console command.
@@ -51,8 +52,9 @@ class HelperMakeCommand extends GeneratorCommand
         $this->addPackageOptions();
 
         $this->addContainerOptions();
-    }
 
+        $this->addOverwriteFileOptions();
+    }
 
     /**
      * @return bool|null

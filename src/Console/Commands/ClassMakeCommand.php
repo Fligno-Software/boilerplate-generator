@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ClassMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * The console command name.

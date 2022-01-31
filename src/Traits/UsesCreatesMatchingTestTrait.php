@@ -5,13 +5,13 @@ namespace Fligno\BoilerplateGenerator\Traits;
 use Illuminate\Support\Str;
 
 /**
- * Trait UsesCreatesMatchingTest
+ * Trait UsesCreatesMatchingTestTrait
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-trait UsesCreatesMatchingTest
+trait UsesCreatesMatchingTestTrait
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * Create the matching test case if requested.

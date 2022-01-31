@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ListenerMakeCommand;
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Console\ListenerMakeCommand;
  */
 class ExtendedMakeListener extends ListenerMakeCommand
 {
-    use UsesCreatesMatchingTest;
+    use UsesCreatesMatchingTestTrait;
 
     /**
      * The console command name.

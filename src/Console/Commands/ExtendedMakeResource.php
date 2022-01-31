@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ResourceMakeCommand;
 
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Console\ResourceMakeCommand;
  */
 class ExtendedMakeResource extends ResourceMakeCommand
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * The console command name.

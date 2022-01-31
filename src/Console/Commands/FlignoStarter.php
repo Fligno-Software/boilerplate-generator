@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class FlignoStarter extends Command
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * The name of the console command.

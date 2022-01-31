@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Console\ControllerMakeCommand;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ExtendedMakeController extends ControllerMakeCommand
 {
-    use UsesCreatesMatchingTest;
+    use UsesCreatesMatchingTestTrait;
 
     /**
      * The console command name.

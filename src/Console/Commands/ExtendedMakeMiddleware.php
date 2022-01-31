@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTest;
+use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Console\MiddlewareMakeCommand;
 use Illuminate\Filesystem\Filesystem;
@@ -18,7 +18,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class ExtendedMakeMiddleware extends MiddlewareMakeCommand
 {
-    use UsesCreatesMatchingTest;
+    use UsesCreatesMatchingTestTrait;
 
     /**
      * The console command name.

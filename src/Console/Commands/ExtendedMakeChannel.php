@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackage;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ChannelMakeCommand;
@@ -18,7 +18,7 @@ use Illuminate\Foundation\Console\ChannelMakeCommand;
  */
 class ExtendedMakeChannel extends ChannelMakeCommand
 {
-    use UsesVendorPackage;
+    use UsesVendorPackageTrait;
 
     /**
      * The console command name.
