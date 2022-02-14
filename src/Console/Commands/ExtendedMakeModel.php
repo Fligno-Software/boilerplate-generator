@@ -45,7 +45,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageOptions(true);
     }
 
     /***** OVERRIDDEN FUNCTIONS *****/

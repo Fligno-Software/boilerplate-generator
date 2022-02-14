@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\RequestMakeCommand;
@@ -18,7 +18,7 @@ use Illuminate\Foundation\Console\RequestMakeCommand;
  */
 class ExtendedMakeRequest extends RequestMakeCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * The console command name.

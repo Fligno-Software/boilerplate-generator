@@ -6,7 +6,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
 use Illuminate\Foundation\Console\ExceptionMakeCommand;
 use Illuminate\Filesystem\Filesystem;
 
@@ -18,7 +18,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class ExtendedMakeException extends ExceptionMakeCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * The console command name.

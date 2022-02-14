@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class DddDtoMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -130,7 +130,7 @@ class DddDtoMakeCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_app_path($this->package_dir) : app_path();
+        $path = $this->getPackageDomainFullPath();
 
         return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }

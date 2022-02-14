@@ -5,7 +5,6 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesContainerTrait;
-use Fligno\BoilerplateGenerator\Traits\UsesOverwriteFileTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -18,7 +17,7 @@ use Illuminate\Support\Str;
  */
 class HelperMakeCommand extends GeneratorCommand
 {
-    use UsesContainerTrait, UsesOverwriteFileTrait;
+    use UsesContainerTrait;
 
     /**
      * The name and signature of the console command.
@@ -49,11 +48,9 @@ class HelperMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageOptions(true, true);
 
         $this->addContainerOptions();
-
-        $this->addOverwriteFileOptions();
     }
 
     /**
@@ -119,7 +116,7 @@ class HelperMakeCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_helpers_path($this->package_dir) : base_path('helpers');
+        $path = $this->package_dir ? package_helpers_path($this->domain_dir) : (base_path($this->domain_dir).'/helpers') ;
 
         return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }

@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
 use Illuminate\Database\Console\Seeds\SeederMakeCommand;
 use Illuminate\Filesystem\Filesystem;
 
@@ -17,7 +17,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class ExtendedMakeSeeder extends SeederMakeCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -75,7 +75,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getPath($name): string
     {
-        $path = $this->package_dir ? package_database_path($this->package_dir)  : $this->laravel->databasePath();
+        $path = $this->package_dir ? package_database_path($this->domain_dir)  : database_path($this->domain_dir);
 
         if (is_dir($path.'/seeds')) {
             return $path.'/seeds/'.$name.'.php';

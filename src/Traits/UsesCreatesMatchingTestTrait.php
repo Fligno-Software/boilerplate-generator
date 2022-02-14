@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  */
 trait UsesCreatesMatchingTestTrait
 {
-    use UsesVendorPackageTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * Create the matching test case if requested.

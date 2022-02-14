@@ -30,6 +30,8 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRule;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\FacadeMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageDisableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageEnableCommand;
@@ -80,6 +82,8 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
         FacadeMakeCommand::class,
+        FlignoDomainCreateCommand::class,
+        FlignoDomainListCommand::class,
         FlignoPackageCloneCommand::class,
         FlignoPackageCreateCommand::class,
         FlignoPackageDisableCommand::class,

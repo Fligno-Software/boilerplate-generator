@@ -5,8 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesOverwriteFileTrait;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -21,7 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RouteMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageTrait, UsesOverwriteFileTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -56,9 +55,7 @@ class RouteMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
-
-        $this->addOverwriteFileOptions();
+        $this->addPackageOptions(true, true);
     }
 
     /**
@@ -137,18 +134,15 @@ class RouteMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the destination class path.
-     *
-     * @param  string  $name
      * @return string
      */
-    protected function getPath($name): string
+    protected function getPackageDomainFullPath(): string
     {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) : app_path()) . '/' . $this->domain_dir . '/routes';
+        }
 
-        $path = $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
-
-        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
+        return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
     }
 
     protected function getDefaultNamespace($rootNamespace): string

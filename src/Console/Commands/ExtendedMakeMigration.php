@@ -6,7 +6,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\ExtendedMigrationCreator;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 
 /**
@@ -17,7 +17,7 @@ use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
  */
 class ExtendedMakeMigration extends MigrateMakeCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesVendorPackageDomainTrait;
 
     /**
      * The console command signature.
@@ -59,7 +59,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
     {
         $this->setVendorAndPackage();
 
-       if ($this->package_dir && $this->creator instanceof ExtendedMigrationCreator) {
+       if ($this->creator instanceof ExtendedMigrationCreator && $this->package_dir) {
             $this->creator->setPackagePath($this->package_dir);
         }
 

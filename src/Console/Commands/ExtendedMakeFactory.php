@@ -102,7 +102,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
 
-        $path = $this->package_dir ? package_database_path($this->package_dir)  : $this->laravel->databasePath();
+        $path = $this->package_dir ? package_database_path($this->domain_dir)  : database_path($this->domain_dir);
 
         return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
     }
