@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesEloquentModelTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandEloquentModelTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Filesystem\Filesystem;
@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeFactory extends FactoryMakeCommand
 {
-    use UsesEloquentModelTrait;
+    use UsesCommandEloquentModelTrait;
 
     /**
      * The console command name.
@@ -55,7 +55,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $this->setModelFields();
 

@@ -19,12 +19,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Support\Str;
 
 /**
- * Trait UsesVendorPackageDomainTrait
+ * Trait UsesCommandVendorPackageDomainTrait
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-11
  */
-trait UsesVendorPackageDomainTrait
+trait UsesCommandVendorPackageDomainTrait
 {
     use UsesCommandCustomMessagesTrait;
 
@@ -168,7 +168,7 @@ trait UsesVendorPackageDomainTrait
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException
      */
-    public function setVendorAndPackage(bool $showPackageChoices = true): void
+    public function setVendorPackageDomain(bool $showPackageChoices = true): void
     {
         if ($this->isGeneratorSubclass()) {
             $this->note($this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null),'ONGOING');
@@ -217,7 +217,7 @@ trait UsesVendorPackageDomainTrait
                             $this->input->setOption('package', null);
                         }
 
-                        $this->setVendorAndPackage();
+                        $this->setVendorPackageDomain();
                 }
             }
         }
@@ -388,11 +388,6 @@ trait UsesVendorPackageDomainTrait
     protected function getNameInput(): ?string
     {
         if ($this->isGeneratorSubclass()) {
-
-            if ($this instanceof RouteMakeCommand) {
-                return null;
-            }
-
             if (is_null($this->argument('name')))
             {
                 if ($this->isNoInteraction()) {
@@ -459,20 +454,19 @@ trait UsesVendorPackageDomainTrait
         return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
+    /**
+     * @return Collection
+     */
     public function getAllPackages(): Collection
     {
         $allPackages = collect();
 
         if (file_exists(package_path())) {
-            collect_files_or_directories(package_path(), true, false)
-                ?->each(function ($vendor) use ($allPackages) {
-                    collect_files_or_directories(package_path($vendor), true, false)
-                        ?->each(function ($package) use ($allPackages, $vendor) {
-                            $allPackages->add($vendor . '/' .$package);
-                        }
-                    );
-                }
-            );
+            collect_files_or_directories(package_path(), true, false)?->each(function ($vendor) use ($allPackages) {
+                collect_files_or_directories(package_path($vendor), true, false)?->each(function ($package) use ($allPackages, $vendor) {
+                    $allPackages->add($vendor . '/' .$package);
+                });
+            });
         }
 
         return $allPackages;
@@ -553,15 +547,11 @@ trait UsesVendorPackageDomainTrait
         $allDomains = collect();
 
         if (file_exists(package_path())) {
-            collect_files_or_directories(package_path(), true, false)
-                ?->each(function ($vendor) use ($allDomains) {
-                    collect_files_or_directories(package_path($vendor), true, false)
-                        ?->each(function ($package) use ($allDomains, $vendor) {
-                            $allDomains->add($vendor . '/' .$package);
-                        }
-                        );
-                }
-                );
+            collect_files_or_directories(package_path(), true, false)?->each(function ($vendor) use ($allDomains) {
+                collect_files_or_directories(package_path($vendor), true, false)?->each(function ($package) use ($allDomains, $vendor) {
+                    $allDomains->add($vendor . '/' .$package);
+                });
+            });
         }
 
         return $allDomains;

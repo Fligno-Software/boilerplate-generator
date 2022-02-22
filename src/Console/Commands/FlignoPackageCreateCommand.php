@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use JsonException;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class FlignoPackageCreateCommand extends Command
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -52,7 +52,7 @@ class FlignoPackageCreateCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $this->call('packager:new', [
             'vendor' => $this->vendor_name,
@@ -68,7 +68,13 @@ class FlignoPackageCreateCommand extends Command
 
             $this->call('fligno:start', $args);
 
-            $this->call('gen:routes', [
+            $this->call('gen:route', [
+                'name' => 'web',
+                '--package' => $this->package_dir
+            ]);
+
+            $this->call('gen:route', [
+                'name' => 'api',
                 '--package' => $this->package_dir
             ]);
 

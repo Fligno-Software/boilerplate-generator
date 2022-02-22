@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ObserverMakeCommand;
@@ -18,7 +18,7 @@ use Illuminate\Foundation\Console\ObserverMakeCommand;
  */
 class ExtendedMakeObserver extends ObserverMakeCommand
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -55,7 +55,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         return parent::handle();
     }

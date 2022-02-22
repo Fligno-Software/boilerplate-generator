@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class FlignoTest extends Command
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -57,7 +57,7 @@ class FlignoTest extends Command
     {
         $showPackageChoices = ! $this->option('packages') && ! $this->option('all');
 
-        $this->setVendorAndPackage($showPackageChoices);
+        $this->setVendorPackageDomain($showPackageChoices);
 
         $testPackages = false;
         $normalTest = true;

@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\JobMakeCommand;
@@ -18,7 +18,7 @@ use Illuminate\Foundation\Console\JobMakeCommand;
  */
 class ExtendedMakeJob extends JobMakeCommand
 {
-    use UsesCreatesMatchingTestTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -55,7 +55,7 @@ class ExtendedMakeJob extends JobMakeCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         return parent::handle();
     }

@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ChannelMakeCommand;
@@ -18,7 +18,7 @@ use Illuminate\Foundation\Console\ChannelMakeCommand;
  */
 class ExtendedMakeChannel extends ChannelMakeCommand
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -56,7 +56,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         return parent::handle();
     }

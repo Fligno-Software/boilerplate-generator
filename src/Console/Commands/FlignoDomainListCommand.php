@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 
 /**
@@ -14,7 +14,7 @@ use Illuminate\Console\Command;
  */
 class FlignoDomainListCommand extends Command
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name and signature of the console command.
@@ -48,7 +48,7 @@ class FlignoDomainListCommand extends Command
      */
     public function handle(): int
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($domains = $this->getAllDomains()) {
             $domainsPath = $this->getAllDomains(true);

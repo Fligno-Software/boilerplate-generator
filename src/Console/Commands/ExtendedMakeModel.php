@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Str;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ExtendedMakeModel extends ModelMakeCommand
 {
-    use UsesCreatesMatchingTestTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -56,7 +56,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($this->option('all')) {
             $this->input->setOption('repo', true);

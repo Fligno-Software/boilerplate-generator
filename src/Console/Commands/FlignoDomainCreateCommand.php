@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class FlignoDomainCreateCommand extends GeneratorCommand
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name and signature of the console command.
@@ -59,22 +59,30 @@ class FlignoDomainCreateCommand extends GeneratorCommand
      */
     public function handle(): int
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $args = $this->getPackageArgs();
         $args['--domain'] = $this->getNameInput();
         $args['--force-domain'] = true;
+        $args['--no-interaction'] = true;
 
-        $result = $this->call('gen:routes', $args);
+        $success = false;
 
-        if ($result === self::SUCCESS) {
+        collect(['web', 'api'])->each(function ($value) use ($args, &$success) {
+            $args['name'] = $value;
+            if ($this->call('gen:route', $args) === self::SUCCESS) {
+                $success = true;
+            }
+        });
+
+        if ($success) {
             $this->done('Domain created successfully.');
         }
         else {
             $this->failed('Domain was not created or already existing.');
         }
 
-        return $result;
+        return $success;
     }
 
     /**

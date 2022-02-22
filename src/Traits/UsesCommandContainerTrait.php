@@ -6,13 +6,13 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Trait UsesContainerTrait
+ * Trait UsesCommandContainerTrait
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-trait UsesContainerTrait
+trait UsesCommandContainerTrait
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * @var bool

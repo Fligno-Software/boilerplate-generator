@@ -2,7 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use JsonException;
 
@@ -14,7 +14,7 @@ use JsonException;
  */
 class FlignoPackageListCommand extends Command
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.

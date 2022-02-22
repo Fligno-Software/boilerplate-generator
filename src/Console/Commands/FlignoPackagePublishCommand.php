@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class FlignoPackagePublishCommand extends Command
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -54,7 +54,7 @@ class FlignoPackagePublishCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $this->call('packager:publish', [
             'vendor' => $this->vendor_name,

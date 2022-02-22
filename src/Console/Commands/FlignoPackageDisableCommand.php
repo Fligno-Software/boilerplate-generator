@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 
 /**
@@ -15,7 +15,7 @@ use Illuminate\Console\Command;
  */
 class FlignoPackageDisableCommand extends Command
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -49,7 +49,7 @@ class FlignoPackageDisableCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $this->call('packager:disable', [
             'vendor' => $this->vendor_name,

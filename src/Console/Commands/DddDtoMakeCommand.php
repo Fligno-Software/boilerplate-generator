@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class DddDtoMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -70,7 +70,7 @@ class DddDtoMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($this->option('request') === FALSE && $this->option('response') === FALSE) {
             $this->input->setOption('request', true);

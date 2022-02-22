@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -20,21 +20,21 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RouteMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'gen:routes';
+    protected $name = 'gen:route';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create web and api route files in a specific package.';
+    protected $description = 'Create new route file in Laravel or in a specific package.';
 
     /**
      * The type of class being generated.
@@ -59,95 +59,31 @@ class RouteMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @throws FileNotFoundException
-     * @throws PackageNotFoundException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException|FileNotFoundException
      */
     public function handle(): bool|int|null
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
-        $routes = [];
+        $name = $this->getNameInput();
 
-        if ($this->option('web') === FALSE && $this->option('api') === FALSE) {
-            $this->input->setOption('web', true);
-            $this->input->setOption('api', true);
+        $path = $this->getPath($name);
+
+        if (! $this->shouldOverwrite() && file_exists($path)) {
+            $this->error(Str::ucfirst($name) . ' route already exists!');
+            return self::FAILURE;
         }
 
-        if ($this->option('web')) {
-            $routes[] = 'web';
-        }
+        // Next, we will generate the path to the location where this class' file should get
+        // written. Then, we will build the class and make the proper replacements on the
+        // stub files so that it gets the correctly formatted namespace and class name.
+        $this->makeDirectory($path);
 
-        if ($this->option('api')) {
-            $routes[] = 'api';
-        }
+        $this->files->put($path, $this->sortImports($this->buildClass($name)));
 
-        $ctr = 0;
+        $this->info($this->type.' created successfully.');
 
-        foreach ($routes as $name) {
-            $path = $this->getPath($name);
-
-            if (! $this->shouldOverwrite() && file_exists($path)) {
-                $ctr++;
-                $this->error(Str::ucfirst($name) . ' route already exists!');
-                continue;
-            }
-
-            // Next, we will generate the path to the location where this class' file should get
-            // written. Then, we will build the class and make the proper replacements on the
-            // stub files so that it gets the correctly formatted namespace and class name.
-            $this->makeDirectory($path);
-
-            $this->files->put($path, $this->sortImports($this->buildClass($name)));
-
-            $this->info($this->type.' created successfully.');
-        }
-
-        return $ctr ? self::FAILURE : self::SUCCESS;
-    }
-
-    /**
-     * Build the class with the given name.
-     *
-     * @param  string  $name
-     * @return string
-     *
-     * @throws FileNotFoundException
-     */
-    protected function buildClass($name): string
-    {
-        $stub = $this->files->get($this->getRouteStub($name));
-
-        return $this->replaceNamespace($stub, $name)->replaceClass($stub, $name);
-    }
-
-    /**
-     * @param string $route
-     * @return string
-     */
-    protected function getRouteStub(string $route): string
-    {
-        if (file_exists($temp = __DIR__ . '/../../../stubs/' . $route . '.custom.stub')) {
-            return $temp;
-        }
-
-        return __DIR__ . '/../../../stubs/api.custom.stub';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPackageDomainFullPath(): string
-    {
-        if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) : app_path()) . '/' . $this->domain_dir . '/routes';
-        }
-
-        return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
-    }
-
-    protected function getDefaultNamespace($rootNamespace): string
-    {
-        return '';
+        return self::SUCCESS;
     }
 
     /**
@@ -156,9 +92,22 @@ class RouteMakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['api', null, InputOption::VALUE_NONE, 'Generate api route.'],
-            ['web', null, InputOption::VALUE_NONE, 'Generate web route.']
+            ['api', null, InputOption::VALUE_NONE, 'Generate api route.']
         ];
+    }
+
+    /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub(): string
+    {
+        if ($this->option('api')) {
+            return __DIR__ . '/../../../stubs/api.custom.stub';
+        }
+
+        return __DIR__ . '/../../../stubs/web.custom.stub';
     }
 
     /**
@@ -172,12 +121,26 @@ class RouteMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the stub file for the generator.
+     * Get the validated desired class name from the input.
      *
      * @return string
      */
-    protected function getStub(): string
+    protected function getValidatedNameInput(): string
     {
-        return '';
+        $name = trim($this->argument('name'));
+
+        return Str::of($name)->snake('-');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPackageDomainFullPath(): string
+    {
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) : app_path()) . '/' . $this->domain_dir . '/routes';
+        }
+
+        return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
     }
 }
