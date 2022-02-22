@@ -70,6 +70,7 @@ class FlignoDomainCreateCommand extends GeneratorCommand
 
         collect(['web', 'api'])->each(function ($value) use ($args, &$success) {
             $args['name'] = $value;
+            $args['--api'] = $value !== 'web';
             if ($this->call('gen:route', $args) === self::SUCCESS) {
                 $success = true;
             }

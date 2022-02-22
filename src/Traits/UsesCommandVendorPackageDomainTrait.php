@@ -314,7 +314,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     public function getAllDomains(bool $prependDirectory = false): ?Collection
     {
-        $path = $this->package_dir ? package_path($this->domain_dir) : app_path($this->domain_dir);
+        $path = $this->package_dir ? package_path($this->package_dir) : app_path();
 
         if ($domainsPath = guess_file_or_directory_path($path, 'Domains')) {
             $result = collect_files_or_directories($domainsPath, true, false, $prependDirectory);

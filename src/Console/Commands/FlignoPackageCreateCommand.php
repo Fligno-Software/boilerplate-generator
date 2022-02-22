@@ -68,15 +68,13 @@ class FlignoPackageCreateCommand extends Command
 
             $this->call('fligno:start', $args);
 
-            $this->call('gen:route', [
-                'name' => 'web',
-                '--package' => $this->package_dir
-            ]);
-
-            $this->call('gen:route', [
-                'name' => 'api',
-                '--package' => $this->package_dir
-            ]);
+            collect(['web', 'api'])->each(function ($value) {
+                $this->call('gen:route', [
+                    'name' => $value,
+                    '--package' => $this->package_dir,
+                    '--api' => $value !== 'web'
+                ]);
+            });
 
             $this->call('gen:gitlab', [
                 '--package' => $this->package_dir
