@@ -171,7 +171,7 @@ trait UsesVendorPackageDomainTrait
     public function setVendorAndPackage(bool $showPackageChoices = true): void
     {
         if ($this->isGeneratorSubclass()) {
-            $this->info('<fg=white;bg=green>[ ONGOING ]</> Creating ' . $this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null));
+            $this->note($this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null),'ONGOING');
         }
 
         $package = $this->hasOption('package') ? $this->option('package') : null;
@@ -255,7 +255,7 @@ trait UsesVendorPackageDomainTrait
                 // create domain if it does not exist
                 if ($domain) {
                     if (! $this instanceof RouteMakeCommand && ! ($domains?->contains($domain))) {
-                        $args = $this->getPackageArgs();
+                        $args = $this->getPackageArgs(false);
                         $args['name'] = $domain;
                         $this->call('fligno:domain:create', $args);
                     }
@@ -326,13 +326,14 @@ trait UsesVendorPackageDomainTrait
     }
 
     /**
+     * @param bool $withDomain
      * @return array
      */
-    #[Pure] public function getPackageArgs(): array
+    public function getPackageArgs(bool $withDomain = true): array
     {
         $args['--package'] = $this->package_dir ?? $this->default_package;
 
-        if ($this->domain_name) {
+        if ($withDomain && $this->domain_name) {
             $args['--domain'] = $this->domain_name;
             $args['--force-domain'] = $this->shouldCreateDomain();
         }
@@ -694,5 +695,22 @@ trait UsesVendorPackageDomainTrait
     protected function shouldCreateDomain(): bool
     {
         return $this->hasOption('force-domain') && $this->option('force-domain');;
+    }
+
+    /**
+     * Create the matching test case if requested.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    protected function handleTestCreation($path): void
+    {
+        $appPath = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
+
+        $args = $this->getPackageArgs();
+        $args['name'] = Str::of($path)->after($appPath)->beforeLast('.php')->append('Test')->replace('\\', '/');
+        $args['--pest'] = $this->option('pest');
+
+        $this->call('gen:test', $args);
     }
 }
