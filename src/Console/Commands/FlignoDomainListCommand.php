@@ -39,7 +39,7 @@ class FlignoDomainListCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageOptions();
+        $this->addPackageOptions(false);
     }
 
     /**
@@ -48,12 +48,12 @@ class FlignoDomainListCommand extends Command
      */
     public function handle(): int
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(true, false);
 
         if ($domains = $this->getAllDomains()) {
-            $domainsPath = $this->getAllDomains(true);
+            $domainPaths = $this->getAllDomains(true);
 
-            $domains = $domains->zip($domainsPath);
+            $domains = $domains->zip($domainPaths);
 
             $this->table(
                 ['Domain', 'Path'],

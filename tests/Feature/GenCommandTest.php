@@ -69,7 +69,7 @@ class GenCommandTest extends TestCase
 
     /***** DddControllerMakeCommand *****/
 
-    /***** DddDtoMakeCommand *****/
+    /***** DtoMakeCommand *****/
 
     /***** DocsGenCommand *****/
 

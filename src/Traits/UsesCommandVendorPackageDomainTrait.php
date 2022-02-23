@@ -115,7 +115,7 @@ trait UsesCommandVendorPackageDomainTrait
      * @param bool $has_force_domain
      * @return void
      */
-    public function addPackageOptions(bool $ddd_enabled = false, bool $has_force = false, bool $has_force_domain = true): void
+    public function addPackageOptions(bool $ddd_enabled = true, bool $has_force = false, bool $has_force_domain = true): void
     {
         $this->getDefinition()->addOption(new InputOption(
             'package', null, InputOption::VALUE_OPTIONAL, 'Target package to generate the files (e.g., `vendor-name/package-name`).'
@@ -134,13 +134,16 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
+     * @param bool $isRequired
      * @return void
      */
-    public function addPackageArguments(): void
+    public function addPackageArguments(bool $isRequired = true): void
     {
+        $mode = $isRequired ? InputArgument::REQUIRED : InputArgument::OPTIONAL;
+
         $this->getDefinition()->addArguments([
-            new InputArgument('vendor', InputArgument::REQUIRED, 'The name of the vendor.'),
-            new InputArgument('package', InputArgument::REQUIRED, 'The name of the package.'),
+            new InputArgument('vendor', $mode, 'The name of the vendor.'),
+            new InputArgument('package', $mode, 'The name of the package.'),
         ]);
 
         $this->is_package_argument = true;
@@ -164,11 +167,13 @@ trait UsesCommandVendorPackageDomainTrait
 
     /**
      * @param bool $showPackageChoices
+     * @param bool $showDomainChoices
+     * @param bool $showDefaultPackage
      * @return void
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException
      */
-    public function setVendorPackageDomain(bool $showPackageChoices = true): void
+    public function setVendorPackageDomain(bool $showPackageChoices = true, bool $showDomainChoices = true, bool $showDefaultPackage = true): void
     {
         if ($this->isGeneratorSubclass()) {
             $this->note($this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null),'ONGOING');
@@ -180,8 +185,11 @@ trait UsesCommandVendorPackageDomainTrait
             $package = $this->argument('vendor') . '/' . $this->argument('package');
         }
 
-        if ($showPackageChoices && is_null($package)) {
-            $package = $this->choice('Choose target package', $this->getAllPackages()->prepend($this->default_package)->toArray(), 0);
+        $package = trim($package, '/');
+
+        if ($showPackageChoices && ! $package) {
+            $choices = $this->getAllPackages()->when($showDefaultPackage, fn ($choices) => $choices->prepend($this->default_package));
+            $package = $this->choice('Choose target package', $choices->toArray(), 0);
         }
 
         $package = $package === $this->default_package ? null : $package;
@@ -222,7 +230,7 @@ trait UsesCommandVendorPackageDomainTrait
             }
         }
 
-        if ($this->domain_name = $this->getDomainFromOptions()) {
+        if ($showDomainChoices && $this->domain_name = $this->getDomainFromOptions()) {
             $this->domain_dir = 'Domains/' . $this->domain_name;
             $this->domain_namespace = ($this->package_namespace ?: 'App\\') . 'Domains\\' . $this->domain_name . '\\';
         }
@@ -684,7 +692,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function shouldCreateDomain(): bool
     {
-        return $this->hasOption('force-domain') && $this->option('force-domain');;
+        return $this->hasOption('force-domain') && $this->option('force-domain');
     }
 
     /**
@@ -700,6 +708,7 @@ trait UsesCommandVendorPackageDomainTrait
         $args = $this->getPackageArgs();
         $args['name'] = Str::of($path)->after($appPath)->beforeLast('.php')->append('Test')->replace('\\', '/');
         $args['--pest'] = $this->option('pest');
+        $args['--no-interaction'] = true;
 
         $this->call('gen:test', $args);
     }

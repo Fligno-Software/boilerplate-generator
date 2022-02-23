@@ -45,7 +45,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions(true);
+        $this->addPackageOptions();
     }
 
     /***** OVERRIDDEN FUNCTIONS *****/
@@ -85,6 +85,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = "create_{$table}_table";
         $args['--create'] = $table;
+        $args['--no-interaction'] = true;
 
         $this->call('gen:migration', $args);
     }
@@ -102,6 +103,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = "{$factory}Factory";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
 
         $this->call('gen:factory', $args);
     }
@@ -117,6 +119,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $args = $this->getPackageArgs();
         $args['name'] = "{$seeder}Seeder";
+        $args['--no-interaction'] = true;
 
         $this->call('gen:seeder', $args);
     }
@@ -139,6 +142,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--api'] = $this->option('api');
         $args['--requests'] = $this->option('requests') || $this->option('all');
         $args['--skip-model'] = true;
+        $args['--no-interaction'] = true;
 
         $this->call('gen:controller', array_filter($args));
     }
@@ -156,6 +160,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = "{$repository}Repository";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
 
         $this->call('gen:repository', $args);
     }
@@ -173,6 +178,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = $policy;
         $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
 
         $this->call('gen:policy', $args);
     }

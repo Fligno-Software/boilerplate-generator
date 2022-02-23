@@ -15,12 +15,12 @@ use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class DddDtoMakeCommand
+ * Class DtoMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-25
  */
-class DddDtoMakeCommand extends GeneratorCommand
+class DtoMakeCommand extends GeneratorCommand
 {
     use UsesCommandVendorPackageDomainTrait;
 
@@ -97,14 +97,6 @@ class DddDtoMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @return string
-     */
-    public function getDtoType(): string
-    {
-        return $this->dtoType;
-    }
-
-    /**
      * Get the desired class name from the input.
      *
      * @return string
@@ -113,11 +105,11 @@ class DddDtoMakeCommand extends GeneratorCommand
     {
         $nameInput = trim($this->argument('name'));
 
-        if ($this->getDtoType() === 'request') {
-            return 'DataTransferObjects' . DIRECTORY_SEPARATOR . $nameInput . 'RequestData';
+        if ($this->dtoType === 'request') {
+            return 'DataTransferObjects/' . $nameInput . 'RequestData';
         }
 
-        return 'DataTransferObjects' . DIRECTORY_SEPARATOR . $nameInput . 'ResponseData';
+        return 'DataTransferObjects/' . $nameInput . 'ResponseData';
     }
 
     /**
@@ -132,7 +124,7 @@ class DddDtoMakeCommand extends GeneratorCommand
 
         $path = $this->getPackageDomainFullPath();
 
-        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
+        return $path.'/'.str_replace('\\', '/', $name).'.php';
     }
 
     /**
@@ -152,13 +144,7 @@ class DddDtoMakeCommand extends GeneratorCommand
     #[Pure]
     protected function getStub(): string
     {
-        $defaultStub = __DIR__ . '/../../../stubs/ddd.dto.request.custom.stub';
-
-        if (file_exists($temp = __DIR__ . '/../../../stubs/dto.' . $this->getDtoType() . '.custom.stub')) {
-            return $temp;
-        }
-
-        return $defaultStub;
+        return __DIR__ . '/../../../stubs/dto.' . $this->dtoType . '.custom.stub';
     }
 
     /**

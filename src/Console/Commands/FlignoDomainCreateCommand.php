@@ -59,7 +59,7 @@ class FlignoDomainCreateCommand extends GeneratorCommand
      */
     public function handle(): int
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(true, false);
 
         $args = $this->getPackageArgs();
         $args['--domain'] = $this->getNameInput();

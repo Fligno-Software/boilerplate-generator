@@ -40,7 +40,7 @@ class FlignoPackageDisableCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageArguments();
+        $this->addPackageArguments(false);
     }
 
     /**
@@ -49,12 +49,14 @@ class FlignoPackageDisableCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(true, false, false);
 
-        $this->call('packager:disable', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name
-        ]);
+        if ($this->vendor_name && $this->package_name) {
+            $this->call('packager:disable', [
+                'vendor' => $this->vendor_name,
+                'name' => $this->package_name
+            ]);
+        }
     }
 
     /**

@@ -40,7 +40,7 @@ class FlignoPackageEnableCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageArguments();
+        $this->addPackageArguments(false);
     }
 
     /**

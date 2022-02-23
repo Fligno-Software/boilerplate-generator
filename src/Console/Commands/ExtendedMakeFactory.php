@@ -102,7 +102,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
 
-        $path = $this->package_dir ? package_database_path($this->domain_dir)  : database_path($this->domain_dir);
+        $path = $this->getPackageDomainFullPath();
 
         return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
     }
@@ -129,5 +129,17 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getClassType(): ?string
     {
         return 'Factory';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPackageDomainFullPath(): string
+    {
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database';
+        }
+
+        return $this->package_dir ? package_database_path($this->package_dir)  : database_path();
     }
 }

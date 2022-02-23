@@ -40,7 +40,7 @@ class FlignoPackageRemoveCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageArguments();
+        $this->addPackageArguments(false);
     }
 
     /**
@@ -49,7 +49,7 @@ class FlignoPackageRemoveCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(true, false, false);
 
         if ($this->vendor_name && $this->package_name) {
             $this->call('packager:remove', [

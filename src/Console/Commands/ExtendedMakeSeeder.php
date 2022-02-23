@@ -75,7 +75,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getPath($name): string
     {
-        $path = $this->package_dir ? package_database_path($this->domain_dir)  : database_path($this->domain_dir);
+        $path = $this->getPackageDomainFullPath();
 
         if (is_dir($path.'/seeds')) {
             return $path.'/seeds/'.$name.'.php';
@@ -92,5 +92,17 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     protected function getClassType(): ?string
     {
         return 'Seeder';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPackageDomainFullPath(): string
+    {
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database';
+        }
+
+        return $this->package_dir ? package_database_path($this->package_dir)  : database_path();
     }
 }

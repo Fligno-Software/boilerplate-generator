@@ -95,11 +95,11 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getValidatedNameInput(): string
     {
-        $classType = $this->getClassType();
+        $classType = Str::snake($this->getClassType(), '-');
         $name = trim($this->argument('name'));
 
         if ($classType) {
-            return Str::of($name)->before($classType)->append($classType)->snake('-');
+            return Str::of($name)->snake('-')->before($classType)->trim('-')->append('-', $classType);
         }
 
         return $name;

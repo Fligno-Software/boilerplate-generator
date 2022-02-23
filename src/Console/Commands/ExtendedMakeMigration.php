@@ -59,8 +59,8 @@ class ExtendedMakeMigration extends MigrateMakeCommand
     {
         $this->setVendorPackageDomain();
 
-       if ($this->creator instanceof ExtendedMigrationCreator && $this->package_dir) {
-            $this->creator->setPackagePath($this->package_dir);
+        if ($this->creator instanceof ExtendedMigrationCreator) {
+            tap($this->creator)->setPackageDir($this->package_dir)->setDomainDir($this->domain_dir);
         }
 
         parent::handle();

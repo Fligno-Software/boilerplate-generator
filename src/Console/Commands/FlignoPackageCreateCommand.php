@@ -52,7 +52,7 @@ class FlignoPackageCreateCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(false, false);
 
         $this->call('packager:new', [
             'vendor' => $this->vendor_name,
@@ -60,7 +60,7 @@ class FlignoPackageCreateCommand extends Command
             '--i' => true
         ]);
 
-        if ($this->option('no-interaction') === FALSE) {
+        if (! $this->isNoInteraction()) {
             $args = $this->getPackageArgs();
 
             $args['model'] = $this->package_name_studly;
