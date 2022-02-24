@@ -54,13 +54,15 @@ class FlignoPackageCloneCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(false, false);
 
-        $this->call('packager:git', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name,
-            'url' => $this->argument('url')
-        ]);
+        if ($this->vendor_name && $this->package_name) {
+            $this->call('packager:git', [
+                'vendor' => $this->vendor_name,
+                'name' => $this->package_name,
+                'url' => $this->argument('url')
+            ]);
+        }
     }
 
     /**
