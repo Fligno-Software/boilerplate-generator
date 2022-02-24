@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Fligno\StarterKit\Interfaces\BaseRepository;
+use Fligno\StarterKit\Abstracts\BaseRepository;
 
 /**
  * Class {{ class }}

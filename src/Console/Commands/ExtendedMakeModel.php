@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\Str;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ExtendedMakeModel extends ModelMakeCommand
 {
-    use UsesCreatesMatchingTestTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -56,7 +56,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($this->option('all')) {
             $this->input->setOption('repo', true);
@@ -85,6 +85,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = "create_{$table}_table";
         $args['--create'] = $table;
+        $args['--no-interaction'] = true;
 
         $this->call('gen:migration', $args);
     }
@@ -102,6 +103,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = "{$factory}Factory";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
 
         $this->call('gen:factory', $args);
     }
@@ -117,6 +119,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $args = $this->getPackageArgs();
         $args['name'] = "{$seeder}Seeder";
+        $args['--no-interaction'] = true;
 
         $this->call('gen:seeder', $args);
     }
@@ -139,6 +142,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--api'] = $this->option('api');
         $args['--requests'] = $this->option('requests') || $this->option('all');
         $args['--skip-model'] = true;
+        $args['--no-interaction'] = true;
 
         $this->call('gen:controller', array_filter($args));
     }
@@ -156,6 +160,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = "{$repository}Repository";
         $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
 
         $this->call('gen:repository', $args);
     }
@@ -173,6 +178,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args = $this->getPackageArgs();
         $args['name'] = $policy;
         $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
 
         $this->call('gen:policy', $args);
     }

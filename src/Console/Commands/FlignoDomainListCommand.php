@@ -8,31 +8,30 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 
 /**
- * Class FlignoPackageEnableCommand
+ * Class FlignoDomainListCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-12-06
  */
-class FlignoPackageEnableCommand extends Command
+class FlignoDomainListCommand extends Command
 {
     use UsesCommandVendorPackageDomainTrait;
 
     /**
-     * The name of the console command.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'fligno:package:enable';
+    protected $name = 'fligno:domain:list';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Enable a Laravel package.';
+    protected $description = 'Command description';
 
     /**
-     * Create a new console command instance.
+     * Create a new command instance.
      *
      * @return void
      */
@@ -40,21 +39,32 @@ class FlignoPackageEnableCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageArguments(false);
+        $this->addPackageOptions(false);
     }
 
     /**
-     * Execute the console command.
-     * @throws PackageNotFoundException|MissingNameArgumentException
+     * @return int
+     * @throws MissingNameArgumentException|PackageNotFoundException
      */
-    public function handle(): void
+    public function handle(): int
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(true, false);
 
-        $this->call('packager:enable', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name
-        ]);
+        if ($domains = $this->getAllDomains()) {
+            $domainPaths = $this->getAllDomains(true);
+
+            $domains = $domains->zip($domainPaths);
+
+            $this->table(
+                ['Domain', 'Path'],
+                $domains
+            );
+        }
+        else {
+            $this->note('No domains found.');
+        }
+
+        return self::SUCCESS;
     }
 
     /**

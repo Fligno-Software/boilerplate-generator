@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use JsonException;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class FlignoPackageCreateCommand extends Command
 {
-    use UsesVendorPackageTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -52,7 +52,7 @@ class FlignoPackageCreateCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain(false, false);
 
         $this->call('packager:new', [
             'vendor' => $this->vendor_name,
@@ -60,7 +60,7 @@ class FlignoPackageCreateCommand extends Command
             '--i' => true
         ]);
 
-        if ($this->option('no-interaction') === FALSE) {
+        if (! $this->isNoInteraction()) {
             $args = $this->getPackageArgs();
 
             $args['model'] = $this->package_name_studly;
@@ -68,9 +68,13 @@ class FlignoPackageCreateCommand extends Command
 
             $this->call('fligno:start', $args);
 
-            $this->call('gen:routes', [
-                '--package' => $this->package_dir
-            ]);
+            collect(['web', 'api'])->each(function ($value) {
+                $this->call('gen:route', [
+                    'name' => $value,
+                    '--package' => $this->package_dir,
+                    '--api' => $value !== 'web'
+                ]);
+            });
 
             $this->call('gen:gitlab', [
                 '--package' => $this->package_dir

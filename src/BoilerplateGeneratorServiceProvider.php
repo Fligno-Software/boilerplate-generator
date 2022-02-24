@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator;
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DddControllerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\DddDtoMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DtoMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCommand;
@@ -30,6 +30,8 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRule;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\FacadeMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageDisableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageEnableCommand;
@@ -54,7 +56,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ClassMakeCommand::class,
 //        DddActionMakeCommand::class,
         DddControllerMakeCommand::class,
-        DddDtoMakeCommand::class,
+        DtoMakeCommand::class,
         DocsGenCommand::class,
         ExtendedMakeCast::class,
         ExtendedMakeChannel::class,
@@ -80,6 +82,8 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
         FacadeMakeCommand::class,
+        FlignoDomainCreateCommand::class,
+        FlignoDomainListCommand::class,
         FlignoPackageCloneCommand::class,
         FlignoPackageCreateCommand::class,
         FlignoPackageDisableCommand::class,

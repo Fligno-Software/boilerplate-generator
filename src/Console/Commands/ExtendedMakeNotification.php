@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCreatesMatchingTestTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\NotificationMakeCommand;
 
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Console\NotificationMakeCommand;
  */
 class ExtendedMakeNotification extends NotificationMakeCommand
 {
-    use UsesCreatesMatchingTestTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -54,7 +54,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         parent::handle();
     }

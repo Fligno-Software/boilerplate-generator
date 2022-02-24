@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -15,14 +15,14 @@ use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class DddDtoMakeCommand
+ * Class DtoMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  * @since 2021-11-25
  */
-class DddDtoMakeCommand extends GeneratorCommand
+class DtoMakeCommand extends GeneratorCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -70,7 +70,7 @@ class DddDtoMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($this->option('request') === FALSE && $this->option('response') === FALSE) {
             $this->input->setOption('request', true);
@@ -97,14 +97,6 @@ class DddDtoMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @return string
-     */
-    public function getDtoType(): string
-    {
-        return $this->dtoType;
-    }
-
-    /**
      * Get the desired class name from the input.
      *
      * @return string
@@ -113,11 +105,11 @@ class DddDtoMakeCommand extends GeneratorCommand
     {
         $nameInput = trim($this->argument('name'));
 
-        if ($this->getDtoType() === 'request') {
-            return 'DataTransferObjects' . DIRECTORY_SEPARATOR . $nameInput . 'RequestData';
+        if ($this->dtoType === 'request') {
+            return 'DataTransferObjects/' . $nameInput . 'RequestData';
         }
 
-        return 'DataTransferObjects' . DIRECTORY_SEPARATOR . $nameInput . 'ResponseData';
+        return 'DataTransferObjects/' . $nameInput . 'ResponseData';
     }
 
     /**
@@ -130,9 +122,9 @@ class DddDtoMakeCommand extends GeneratorCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_app_path($this->package_dir) : app_path();
+        $path = $this->getPackageDomainFullPath();
 
-        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
+        return $path.'/'.str_replace('\\', '/', $name).'.php';
     }
 
     /**
@@ -152,13 +144,7 @@ class DddDtoMakeCommand extends GeneratorCommand
     #[Pure]
     protected function getStub(): string
     {
-        $defaultStub = __DIR__ . '/../../../stubs/ddd.dto.request.custom.stub';
-
-        if (file_exists($temp = __DIR__ . '/../../../stubs/dto.' . $this->getDtoType() . '.custom.stub')) {
-            return $temp;
-        }
-
-        return $defaultStub;
+        return __DIR__ . '/../../../stubs/dto.' . $this->dtoType . '.custom.stub';
     }
 
     /**

@@ -10,7 +10,12 @@ class ExtendedMigrationCreator extends MigrationCreator
     /**
      * @var string|null
      */
-    protected ?string $package_path = null;
+    protected ?string $package_dir = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $domain_dir = null;
 
     /**
      * Create a new migration at the given path.
@@ -25,18 +30,37 @@ class ExtendedMigrationCreator extends MigrationCreator
      */
     public function create($name, $path, $table = null, $create = false): string
     {
-        $path = $this->package_path ? package_migration_path($this->package_path) : $path;
+        return parent::create($name, $this->getPackageDomainFullPath($path), $table, $create);
+    }
 
-        return parent::create($name, $path, $table, $create);
+    /**
+     * @param string $defaultPath
+     * @return string
+     */
+    protected function getPackageDomainFullPath(string $defaultPath): string
+    {
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database/migrations';
+        }
+
+        return $this->package_dir ? package_migration_path($this->package_dir) : $defaultPath;
     }
 
     /***** SETTER & GETTER *****/
 
     /**
-     * @param string|null $package_path
+     * @param string|null $package_dir
      */
-    public function setPackagePath(?string $package_path): void
+    public function setPackageDir(?string $package_dir): void
     {
-        $this->package_path = $package_path;
+        $this->package_dir = $package_dir;
+    }
+
+    /**
+     * @param string|null $domain_dir
+     */
+    public function setDomainDir(?string $domain_dir): void
+    {
+        $this->domain_dir = $domain_dir;
     }
 }

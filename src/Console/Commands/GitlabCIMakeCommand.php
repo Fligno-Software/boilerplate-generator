@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class GitlabCIMakeCommand extends Command
 {
-    use UsesVendorPackageTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name and signature of the console command.
@@ -53,7 +53,7 @@ class GitlabCIMakeCommand extends Command
      */
     public function handle(): int
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $file = '.gitlab-ci.yml';
 

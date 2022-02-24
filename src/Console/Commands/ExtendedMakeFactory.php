@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesEloquentModelTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandEloquentModelTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Filesystem\Filesystem;
@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeFactory extends FactoryMakeCommand
 {
-    use UsesEloquentModelTrait;
+    use UsesCommandEloquentModelTrait;
 
     /**
      * The console command name.
@@ -55,7 +55,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         $this->setModelFields();
 
@@ -102,7 +102,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
 
-        $path = $this->package_dir ? package_database_path($this->package_dir)  : $this->laravel->databasePath();
+        $path = $this->getPackageDomainFullPath();
 
         return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
     }
@@ -129,5 +129,17 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getClassType(): ?string
     {
         return 'Factory';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPackageDomainFullPath(): string
+    {
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database';
+        }
+
+        return $this->package_dir ? package_database_path($this->package_dir)  : database_path();
     }
 }

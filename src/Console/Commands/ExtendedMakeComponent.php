@@ -5,7 +5,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ComponentMakeCommand;
 use Illuminate\Foundation\Inspiring;
@@ -17,7 +17,7 @@ use Illuminate\Foundation\Inspiring;
  */
 class ExtendedMakeComponent extends ComponentMakeCommand
 {
-    use UsesVendorPackageTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The console command name.
@@ -54,7 +54,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         return parent::handle();
     }

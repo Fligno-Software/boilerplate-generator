@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class FlignoPackageCloneCommand extends Command
 {
-    use UsesVendorPackageTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -54,13 +54,15 @@ class FlignoPackageCloneCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain(false, false);
 
-        $this->call('packager:git', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name,
-            'url' => $this->argument('url')
-        ]);
+        if ($this->vendor_name && $this->package_name) {
+            $this->call('packager:git', [
+                'vendor' => $this->vendor_name,
+                'name' => $this->package_name,
+                'url' => $this->argument('url')
+            ]);
+        }
     }
 
     /**

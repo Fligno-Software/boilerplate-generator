@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesContainerTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandContainerTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -17,7 +17,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class FacadeMakeCommand extends GeneratorCommand
 {
-    use UsesContainerTrait;
+    use UsesCommandContainerTrait;
 
     /**
      * The name and signature of the console command.
@@ -61,7 +61,7 @@ class FacadeMakeCommand extends GeneratorCommand
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($this->option('container')) {
             $this->addContainerReplaceNamespace();

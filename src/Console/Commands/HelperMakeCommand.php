@@ -4,8 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesContainerTrait;
-use Fligno\BoilerplateGenerator\Traits\UsesOverwriteFileTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandContainerTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -18,7 +17,7 @@ use Illuminate\Support\Str;
  */
 class HelperMakeCommand extends GeneratorCommand
 {
-    use UsesContainerTrait, UsesOverwriteFileTrait;
+    use UsesCommandContainerTrait;
 
     /**
      * The name and signature of the console command.
@@ -49,21 +48,18 @@ class HelperMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageOptions(true, true);
 
         $this->addContainerOptions();
-
-        $this->addOverwriteFileOptions();
     }
 
     /**
      * @return bool|null
-     * @throws MissingNameArgumentException
-     * @throws PackageNotFoundException|FileNotFoundException
+     * @throws MissingNameArgumentException|PackageNotFoundException|FileNotFoundException
      */
     public function handle(): ?bool
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain();
 
         if ($this->option('container')) {
             $this->addContainerReplaceNamespace();
@@ -99,28 +95,25 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getValidatedNameInput(): string
     {
-        $classType = $this->getClassType();
+        $classType = Str::snake($this->getClassType(), '-');
         $name = trim($this->argument('name'));
 
         if ($classType) {
-            return Str::of($name)->before($classType)->append($classType)->snake('-');
+            return Str::of($name)->snake('-')->before($classType)->trim('-')->append('-', $classType);
         }
 
         return $name;
     }
 
     /**
-     * Get the destination class path.
-     *
-     * @param  string  $name
      * @return string
      */
-    protected function getPath($name): string
+    protected function getPackageDomainFullPath(): string
     {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
+        if ($this->domain_dir) {
+            return ($this->package_dir ? package_app_path($this->package_dir) : app_path()) . '/' . $this->domain_dir . '/helpers';
+        }
 
-        $path = $this->package_dir ? package_helpers_path($this->package_dir) : base_path('helpers');
-
-        return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
+        return $this->package_dir ? package_helpers_path($this->package_dir) : base_path('helpers');
     }
 }

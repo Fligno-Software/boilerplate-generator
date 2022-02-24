@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Fligno\StarterKit\Traits\UsesUUID;
+use Fligno\StarterKit\Traits\UsesUUIDTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class {{ class }} extends Model
 {
-    use UsesUUID, SoftDeletes;
+    use UsesUUIDTrait, SoftDeletes;
 
     /**
      * Get the route key for the model.

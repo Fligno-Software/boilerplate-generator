@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesVendorPackageTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 
 /**
@@ -15,7 +15,7 @@ use Illuminate\Console\Command;
  */
 class FlignoPackageRemoveCommand extends Command
 {
-    use UsesVendorPackageTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name of the console command.
@@ -40,7 +40,7 @@ class FlignoPackageRemoveCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageArguments();
+        $this->addPackageArguments(false);
     }
 
     /**
@@ -49,12 +49,14 @@ class FlignoPackageRemoveCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorAndPackage();
+        $this->setVendorPackageDomain(true, false, false);
 
-        $this->call('packager:remove', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name
-        ]);
+        if ($this->vendor_name && $this->package_name) {
+            $this->call('packager:remove', [
+                'vendor' => $this->vendor_name,
+                'name' => $this->package_name
+            ]);
+        }
     }
 
     /**
