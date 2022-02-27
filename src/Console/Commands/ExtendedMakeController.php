@@ -114,20 +114,63 @@ class ExtendedMakeController extends ControllerMakeCommand
 
         if ($this->option('api')) {
             if (is_null($stub)) {
-                $stub = '/stubs/controller.api.custom.stub';
+                $stub = __DIR__ . '/../../../stubs/controller.api.custom.stub';
             }
             elseif (! $this->option('invokable')) {
                 $stub = str_replace('.custom.stub', '.api.custom.stub', $stub);
             }
         }
 
-        $stub = $stub ?? '/stubs/controller.plain.custom.stub';
+        $stub = $stub ?? __DIR__ . '/../../../stubs/controller.plain.custom.stub';
 
         if (file_exists($stub) === FALSE) {
             return parent::getStub();
         }
 
         return $stub;
+    }
+
+    /**
+     * @param string $option
+     * @return string
+     */
+    protected function getModelClass(string $option): string
+    {
+        $modelClass = $this->parseModel($this->option($option));
+
+        if (! class_exists($modelClass)) {
+            if ($this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
+                $args = $this->getPackageArgs();
+                $args['name'] = $modelClass;
+
+                $this->call('gen:model', $args);
+            }
+            else {
+                $alternativeModels = collect();
+
+                if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
+                    if (file_exists($temp = $packageDomainFullPath . '/Models')) {
+                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)->values());
+                    }
+
+                    if ($this->package_dir && ($temp = package_app_path($this->package_dir)) && $temp !== $packageDomainFullPath && file_exists($temp .= '/Models')) {
+                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)->values());
+                    }
+                }
+
+                $alternativeModels = $alternativeModels->merge(collect_classes_from_path(app_path('Models'))->values());
+
+                $defaultAlternativeModel = 'none';
+
+                $modelClass = $this->choice('Choose alternative ' . ($option === 'parent' ? $option . ' ' : null) . 'model', $alternativeModels->prepend($defaultAlternativeModel)->toArray(), 0);
+
+                $modelClass = $modelClass === $defaultAlternativeModel ? null : $modelClass;
+
+                $this->input->setOption($option, $modelClass);
+            }
+        }
+
+        return $modelClass;
     }
 
     /**
@@ -138,13 +181,7 @@ class ExtendedMakeController extends ControllerMakeCommand
     #[ArrayShape(['ParentDummyFullModelClass' => "mixed|string", '{{ namespacedParentModel }}' => "mixed|string", '{{namespacedParentModel}}' => "mixed|string", 'ParentDummyModelClass' => "string", '{{ parentModel }}' => "string", '{{parentModel}}' => "string", 'ParentDummyModelVariable' => "string", '{{ parentModelVariable }}' => "string", '{{parentModelVariable}}' => "string"])]
     protected function buildParentReplacements(): array
     {
-        $parentModelClass = $this->parseModel($this->option('parent'));
-
-        if (!class_exists($parentModelClass) && $this->confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", true)) {
-            $args = $this->getPackageArgs();
-            $args['name'] = $parentModelClass;
-            $this->call('gen:model', $args);
-        }
+        $parentModelClass = $this->getModelClass('parent');
 
         return [
             'ParentDummyFullModelClass' => $parentModelClass,
@@ -167,28 +204,26 @@ class ExtendedMakeController extends ControllerMakeCommand
      */
     protected function buildModelReplacements(array $replace): array
     {
-        $modelClass = $this->parseModel($this->option('model'));
+        $modelClass = $this->getModelClass('model');
 
-        if (!class_exists($modelClass) && $this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
-            $args = $this->getPackageArgs();
-            $args['name'] = $modelClass;
+        $replaceModelNamespaces = [];
 
-            $this->call('gen:model', $args);
+        if ($this->option('model')) {
+            $replace = $this->buildFormRequestReplacements($replace, $modelClass);
+            $replaceModelNamespaces = [
+                'DummyFullModelClass' => $modelClass,
+                '{{ namespacedModel }}' => $modelClass,
+                '{{namespacedModel}}' => $modelClass,
+                'DummyModelClass' => class_basename($modelClass),
+                '{{ model }}' => class_basename($modelClass),
+                '{{model}}' => class_basename($modelClass),
+                'DummyModelVariable' => lcfirst(class_basename($modelClass)),
+                '{{ modelVariable }}' => lcfirst(class_basename($modelClass)),
+                '{{modelVariable}}' => lcfirst(class_basename($modelClass)),
+            ];
         }
 
-        $replace = $this->buildFormRequestReplacements($replace, $modelClass);
-
-        return array_merge($replace, [
-            'DummyFullModelClass' => $modelClass,
-            '{{ namespacedModel }}' => $modelClass,
-            '{{namespacedModel}}' => $modelClass,
-            'DummyModelClass' => class_basename($modelClass),
-            '{{ model }}' => class_basename($modelClass),
-            '{{model}}' => class_basename($modelClass),
-            'DummyModelVariable' => lcfirst(class_basename($modelClass)),
-            '{{ modelVariable }}' => lcfirst(class_basename($modelClass)),
-            '{{modelVariable}}' => lcfirst(class_basename($modelClass)),
-        ]);
+        return array_merge($replace, $replaceModelNamespaces);
     }
 
     /**
@@ -200,7 +235,7 @@ class ExtendedMakeController extends ControllerMakeCommand
      */
     protected function buildFormRequestReplacements(array $replace, $modelClass): array
     {
-        if ($this->option('requests')) {
+        if ($modelClass) {
 
             $result = collect();
 
@@ -244,10 +279,12 @@ class ExtendedMakeController extends ControllerMakeCommand
     /**
      * @return array
      */
-    #[Pure] protected function getOptions(): array
+    protected function getOptions(): array
     {
+        $options = collect(parent::getOptions())->filter(fn($value) => ! collect($value)->contains('requests'))->toArray();
+
         return array_merge(
-            parent::getOptions(),
+            $options,
             [
                 ['repo', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
                 ['skip-model', null, InputOption::VALUE_NONE, 'Proceed as if model is already created.'],
