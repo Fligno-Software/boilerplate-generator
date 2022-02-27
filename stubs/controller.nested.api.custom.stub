@@ -164,7 +164,7 @@ class {{ class }} extends Controller
      * @param ${{ modelVariable }}
      * @return JsonResponse
      */
-    public function restore({{ restoreRequest }} $request, {{ parentModel }} ${{ parentModelVariable }}, ${{ modelVariable }})): JsonResponse
+    public function restore({{ restoreRequest }} $request, {{ parentModel }} ${{ parentModelVariable }}, ${{ modelVariable }}): JsonResponse
     {
         $data = {{ model }}::withTrashed()->find(${{ modelVariable }})->restore();
 
