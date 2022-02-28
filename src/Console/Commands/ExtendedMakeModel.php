@@ -140,7 +140,6 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['name'] = "{$controller}Controller";
         $args['--model'] = $this->option('resource') || $this->option('api') ? $modelName : null;
         $args['--api'] = $this->option('api');
-        $args['--requests'] = $this->option('requests') || $this->option('all');
         $args['--skip-model'] = true;
         $args['--no-interaction'] = true;
 
