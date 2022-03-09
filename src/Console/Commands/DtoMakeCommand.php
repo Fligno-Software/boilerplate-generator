@@ -68,7 +68,7 @@ class DtoMakeCommand extends GeneratorCommand
     /**
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
-    public function handle()
+    public function handle(): ?bool
     {
         $this->setVendorPackageDomain();
 
@@ -86,6 +86,8 @@ class DtoMakeCommand extends GeneratorCommand
             $this->setDtoType('response');
             parent::handle();
         }
+
+        return starterKit()->clearCache();
     }
 
     /**

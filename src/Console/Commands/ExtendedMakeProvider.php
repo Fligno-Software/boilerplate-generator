@@ -57,7 +57,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

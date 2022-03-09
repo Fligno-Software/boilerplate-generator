@@ -63,7 +63,7 @@ class ExtendedMakeTest extends TestMakeCommand
 
         $this->setModelFields();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

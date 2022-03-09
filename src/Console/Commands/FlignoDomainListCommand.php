@@ -48,6 +48,8 @@ class FlignoDomainListCommand extends Command
      */
     public function handle(): int
     {
+        starterKit()->clearCache();
+
         $this->setVendorPackageDomain(true, false);
 
         if ($domains = $this->getAllDomains(true)) {

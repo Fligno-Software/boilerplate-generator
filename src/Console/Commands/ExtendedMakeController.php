@@ -90,7 +90,7 @@ class ExtendedMakeController extends ControllerMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**
@@ -150,15 +150,15 @@ class ExtendedMakeController extends ControllerMakeCommand
 
                 if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
                     if (file_exists($temp = $packageDomainFullPath . '/Models')) {
-                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)->values());
+                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
                     }
 
                     if ($this->package_dir && ($temp = package_app_path($this->package_dir)) && $temp !== $packageDomainFullPath && file_exists($temp .= '/Models')) {
-                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)->values());
+                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
                     }
                 }
 
-                $alternativeModels = $alternativeModels->merge(collect_classes_from_path(app_path('Models'))->values());
+                $alternativeModels = $alternativeModels->merge(collect_classes_from_path(app_path('Models'))?->values());
 
                 $defaultAlternativeModel = 'none';
 

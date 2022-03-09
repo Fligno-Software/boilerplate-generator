@@ -55,6 +55,8 @@ class FlignoTest extends Command
      */
     public function handle(): int
     {
+        starterKit()->clearCache();
+
         $showPackageChoices = ! $this->option('packages') && ! $this->option('all');
 
         $this->setVendorPackageDomain($showPackageChoices);

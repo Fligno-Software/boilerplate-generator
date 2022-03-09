@@ -57,7 +57,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

@@ -57,7 +57,7 @@ class ExtendedMakeJob extends JobMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

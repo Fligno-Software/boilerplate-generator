@@ -57,7 +57,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

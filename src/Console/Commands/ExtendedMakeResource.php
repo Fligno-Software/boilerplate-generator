@@ -57,6 +57,8 @@ class ExtendedMakeResource extends ResourceMakeCommand
         $this->setVendorPackageDomain();
 
         parent::handle();
+
+        starterKit()->clearCache();
     }
 
     /**

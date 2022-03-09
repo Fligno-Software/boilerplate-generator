@@ -43,21 +43,6 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected $type = 'Trait';
 
-    /**
-     * @var string|null
-     */
-    protected ?string $factory_class = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $factory_name = null;
-
-    /**
-     * @var bool
-     */
-    protected bool $factory_exists = false;
-
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);

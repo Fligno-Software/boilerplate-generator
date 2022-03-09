@@ -36,6 +36,8 @@ class FlignoPackageListCommand extends Command
      */
     public function handle(): void
     {
+        starterKit()->clearCache();
+
         $this->table(
             [
                 'Package',

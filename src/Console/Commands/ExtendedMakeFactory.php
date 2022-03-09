@@ -63,7 +63,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
         $this->createFactoryTrait();
 
-        return $res;
+        return $res && starterKit()->clearCache();
     }
 
     /**

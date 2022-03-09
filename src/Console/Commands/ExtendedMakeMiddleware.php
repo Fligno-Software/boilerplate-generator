@@ -57,7 +57,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

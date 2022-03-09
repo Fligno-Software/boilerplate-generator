@@ -57,7 +57,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

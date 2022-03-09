@@ -84,7 +84,7 @@ class RouteMakeCommand extends GeneratorCommand
 
         $this->info($this->type.' created successfully.');
 
-        return self::SUCCESS;
+        return self::SUCCESS && ! starterKit()->clearCache();
     }
 
     /**
