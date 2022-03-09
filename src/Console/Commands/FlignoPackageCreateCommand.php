@@ -85,6 +85,8 @@ class FlignoPackageCreateCommand extends Command
                 '--package' => $this->package_dir
             ]);
         }
+
+        starterKit()->clearCache();
     }
 
     /**

@@ -67,6 +67,8 @@ class ExtendedMakeModel extends ModelMakeCommand
         if ($this->option('repo')) {
             $this->createRepository();
         }
+
+        starterKit()->clearCache();
     }
 
     /**

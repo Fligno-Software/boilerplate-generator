@@ -55,6 +55,8 @@ class FlignoPackageEnableCommand extends Command
             'vendor' => $this->vendor_name,
             'name' => $this->package_name
         ]);
+
+        starterKit()->clearCache();
     }
 
     /**

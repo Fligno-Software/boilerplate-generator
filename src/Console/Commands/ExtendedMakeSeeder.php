@@ -57,6 +57,8 @@ class ExtendedMakeSeeder extends SeederMakeCommand
         $this->setVendorPackageDomain();
 
         parent::handle();
+
+        starterKit()->clearCache();
     }
 
     /**

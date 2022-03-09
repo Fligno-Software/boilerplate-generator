@@ -83,7 +83,7 @@ class FlignoDomainCreateCommand extends GeneratorCommand
             $this->failed('Domain was not created or already existing.');
         }
 
-        return $success;
+        return $success && starterKit()->clearCache();
     }
 
     /**

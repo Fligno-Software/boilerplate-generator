@@ -56,7 +56,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

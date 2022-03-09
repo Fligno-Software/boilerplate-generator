@@ -57,6 +57,8 @@ class ExtendedMakeNotification extends NotificationMakeCommand
         $this->setVendorPackageDomain();
 
         parent::handle();
+
+        starterKit()->clearCache();
     }
 
     /**

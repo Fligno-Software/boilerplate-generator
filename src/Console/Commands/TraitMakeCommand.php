@@ -43,21 +43,6 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected $type = 'Trait';
 
-    /**
-     * @var string|null
-     */
-    protected ?string $factory_class = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $factory_name = null;
-
-    /**
-     * @var bool
-     */
-    protected bool $factory_exists = false;
-
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);
@@ -98,13 +83,10 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected function setFactoryFields(): void
     {
-        if(
-            ($factory = $this->option('factory')) && (
-                $this->checkFactoryExists($factory, false) ||
-                $this->checkFactoryExists($factory, true, true)||
-                $this->checkFactoryExists($factory)
-            )
-        ) {
+        if($factory = $this->option('factory')) {
+            $factory = $this->qualifyFactoryClass($factory);
+            $this->setFactoryName($factory);
+            $this->setFactoryClass($factory);
             $this->addMoreCasedReplaceNamespace($factory, 'Factory');
         }
     }
@@ -139,67 +121,23 @@ class TraitMakeCommand extends GeneratorCommand
     /***** SETTERS & GETTERS *****/
 
     /**
-     * @param string|null $factory_class
+     * @param string|null $factory
      */
-    public function setFactoryClass(?string $factory_class): void
+    public function setFactoryClass(?string $factory): void
     {
-        $this->factory_class = $factory_class;
-
         $this->addMoreReplaceNamespace([
-            'FactoryClass' => $this->factory_class
+            'FactoryClass' => $factory
         ]);
     }
 
     /**
-     * @param string|null $factory_name
+     * @param string|null $factory
      */
-    public function setFactoryName(?string $factory_name): void
+    public function setFactoryName(?string $factory): void
     {
-        $this->factory_name = Str::of($factory_name)->afterLast('\\');
-
         $this->addMoreReplaceNamespace([
-            'FactoryName' => $this->factory_name
+            'FactoryName' => Str::of($factory)->afterLast('\\')
         ]);
-    }
-
-    /**
-     * @param string $factory
-     * @param bool $qualifyFactoryClass
-     * @param bool $disablePackageNamespaceTemporarily
-     * @return bool
-     */
-    protected function checkFactoryExists(string &$factory, bool $qualifyFactoryClass = true, bool $disablePackageNamespaceTemporarily = false): bool
-    {
-        if ($disablePackageNamespaceTemporarily) {
-            $this->is_package_namespace_disabled = true;
-        }
-
-        if ($qualifyFactoryClass) {
-            $factory = $this->qualifyFactoryClass($factory);
-        }
-        else {
-            $factory = (string) $this->cleanClassNamespace($factory);
-        }
-
-        $this->is_package_namespace_disabled = false;
-
-        $this->factory_exists = class_exists($factory);
-
-        return $this->factory_exists;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRootNamespaceDuringReplaceNamespace(): string
-    {
-        $rootNameSpace = $this->rootNamespace();
-
-        if ($rootNameSpace !== $this->package_namespace) {
-            $rootNameSpace = '';
-        }
-
-        return $rootNameSpace;
     }
 
     /**
@@ -212,25 +150,12 @@ class TraitMakeCommand extends GeneratorCommand
     {
         $name = (string) $this->cleanClassNamespace($name);
 
-        $rootNamespace = $this->rootFactoryNamespace();
+        $rootNamespace = 'Database\\Factories';
 
-        if (!$rootNamespace || Str::startsWith($name, $rootNamespace)) {
+        if (Str::startsWith($name, $rootNamespace)) {
             return $name;
         }
 
         return $this->qualifyFactoryClass(trim($rootNamespace, '\\').'\\'.$name);
-    }
-
-    /**
-     * @return string
-     */
-    protected function rootFactoryNamespace(): string
-    {
-        $default = 'Database\\Factories';
-        if ($this->is_package_namespace_disabled || ! $this->package_namespace) {
-            return $default;
-        }
-
-        return $this->package_namespace;
     }
 }

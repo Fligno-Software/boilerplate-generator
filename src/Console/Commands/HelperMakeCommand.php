@@ -65,7 +65,7 @@ class HelperMakeCommand extends GeneratorCommand
             $this->addContainerReplaceNamespace();
         }
 
-        return parent::handle();
+        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

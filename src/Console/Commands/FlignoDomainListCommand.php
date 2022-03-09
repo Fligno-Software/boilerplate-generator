@@ -48,12 +48,13 @@ class FlignoDomainListCommand extends Command
      */
     public function handle(): int
     {
+        starterKit()->clearCache();
+
         $this->setVendorPackageDomain(true, false);
 
-        if ($domains = $this->getAllDomains()) {
-            $domainPaths = $this->getAllDomains(true);
+        if ($domains = $this->getAllDomains(true)) {
 
-            $domains = $domains->zip($domainPaths);
+            $domains = $domains->mapWithKeys(fn($item, $key) => [[$key, $item]]);
 
             $this->table(
                 ['Domain', 'Path'],

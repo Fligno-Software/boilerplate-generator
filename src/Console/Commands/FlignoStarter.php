@@ -76,6 +76,8 @@ class FlignoStarter extends Command
      */
     public function handle(): void
     {
+        starterKit()->clearCache();
+
         $this->setVendorPackageDomain();
 
         $this->startPreparations();

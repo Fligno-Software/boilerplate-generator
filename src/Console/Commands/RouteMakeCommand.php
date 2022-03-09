@@ -10,6 +10,7 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -83,7 +84,7 @@ class RouteMakeCommand extends GeneratorCommand
 
         $this->info($this->type.' created successfully.');
 
-        return self::SUCCESS;
+        return self::SUCCESS && ! starterKit()->clearCache();
     }
 
     /**
@@ -103,11 +104,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        if ($this->option('api')) {
-            return __DIR__ . '/../../../stubs/api.custom.stub';
-        }
-
-        return __DIR__ . '/../../../stubs/web.custom.stub';
+        return __DIR__ . '/../../../stubs/route.custom.stub';
     }
 
     /**
@@ -127,9 +124,12 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getValidatedNameInput(): string
     {
-        $name = trim($this->argument('name'));
-
-        return Str::of($name)->snake('-');
+        return Str::of(preg_replace('/[^A-Za-z0-9]/', ' ', trim($this->argument('name'))))
+            ->snake('-')
+            ->replace('api','')
+            ->trim('-')
+            ->when($this->option('api'), fn(Stringable $str) => $str->append('.api'))
+            ->trim('.');
     }
 
     /**

@@ -54,6 +54,8 @@ class FlignoPackageCloneCommand extends Command
      */
     public function handle(): void
     {
+        starterKit()->clearCache();
+
         $this->setVendorPackageDomain(false, false);
 
         if ($this->vendor_name && $this->package_name) {

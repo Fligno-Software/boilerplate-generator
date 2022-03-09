@@ -57,6 +57,8 @@ class FlignoPackageDisableCommand extends Command
                 'name' => $this->package_name
             ]);
         }
+
+        starterKit()->clearCache();
     }
 
     /**

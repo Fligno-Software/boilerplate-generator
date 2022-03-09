@@ -54,6 +54,8 @@ class FlignoPackagePublishCommand extends Command
      */
     public function handle(): void
     {
+        starterKit()->clearCache();
+
         $this->setVendorPackageDomain();
 
         $this->call('packager:publish', [

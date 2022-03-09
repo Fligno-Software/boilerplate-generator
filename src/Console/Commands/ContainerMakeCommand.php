@@ -70,7 +70,7 @@ class ContainerMakeCommand extends GeneratorCommand
 
         $this->createContainerFacade();
 
-        return $res;
+        return $res && starterKit()->clearCache();
     }
 
     /**
