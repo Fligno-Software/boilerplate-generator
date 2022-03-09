@@ -9,10 +9,8 @@ use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\StarterKit\Traits\UsesCommandCustomMessagesTrait;
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use JetBrains\PhpStorm\Pure;
 use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -317,23 +315,6 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $prependDirectory
-     * @return Collection|null
-     */
-    public function getAllDomains(bool $prependDirectory = false): ?Collection
-    {
-        $path = $this->package_dir ? package_path($this->package_dir) : app_path();
-
-        if ($domainsPath = guess_file_or_directory_path($path, 'Domains')) {
-            $result = collect_files_or_directories($domainsPath, true, false, $prependDirectory);
-
-            return $result?->isNotEmpty() ? $result : null;
-        }
-
-        return null;
-    }
-
-    /**
      * @param bool $withDomain
      * @return array
      */
@@ -548,32 +529,23 @@ trait UsesCommandVendorPackageDomainTrait
     /***** DOMAINS LIST *****/
 
     /**
-     * @return Collection
+     * @param bool $prependDirectory
+     * @return Collection|null
      */
-    public function collectDomainList(): Collection
+    public function getAllDomains(bool $prependDirectory = false): ?Collection
     {
-        $allDomains = collect();
+        $path = $this->package_dir ? package_path($this->package_dir) : app_path();
 
-        if (file_exists(package_path())) {
-            collect_files_or_directories(package_path(), true, false)?->each(function ($vendor) use ($allDomains) {
-                collect_files_or_directories(package_path($vendor), true, false)?->each(function ($package) use ($allDomains, $vendor) {
-                    $allDomains->add($vendor . '/' .$package);
-                });
-            });
+        if ($domainsPath = guess_file_or_directory_path($path, 'Domains')) {
+            $result = collect_files_or_directories($domainsPath, true, false, $prependDirectory);
+
+            return $result?->isNotEmpty() ? $result : null;
         }
 
-        return $allDomains;
+        return null;
     }
 
     /***** STUB REPLACEMENT LOGIC *****/
-
-    /**
-     * @return Collection|null
-     */
-    public function getMoreReplaceNamespace(): ?Collection
-    {
-        return $this->moreReplaceNamespace;
-    }
 
     /**
      * @param Collection|array $more
