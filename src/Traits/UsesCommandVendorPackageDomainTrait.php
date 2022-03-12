@@ -185,8 +185,8 @@ trait UsesCommandVendorPackageDomainTrait
 
         $package = trim($package, '/');
 
-        if ($showPackageChoices && ! $package) {
-            $choices = $this->getAllPackages()->when($showDefaultPackage, fn ($choices) => $choices->prepend($this->default_package));
+        if ($showPackageChoices && ! $package && ($choices = $this->getAllPackages()) && $choices->count()) {
+            $choices = $choices->when($showDefaultPackage, fn ($choices) => $choices->prepend($this->default_package));
             $package = $this->choice('Choose target package', $choices->toArray(), 0);
         }
 
