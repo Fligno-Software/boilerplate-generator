@@ -59,13 +59,18 @@ class ExtendedMakeModel extends ModelMakeCommand
         $this->setVendorPackageDomain();
 
         if ($this->option('all')) {
-            $this->input->setOption('repo', true);
+            $this->input->setOption('repository', true);
+            $this->input->setOption('observer', true);
         }
 
         parent::handle();
 
-        if ($this->option('repo')) {
+        if ($this->option('repository')) {
             $this->createRepository();
+        }
+
+        if ($this->option('observer')) {
+            $this->createObserver();
         }
 
         starterKit()->clearCache();
@@ -149,7 +154,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     }
 
     /**
-     * Create a policy file for the model.
+     * Create a repository file for the model.
      *
      * @return void
      * @throws MissingNameArgumentException
@@ -164,6 +169,24 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--no-interaction'] = true;
 
         $this->call('gen:repository', $args);
+    }
+
+    /**
+     * Create a observer file for the model.
+     *
+     * @return void
+     * @throws MissingNameArgumentException
+     */
+    protected function createObserver(): void
+    {
+        $repository = Str::studly(class_basename($this->argument('name')));
+
+        $args = $this->getPackageArgs();
+        $args['name'] = "{$repository}Observer";
+        $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--no-interaction'] = true;
+
+        $this->call('gen:observer', $args);
     }
 
     /**
@@ -209,7 +232,8 @@ class ExtendedMakeModel extends ModelMakeCommand
         return array_merge(
             parent::getOptions(),
             [
-                ['repo', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
+                ['repository', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
+                ['observer', 'o', InputOption::VALUE_NONE, 'Create new observer class based on the model.'],
             ]
         );
     }
