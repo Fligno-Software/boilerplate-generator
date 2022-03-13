@@ -108,7 +108,7 @@ trait UsesCommandEloquentModelTrait
      */
     public function setModelSnake(?string $str): void
     {
-        $this->model_snake = Str::snake($str);
+        $this->model_snake = Str::of($str)->afterLast('\\')->snake();
 
         $this->addMoreReplaceNamespace([
             'ModelSnake' => $this->model_snake
@@ -120,7 +120,7 @@ trait UsesCommandEloquentModelTrait
      */
     public function setModelKebab(?string $str): void
     {
-        $this->model_kebab = Str::kebab($str);
+        $this->model_kebab = Str::of($str)->afterLast('\\')->kebab();
 
         $this->addMoreReplaceNamespace([
             'ModelKebab' => $this->model_kebab
