@@ -72,7 +72,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function createFactoryTrait(): void
     {
-        if ($this->package_name && $this->model_name)
+        if (($this->package_name || $this->domain_name) && $this->model_name)
         {
             $this->call('gen:trait', array_merge(
                 $this->getPackageArgs(),
