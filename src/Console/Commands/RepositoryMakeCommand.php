@@ -9,8 +9,6 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use JetBrains\PhpStorm\Pure;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class RepositoryMakeCommand
@@ -75,18 +73,6 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function getStub(): string
     {
         return __DIR__ . '/../../../stubs/repository.custom.stub';
-    }
-
-    /**
-     * @return array
-     */
-    #[Pure] protected function getOptions(): array
-    {
-        return array_merge(
-            [
-                ['model', null, InputOption::VALUE_REQUIRED, 'Eloquent Model to base the repository class from.']
-            ]
-        );
     }
 
     protected function getDefaultNamespace($rootNamespace): string

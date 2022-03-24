@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
  */
 class ExtendedMakeTest extends TestMakeCommand
 {
-    use UsesCommandVendorPackageDomainTrait, UsesCommandEloquentModelTrait;
+    use UsesCommandEloquentModelTrait;
 
     /**
      * The console command name.

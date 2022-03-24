@@ -101,15 +101,16 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a model factory for the model.
      *
      * @return void
-     * @throws MissingNameArgumentException
      */
     protected function createFactory(): void
     {
-        $factory = Str::studly($this->argument('name'));
+        $name = $this->argument('name');
+
+        $factory = Str::studly($name);
 
         $args = $this->getPackageArgs();
-        $args['name'] = "{$factory}Factory";
-        $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['name'] = $factory;
+        $args['--model'] = $this->qualifyClass($name);
         $args['--no-interaction'] = true;
 
         $this->call('gen:factory', $args);
@@ -125,7 +126,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $seeder = Str::studly(class_basename($this->argument('name')));
 
         $args = $this->getPackageArgs();
-        $args['name'] = "{$seeder}Seeder";
+        $args['name'] = $seeder;
         $args['--no-interaction'] = true;
 
         $this->call('gen:seeder', $args);
@@ -135,16 +136,17 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a controller for the model.
      *
      * @return void
-     * @throws MissingNameArgumentException
      */
     protected function createController(): void
     {
-        $controller = Str::studly(class_basename($this->argument('name')));
+        $name = $this->argument('name');
 
-        $modelName = $this->qualifyClass($this->getNameInput());
+        $controller = Str::studly(class_basename($name));
+
+        $modelName = $this->qualifyClass($name);
 
         $args = $this->getPackageArgs();
-        $args['name'] = "{$controller}Controller";
+        $args['name'] = $controller;
         $args['--model'] = $this->option('resource') || $this->option('api') ? $modelName : null;
         $args['--api'] = $this->option('api');
         $args['--skip-model'] = true;
@@ -157,33 +159,32 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a repository file for the model.
      *
      * @return void
-     * @throws MissingNameArgumentException
      */
     protected function createRepository(): void
     {
-        $repository = Str::studly(class_basename($this->argument('name')));
+        $name = $this->argument('name');
+
+        $repository = Str::studly(class_basename($name));
 
         $args = $this->getPackageArgs();
-        $args['name'] = "{$repository}Repository";
-        $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['name'] = $repository;
         $args['--no-interaction'] = true;
 
         $this->call('gen:repository', $args);
     }
 
     /**
-     * Create a observer file for the model.
+     * Create an observer file for the model.
      *
      * @return void
-     * @throws MissingNameArgumentException
      */
     protected function createObserver(): void
     {
         $repository = Str::studly(class_basename($this->argument('name')));
 
         $args = $this->getPackageArgs();
-        $args['name'] = "{$repository}Observer";
-        $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['name'] = $repository;
+        $args['--model'] = $this->qualifyClass($repository);
         $args['--no-interaction'] = true;
 
         $this->call('gen:observer', $args);
@@ -193,15 +194,16 @@ class ExtendedMakeModel extends ModelMakeCommand
      * Create a policy file for the model.
      *
      * @return void
-     * @throws MissingNameArgumentException
      */
     protected function createPolicy(): void
     {
-        $policy = Str::studly(class_basename($this->argument('name')));
+        $name = $this->argument('name');
+
+        $policy = Str::studly(class_basename($name));
 
         $args = $this->getPackageArgs();
         $args['name'] = $policy;
-        $args['--model'] = $this->qualifyClass($this->getNameInput());
+        $args['--model'] = $this->qualifyClass($name);
         $args['--no-interaction'] = true;
 
         $this->call('gen:policy', $args);
@@ -215,13 +217,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected function getStub(): string
     {
-        $stub = '/../../../stubs/model.custom.stub';
-
-        if (file_exists($path = __DIR__ . $stub) === false) {
-            return parent::getStub();
-        }
-
-        return $path;
+        return __DIR__ . '/../../../stubs/model.custom.stub';
     }
 
     /**
