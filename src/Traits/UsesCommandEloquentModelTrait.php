@@ -67,14 +67,11 @@ trait UsesCommandEloquentModelTrait
         $this->skip_model_check = $this->option('skip');
 
         if ($this->hasOption('model') && $model = $this->option('model')) {
-            if ($this->skip_model_check ||
-                ($this->isGeneratorSubclass() && (
-                    $this->checkModelExists($model, false) ||
-                    $this->checkModelExists($model, true, true) ||
-                    $this->checkModelExists($model)
-                    )
-                )
-            ) {
+            if (! class_exists($model)) {
+                $model = $this->getModelClass('model');
+            }
+
+            if ($this->option('model')) {
                 $this->setModelClass($model);
                 $this->setModelName($model);
                 $this->setModelKebab($model);
@@ -93,14 +90,6 @@ trait UsesCommandEloquentModelTrait
         $this->addMoreReplaceNamespace([
             'ModelClass' => $this->model_class
         ]);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModelClass(): ?string
-    {
-        return $this->model_class;
     }
 
     /**
@@ -137,64 +126,5 @@ trait UsesCommandEloquentModelTrait
         $this->addMoreReplaceNamespace([
             'ModelName' => $this->model_name
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function getEloquentModelArgs(): array
-    {
-        $args = [];
-
-        if ($this->option('model')) {
-            $args['--model'] = $this->getModelClass();
-        }
-
-        return $args;
-    }
-
-    /**
-     * Qualify the given model class base name.
-     *
-     * @param  string  $model
-     * @return string
-     */
-    protected function qualifyModel(string $model): string
-    {
-        $model = (string) $this->cleanClassNamespace($model);
-
-        $rootNamespace = $this->rootNamespace();
-
-        if (Str::startsWith($model, $rootNamespace)) {
-            return $model;
-        }
-
-        return is_dir(app_path('Models'))
-            ? $rootNamespace.'Models\\'.$model
-            : $rootNamespace.$model;
-    }
-
-    /**
-     * @param string $model
-     * @param bool $qualifyModel
-     * @param bool $disablePackageNamespaceTemporarily
-     * @return bool
-     */
-    protected function checkModelExists(string &$model, bool $qualifyModel = true, bool $disablePackageNamespaceTemporarily = false): bool
-    {
-        if ($disablePackageNamespaceTemporarily) {
-            $this->is_package_namespace_disabled = true;
-        }
-
-        if ($qualifyModel) {
-            $model = $this->qualifyModel($model);
-        }
-        else {
-            $model = (string) $this->cleanClassNamespace($model);
-        }
-
-        $this->is_package_namespace_disabled = false;
-
-        return $this->model_exists = is_eloquent_model($model);
     }
 }

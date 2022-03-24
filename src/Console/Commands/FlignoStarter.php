@@ -207,23 +207,6 @@ class FlignoStarter extends Command
     /***** MODEL VALIDATION *****/
 
     /**
-     * Get the fully-qualified model class name.
-     *
-     * @param string $model
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function parseModel(string $model): string
-    {
-        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
-            throw new InvalidArgumentException('Model name contains invalid characters.');
-        }
-
-        return $this->qualifyModel($model);
-    }
-
-    /**
      * Qualify the given model class base name.
      *
      * @param  string  $model

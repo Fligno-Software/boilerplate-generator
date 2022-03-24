@@ -11,6 +11,7 @@ use Fligno\StarterKit\Traits\UsesCommandCustomMessagesTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -666,6 +667,70 @@ trait UsesCommandVendorPackageDomainTrait
     {
         return $this->hasOption('force-domain') && $this->option('force-domain');
     }
+
+    /***** ELOQUENT MODEL RELATED *****/
+
+    /**
+     * @param string $option
+     * @return string
+     */
+    protected function getModelClass(string $option): string
+    {
+        $modelClass = $this->parseModel($this->option($option));
+
+        if (! class_exists($modelClass)) {
+            if ($this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
+                $args = $this->getPackageArgs();
+                $args['name'] = $modelClass;
+
+                $this->call('gen:model', $args);
+            }
+            else {
+                $alternativeModels = collect();
+
+                if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
+                    if (file_exists($temp = $packageDomainFullPath . '/Models')) {
+                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
+                    }
+
+                    if ($this->package_dir && ($temp = package_app_path($this->package_dir)) && $temp !== $packageDomainFullPath && file_exists($temp .= '/Models')) {
+                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
+                    }
+                }
+
+                $alternativeModels = $alternativeModels->merge(collect_classes_from_path(app_path('Models'))?->values());
+
+                $defaultAlternativeModel = 'none';
+
+                $modelClass = $this->choice('Choose alternative ' . ($option === 'parent' ? $option . ' ' : null) . 'model', $alternativeModels->prepend($defaultAlternativeModel)->toArray(), 0);
+
+                $modelClass = $modelClass === $defaultAlternativeModel ? null : $modelClass;
+
+                $this->input->setOption($option, $modelClass);
+            }
+        }
+
+        return $modelClass;
+    }
+
+    /**
+     * Get the fully-qualified model class name.
+     *
+     * @param  string  $model
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function parseModel($model): string
+    {
+        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
+            throw new InvalidArgumentException('Model name contains invalid characters.');
+        }
+
+        return $this->qualifyModel($model);
+    }
+
+    /***** TEST RELATED *****/
 
     /**
      * Create the matching test case if requested.

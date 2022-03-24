@@ -131,49 +131,6 @@ class ExtendedMakeController extends ControllerMakeCommand
     }
 
     /**
-     * @param string $option
-     * @return string
-     */
-    protected function getModelClass(string $option): string
-    {
-        $modelClass = $this->parseModel($this->option($option));
-
-        if (! class_exists($modelClass)) {
-            if ($this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
-                $args = $this->getPackageArgs();
-                $args['name'] = $modelClass;
-
-                $this->call('gen:model', $args);
-            }
-            else {
-                $alternativeModels = collect();
-
-                if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
-                    if (file_exists($temp = $packageDomainFullPath . '/Models')) {
-                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
-                    }
-
-                    if ($this->package_dir && ($temp = package_app_path($this->package_dir)) && $temp !== $packageDomainFullPath && file_exists($temp .= '/Models')) {
-                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
-                    }
-                }
-
-                $alternativeModels = $alternativeModels->merge(collect_classes_from_path(app_path('Models'))?->values());
-
-                $defaultAlternativeModel = 'none';
-
-                $modelClass = $this->choice('Choose alternative ' . ($option === 'parent' ? $option . ' ' : null) . 'model', $alternativeModels->prepend($defaultAlternativeModel)->toArray(), 0);
-
-                $modelClass = $modelClass === $defaultAlternativeModel ? null : $modelClass;
-
-                $this->input->setOption($option, $modelClass);
-            }
-        }
-
-        return $modelClass;
-    }
-
-    /**
      * Build the replacements for a parent controller.
      *
      * @return array
