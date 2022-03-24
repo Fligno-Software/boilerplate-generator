@@ -61,13 +61,6 @@ class FlignoPackageCreateCommand extends Command
         ]);
 
         if (! $this->isNoInteraction()) {
-            $args = $this->getPackageArgs();
-
-            $args['model'] = $this->package_name_studly;
-            $args['--yes'] = $this->option('yes');
-
-            $this->call('fligno:start', $args);
-
             collect(['web', 'api'])->each(function ($value) {
                 $this->call('gen:route', [
                     'name' => $value,
