@@ -14,7 +14,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-20
+ * @since  2021-11-20
  */
 class ExtendedMakeMiddleware extends MiddlewareMakeCommand
 {
@@ -37,7 +37,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -47,7 +47,9 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

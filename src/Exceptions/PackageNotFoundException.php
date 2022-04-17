@@ -15,6 +15,6 @@ class PackageNotFoundException extends Exception
     #[Pure]
     public function __construct(string $package_name)
     {
-        parent::__construct('Package does not exist: ' . $package_name, 0);
+        parent::__construct('Package does not exist: ' . $package_name);
     }
 }

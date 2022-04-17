@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
  * Class FlignoPackageCloneCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-12-06
+ * @since  2021-12-06
  */
 class FlignoPackageCloneCommand extends Command
 {
@@ -43,13 +43,18 @@ class FlignoPackageCloneCommand extends Command
 
         $this->addPackageArguments();
 
-        $this->getDefinition()->addArgument(new InputArgument(
-            'url', InputArgument::REQUIRED, 'The Git URL of package to clone.'
-        ));
+        $this->getDefinition()->addArgument(
+            new InputArgument(
+                'url',
+                InputArgument::REQUIRED,
+                'The Git URL of package to clone.'
+            )
+        );
     }
 
     /**
      * Execute the console command.
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -59,11 +64,14 @@ class FlignoPackageCloneCommand extends Command
         $this->setVendorPackageDomain(false, false);
 
         if ($this->vendor_name && $this->package_name) {
-            $this->call('packager:git', [
-                'vendor' => $this->vendor_name,
-                'name' => $this->package_name,
-                'url' => $this->argument('url')
-            ]);
+            $this->call(
+                'packager:git',
+                [
+                    'vendor' => $this->vendor_name,
+                    'name' => $this->package_name,
+                    'url' => $this->argument('url')
+                ]
+            );
         }
     }
 

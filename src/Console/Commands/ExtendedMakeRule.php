@@ -14,7 +14,7 @@ use Illuminate\Foundation\Console\RuleMakeCommand;
  * Class ExtendedMakeRule
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-20
+ * @since  2021-11-20
  */
 class ExtendedMakeRule extends RuleMakeCommand
 {
@@ -37,7 +37,7 @@ class ExtendedMakeRule extends RuleMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -47,7 +47,9 @@ class ExtendedMakeRule extends RuleMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

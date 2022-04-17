@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
  * Class FlignoPackageDisableCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-12-06
+ * @since  2021-12-06
  */
 class FlignoPackageDisableCommand extends Command
 {
@@ -45,6 +45,7 @@ class FlignoPackageDisableCommand extends Command
 
     /**
      * Execute the console command.
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -52,10 +53,13 @@ class FlignoPackageDisableCommand extends Command
         $this->setVendorPackageDomain(true, false, false);
 
         if ($this->vendor_name && $this->package_name) {
-            $this->call('packager:disable', [
-                'vendor' => $this->vendor_name,
-                'name' => $this->package_name
-            ]);
+            $this->call(
+                'packager:disable',
+                [
+                    'vendor' => $this->vendor_name,
+                    'name' => $this->package_name
+                ]
+            );
         }
 
         starterKit()->clearCache();

@@ -6,14 +6,13 @@ use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
-use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class FlignoPackageCreateCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-09
+ * @since  2021-11-09
  */
 class FlignoPackageCreateCommand extends Command
 {
@@ -48,35 +47,50 @@ class FlignoPackageCreateCommand extends Command
 
     /**
      * Execute the console command.
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
     {
         $this->setVendorPackageDomain(false, false);
 
-        $this->call('packager:new', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name,
-            '--i' => true
-        ]);
+        $this->call(
+            'packager:new',
+            [
+                'vendor' => $this->vendor_name,
+                'name' => $this->package_name,
+                '--i' => true
+            ]
+        );
 
         if (! $this->isNoInteraction()) {
-            collect(['web', 'api'])->each(function ($value) {
-                $this->call('gen:route', [
-                    'name' => $value,
-                    '--package' => $this->package_dir,
-                    '--api' => $value !== 'web'
-                ]);
-            });
+            collect(['web', 'api'])->each(
+                function ($value) {
+                    $this->call(
+                        'gen:route',
+                        [
+                            'name' => $value,
+                            '--package' => $this->package_dir,
+                            '--api' => $value !== 'web'
+                        ]
+                    );
+                }
+            );
 
-            $this->call('gen:gitlab', [
-                '--package' => $this->package_dir
-            ]);
+            $this->call(
+                'gen:gitlab',
+                [
+                    '--package' => $this->package_dir
+                ]
+            );
 
-            $this->call('gen:helper', [
-                'name' => $this->package_name,
-                '--package' => $this->package_dir
-            ]);
+            $this->call(
+                'gen:helper',
+                [
+                    'name' => $this->package_name,
+                    '--package' => $this->package_dir
+                ]
+            );
         }
 
         starterKit()->clearCache();

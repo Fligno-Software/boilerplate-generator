@@ -20,25 +20,34 @@ trait UsesCommandContainerTrait
     protected bool $container_exists = false;
 
     /**
-     * @param string|null $description
+     * @param  string|null $description
      * @return void
      */
     protected function addContainerOptions(string $description = null): void
     {
-        $this->getDefinition()->addOption(new InputOption(
-            'container', 'c', InputOption::VALUE_REQUIRED, $description ?? 'Service Container class.'
-        ));
+        $this->getDefinition()->addOption(
+            new InputOption(
+                'container',
+                'c',
+                InputOption::VALUE_REQUIRED,
+                $description ?? 'Service Container class.'
+            )
+        );
     }
 
     /**
-     * @param string $container
-     * @param string|null $additionalNamespace
-     * @param bool $qualifyContainer
-     * @param bool $disablePackageNamespaceTemporarily
+     * @param  string      $container
+     * @param  string|null $additionalNamespace
+     * @param  bool        $qualifyContainer
+     * @param  bool        $disablePackageNamespaceTemporarily
      * @return bool
      */
-    protected function checkContainerExists(string &$container, string $additionalNamespace = null, bool $qualifyContainer = true, bool $disablePackageNamespaceTemporarily = false): bool
-    {
+    protected function checkContainerExists(
+        string &$container,
+        string $additionalNamespace = null,
+        bool $qualifyContainer = true,
+        bool $disablePackageNamespaceTemporarily = false
+    ): bool {
         $containerCopy = $container;
 
         if ($disablePackageNamespaceTemporarily) {
@@ -47,8 +56,7 @@ trait UsesCommandContainerTrait
 
         if ($qualifyContainer) {
             $container = $this->qualifyContainer($container, $additionalNamespace);
-        }
-        else {
+        } else {
             $container = (string) $this->cleanClassNamespace($container);
         }
 
@@ -82,8 +90,8 @@ trait UsesCommandContainerTrait
     /**
      * Qualify the given model class base name.
      *
-     * @param string $container
-     * @param string|null $additionalNamespace
+     * @param  string      $container
+     * @param  string|null $additionalNamespace
      * @return string
      */
     protected function qualifyContainer(string $container, string $additionalNamespace = null): string

@@ -13,7 +13,7 @@ use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
  * Class ExtendedMakeMigration
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
+ * @since  2021-11-10
  */
 class ExtendedMakeMigration extends MigrateMakeCommand
 {
@@ -49,7 +49,9 @@ class ExtendedMakeMigration extends MigrateMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return void

@@ -14,7 +14,7 @@ use Illuminate\Foundation\Console\ObserverMakeCommand;
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-20
+ * @since  2021-11-20
  */
 class ExtendedMakeObserver extends ObserverMakeCommand
 {
@@ -37,7 +37,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -47,7 +47,9 @@ class ExtendedMakeObserver extends ObserverMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

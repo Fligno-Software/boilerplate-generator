@@ -7,8 +7,6 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -16,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class FlignoStarter
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-09
+ * @since  2021-11-09
  */
 class FlignoStarter extends Command
 {
@@ -42,12 +40,12 @@ class FlignoStarter extends Command
     /**
      * @var bool
      */
-    protected bool $yes_to_questions = FALSE;
+    protected bool $yes_to_questions = false;
 
     /**
      * @var bool
      */
-    protected bool $is_model_created = FALSE;
+    protected bool $is_model_created = false;
 
     /**
      * The console command description.
@@ -68,10 +66,13 @@ class FlignoStarter extends Command
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * Execute the console command.
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -85,7 +86,9 @@ class FlignoStarter extends Command
         $this->startMagicShow();
     }
 
-    /***** GETTERS & SETTERS *****/
+    /*****
+     * GETTERS & SETTERS
+     *****/
 
     /**
      * @return string|null
@@ -109,7 +112,9 @@ class FlignoStarter extends Command
         $this->model_class = $this->parseModel($this->model_name);
     }
 
-    /***** OTHER METHODS *****/
+    /*****
+     * OTHER METHODS
+     *****/
 
     public function startPreparations(): void
     {
@@ -140,37 +145,39 @@ class FlignoStarter extends Command
         $this->generateResource();
 
         // Create Tests
-//        $this->generateTests();
+        //        $this->generateTests();
     }
 
-    /***** COMMANDS *****/
+    /*****
+     * COMMANDS
+     *****/
 
     /**
      * This will auto-generate a model class.
      */
     protected function generateModel(): void
     {
-        if ($this->modelExists() === FALSE) {
+        if (! $this->modelExists()) {
             $modelClass = $this->getModelClass();
             $args = $this->getPackageArgs();
-            $will_generate = FALSE;
-
-            if($this->yes_to_questions || $this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
+            $will_generate = false;
+            if ($this->yes_to_questions
+                || $this->confirm("$modelClass model does not exist. Do you want to generate it?", true)
+            ) {
                 $args['name'] = $this->model_name;
                 $args['--all'] = true;
                 $args['--repo'] = true;
                 $args['--api'] = true;
-                $will_generate = TRUE;
+                $will_generate = true;
             }
 
             if ($will_generate) {
                 $this->call('gen:model', $args);
-                $this->is_model_created = TRUE;
+                $this->is_model_created = true;
             }
-        }
-        else {
+        } else {
             $this->error('Model already exists!');
-            $this->is_model_created = TRUE;
+            $this->is_model_created = true;
         }
     }
 
@@ -179,7 +186,9 @@ class FlignoStarter extends Command
      */
     public function generateResource(): void
     {
-        if($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true))) {
+        if ($this->is_model_created &&
+            ($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true))
+        ) {
             $args = $this->getPackageArgs();
             $args['name'] = $this->getModelName() . 'Resource';
             $this->call('gen:resource', $args);
@@ -191,7 +200,9 @@ class FlignoStarter extends Command
      */
     public function generateTests(): void
     {
-        if ($this->is_model_created && ($this->yes_to_questions || $this->confirm("Do you want to generate a test file?", true))) {
+        if ($this->is_model_created &&
+            ($this->yes_to_questions || $this->confirm("Do you want to generate a test file?", true))
+        ) {
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
@@ -204,12 +215,14 @@ class FlignoStarter extends Command
         }
     }
 
-    /***** MODEL VALIDATION *****/
+    /*****
+     * MODEL VALIDATION
+     *****/
 
     /**
      * Qualify the given model class base name.
      *
-     * @param  string  $model
+     * @param  string $model
      * @return string
      */
     protected function qualifyModel(string $model): string
@@ -242,7 +255,7 @@ class FlignoStarter extends Command
     /**
      * @return array
      */
-    #[Pure] protected function getOptions(): array
+    protected function getOptions(): array
     {
         return array_merge(
             parent::getOptions(),

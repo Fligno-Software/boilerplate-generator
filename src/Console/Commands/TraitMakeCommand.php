@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class TraitMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
+ * @since  2021-11-10
  */
 class TraitMakeCommand extends GeneratorCommand
 {
@@ -52,7 +52,9 @@ class TraitMakeCommand extends GeneratorCommand
         $this->addFactoryOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -61,11 +63,11 @@ class TraitMakeCommand extends GeneratorCommand
      */
     public function handle(): ?bool
     {
-       $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain();
 
-       $this->setFactoryFields();
+        $this->setFactoryFields();
 
-       return parent::handle();
+        return parent::handle();
     }
 
     /**
@@ -73,9 +75,14 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected function addFactoryOptions(): void
     {
-        $this->getDefinition()->addOption(new InputOption(
-            'factory', 'f', InputOption::VALUE_REQUIRED, 'Factory to be included.'
-        ));
+        $this->getDefinition()->addOption(
+            new InputOption(
+                'factory',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Factory to be included.'
+            )
+        );
     }
 
     /**
@@ -83,7 +90,7 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected function setFactoryFields(): void
     {
-        if($factory = $this->option('factory')) {
+        if ($factory = $this->option('factory')) {
             $factory = $this->qualifyFactoryClass($factory);
             $this->setFactoryName($factory);
             $this->setFactoryClass($factory);
@@ -100,7 +107,7 @@ class TraitMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param $rootNamespace
+     * @param  string $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
@@ -118,16 +125,20 @@ class TraitMakeCommand extends GeneratorCommand
         return 'Trait';
     }
 
-    /***** SETTERS & GETTERS *****/
+    /*****
+     * SETTERS & GETTERS
+     *****/
 
     /**
      * @param string|null $factory
      */
     public function setFactoryClass(?string $factory): void
     {
-        $this->addMoreReplaceNamespace([
+        $this->addMoreReplaceNamespace(
+            [
             'FactoryClass' => $factory
-        ]);
+            ]
+        );
     }
 
     /**
@@ -135,15 +146,17 @@ class TraitMakeCommand extends GeneratorCommand
      */
     public function setFactoryName(?string $factory): void
     {
-        $this->addMoreReplaceNamespace([
+        $this->addMoreReplaceNamespace(
+            [
             'FactoryName' => Str::of($factory)->afterLast('\\')
-        ]);
+            ]
+        );
     }
 
     /**
      * Parse the class name and format according to the root namespace.
      *
-     * @param string $name
+     * @param  string $name
      * @return string
      */
     protected function qualifyFactoryClass(string $name): string

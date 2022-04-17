@@ -21,13 +21,15 @@ use Illuminate\Support\Str;
  * Trait UsesCommandVendorPackageDomainTrait
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-11
+ * @since  2021-11-11
  */
 trait UsesCommandVendorPackageDomainTrait
 {
     use UsesCommandCustomMessagesTrait;
 
-    /***** PACKAGE RELATED FIELDS *****/
+    /*****
+     * PACKAGE RELATED FIELDS
+     *****/
 
     /**
      * @var string|null
@@ -74,7 +76,9 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected bool $is_package_argument = false;
 
-    /***** DOMAIN RELATED FIELDS *****/
+    /*****
+     * DOMAIN RELATED FIELDS
+     *****/
 
     /**
      * @var string|null
@@ -101,7 +105,9 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected bool $ddd_enabled = true;
 
-    /***** OTHER FIELDS *****/
+    /*****
+     * OTHER FIELDS
+     *****/
 
     /**
      * @var Collection|null
@@ -109,41 +115,72 @@ trait UsesCommandVendorPackageDomainTrait
     protected ?Collection $moreReplaceNamespace = null;
 
     /**
-     * @param bool $ddd_enabled
-     * @param bool $has_force
-     * @param bool $has_force_domain
+     * @param  bool $ddd_enabled
+     * @param  bool $has_force
+     * @param  bool $has_force_domain
      * @return void
      */
-    public function addPackageOptions(bool $ddd_enabled = true, bool $has_force = false, bool $has_force_domain = true): void
-    {
-        $this->getDefinition()->addOption(new InputOption(
-            'package', null, InputOption::VALUE_OPTIONAL, 'Target package to generate the files (e.g., `vendor-name/package-name`).'
-        ));
+    public function addPackageOptions(
+        bool $ddd_enabled = true,
+        bool $has_force = false,
+        bool $has_force_domain = true
+    ): void {
+        $this->getDefinition()->addOption(
+            new InputOption(
+                'package',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Target package to generate the files (e.g., `vendor-name/package-name`).'
+            )
+        );
 
         if ($this->ddd_enabled = $ddd_enabled) {
-            $this->getDefinition()->addOption(new InputOption('domain', 'd', InputOption::VALUE_OPTIONAL, 'Domain or module name'));
+            $this->getDefinition()->addOption(
+                new InputOption(
+                    'domain',
+                    'd',
+                    InputOption::VALUE_OPTIONAL,
+                    'Domain or module name'
+                )
+            );
             if ($has_force_domain) {
-                $this->getDefinition()->addOption(new InputOption('force-domain', null, InputOption::VALUE_NONE, 'Create domain if does not exist.'));
+                $this->getDefinition()->addOption(
+                    new InputOption(
+                        'force-domain',
+                        null,
+                        InputOption::VALUE_NONE,
+                        'Create domain if does not exist.'
+                    )
+                );
             }
         }
 
-        if ($has_force && $this->getDefinition()->hasOption('force') === FALSE) {
-            $this->getDefinition()->addOption(new InputOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite file if exists.'));
+        if ($has_force && $this->getDefinition()->hasOption('force') === false) {
+            $this->getDefinition()->addOption(
+                new InputOption(
+                    'force',
+                    'f',
+                    InputOption::VALUE_NONE,
+                    'Overwrite file if exists.'
+                )
+            );
         }
     }
 
     /**
-     * @param bool $isRequired
+     * @param  bool $isRequired
      * @return void
      */
     public function addPackageArguments(bool $isRequired = true): void
     {
         $mode = $isRequired ? InputArgument::REQUIRED : InputArgument::OPTIONAL;
 
-        $this->getDefinition()->addArguments([
-            new InputArgument('vendor', $mode, 'The name of the vendor.'),
-            new InputArgument('package', $mode, 'The name of the package.'),
-        ]);
+        $this->getDefinition()->addArguments(
+            [
+                new InputArgument('vendor', $mode, 'The name of the vendor.'),
+                new InputArgument('package', $mode, 'The name of the package.'),
+            ]
+        );
 
         $this->is_package_argument = true;
     }
@@ -165,17 +202,20 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $showPackageChoices
-     * @param bool $showDomainChoices
-     * @param bool $showDefaultPackage
+     * @param  bool $showPackageChoices
+     * @param  bool $showDomainChoices
+     * @param  bool $showDefaultPackage
      * @return void
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException
      */
-    public function setVendorPackageDomain(bool $showPackageChoices = true, bool $showDomainChoices = true, bool $showDefaultPackage = true): void
-    {
+    public function setVendorPackageDomain(
+        bool $showPackageChoices = true,
+        bool $showDomainChoices = true,
+        bool $showDefaultPackage = true
+    ): void {
         if ($this->isGeneratorSubclass()) {
-            $this->note($this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null),'ONGOING');
+            $this->note($this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null), 'ONGOING');
         }
 
         $package = $this->hasOption('package') ? $this->option('package') : null;
@@ -206,25 +246,25 @@ trait UsesCommandVendorPackageDomainTrait
                 $this->package_namespace = $this->vendor_name_studly . '\\' . $this->package_name_studly . '\\';
 
                 // Check if folder exists
-                if (! $this instanceof FlignoPackageCreateCommand &&
+                if (
+                    ! $this instanceof FlignoPackageCreateCommand &&
                     ! $this instanceof FlignoPackageCloneCommand &&
-                    ! file_exists(package_path($this->package_dir)))
-                {
-                        if ($this->isNoInteraction()) {
-                            throw new PackageNotFoundException($this->package_dir);
-                        }
+                    ! file_exists(package_path($this->package_dir))
+                ) {
+                    if ($this->isNoInteraction()) {
+                        throw new PackageNotFoundException($this->package_dir);
+                    }
 
-                        $this->error('Package not found! Please choose an existing package.');
+                    $this->error('Package not found! Please choose an existing package.');
 
-                        if ($this->is_package_argument) {
-                            $this->input->setArgument('vendor', null);
-                            $this->input->setArgument('package', null);
-                        }
-                        else {
-                            $this->input->setOption('package', null);
-                        }
+                    if ($this->is_package_argument) {
+                        $this->input->setArgument('vendor', null);
+                        $this->input->setArgument('package', null);
+                    } else {
+                        $this->input->setOption('package', null);
+                    }
 
-                        $this->setVendorPackageDomain();
+                    $this->setVendorPackageDomain();
                 }
             }
         }
@@ -275,7 +315,13 @@ trait UsesCommandVendorPackageDomainTrait
             };
 
             $chooseFromDomains = function () use ($domains) {
-                if ($domains && ($domain = $this->choice('Choose a domain', $domains->prepend($this->default_domain)->toArray(), 0))) {
+                if ($domains &&
+                    ($domain = $this->choice(
+                        'Choose a domain',
+                        $domains->prepend($this->default_domain)->toArray(),
+                        0
+                    ))
+                ) {
                     if ($domain === $this->default_domain) {
                         return null;
                     }
@@ -291,10 +337,14 @@ trait UsesCommandVendorPackageDomainTrait
                     return $domain;
                 }
 
-                $choice = $this->choice('Choose what to do', [
-                    'create new domain',
-                    'choose from domains'
-                ], 0);
+                $choice = $this->choice(
+                    'Choose what to do',
+                    [
+                        'create new domain',
+                        'choose from domains'
+                    ],
+                    0
+                );
 
                 if ($choice === 'create new domain') {
                     return $createNewDomain();
@@ -316,7 +366,7 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $withDomain
+     * @param  bool $withDomain
      * @return array
      */
     public function getPackageArgs(bool $withDomain = true): array
@@ -343,7 +393,9 @@ trait UsesCommandVendorPackageDomainTrait
         return $this->getPackageDomainNamespace();
     }
 
-    /***** NAME INPUT *****/
+    /*****
+     * NAME INPUT
+     *****/
 
     /**
      * Class type to append on filename.
@@ -378,8 +430,7 @@ trait UsesCommandVendorPackageDomainTrait
     protected function getNameInput(): ?string
     {
         if ($this->isGeneratorSubclass()) {
-            if (is_null($this->argument('name')))
-            {
+            if (is_null($this->argument('name'))) {
                 if ($this->isNoInteraction()) {
                     throw new MissingNameArgumentException();
                 }
@@ -411,7 +462,9 @@ trait UsesCommandVendorPackageDomainTrait
         return is_subclass_of($this, GeneratorCommand::class);
     }
 
-    /***** PACKAGE LIST *****/
+    /*****
+     * PACKAGE LIST
+     *****/
 
     /**
      * @return string|null
@@ -426,13 +479,14 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function getPackageDomainFullPath(): string
     {
-        return ($this->package_dir ? package_app_path($this->package_dir) : app_path()) . ($this->domain_dir ? '/' . $this->domain_dir : null);
+        return ($this->package_dir ? package_app_path($this->package_dir) :
+                app_path()) . ($this->domain_dir ? '/' . $this->domain_dir : null);
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function getPath($name): string
@@ -452,11 +506,15 @@ trait UsesCommandVendorPackageDomainTrait
         $allPackages = collect();
 
         if (file_exists(package_path())) {
-            collect_files_or_directories(package_path(), true, false)?->each(function ($vendor) use ($allPackages) {
-                collect_files_or_directories(package_path($vendor), true, false)?->each(function ($package) use ($allPackages, $vendor) {
-                    $allPackages->add($vendor . '/' .$package);
-                });
-            });
+            collect_files_or_directories(package_path(), true, false)?->each(
+                function ($vendor) use ($allPackages) {
+                    collect_files_or_directories(package_path($vendor), true, false)?->each(
+                        function ($package) use ($allPackages, $vendor) {
+                            $allPackages->add($vendor . '/' .$package);
+                        }
+                    );
+                }
+            );
         }
 
         return $allPackages;
@@ -467,13 +525,17 @@ trait UsesCommandVendorPackageDomainTrait
      */
     public function getPackageChoices(): Collection
     {
-        $enabled = collect($this->getEnabledPackages())->map(function ($value) {
-            return $value . ' <fg=white;bg=green>[ENABLED]</>';
-        });
+        $enabled = collect($this->getEnabledPackages())->map(
+            function ($value) {
+                return $value . ' <fg=white;bg=green>[ENABLED]</>';
+            }
+        );
 
-        $disabled = collect($this->collectDisabledPackages())->map(function ($value) {
-            return $value . ' <fg=white;bg=red>[DISABLED]</>';
-        });
+        $disabled = collect($this->collectDisabledPackages())->map(
+            function ($value) {
+                return $value . ' <fg=white;bg=red>[DISABLED]</>';
+            }
+        );
 
         return $enabled->merge($disabled)->prepend($this->default_package);
     }
@@ -484,13 +546,17 @@ trait UsesCommandVendorPackageDomainTrait
      */
     public function getPackagesRows(): array
     {
-        $enabled = collect($this->getEnabledPackages())->map(function ($value) {
-            return [ $value, '<fg=white;bg=green>[ ENABLED ]</>' ];
-        });
+        $enabled = collect($this->getEnabledPackages())->map(
+            function ($value) {
+                return [ $value, '<fg=white;bg=green>[ ENABLED ]</>' ];
+            }
+        );
 
-        $disabled = collect($this->collectDisabledPackages())->map(function ($value) {
-            return [ $value, '<fg=white;bg=red>[ DISABLED ]</>' ];
-        });
+        $disabled = collect($this->collectDisabledPackages())->map(
+            function ($value) {
+                return [ $value, '<fg=white;bg=red>[ DISABLED ]</>' ];
+            }
+        );
 
         return $enabled->merge($disabled)->toArray();
     }
@@ -527,10 +593,12 @@ trait UsesCommandVendorPackageDomainTrait
         return $this->getAllPackages()->diff($this->getEnabledPackages());
     }
 
-    /***** DOMAINS LIST *****/
+    /*****
+     * DOMAINS LIST
+     *****/
 
     /**
-     * @param bool $prependDirectory
+     * @param  bool $prependDirectory
      * @return Collection|null
      */
     public function getAllDomains(bool $prependDirectory = false): ?Collection
@@ -546,10 +614,12 @@ trait UsesCommandVendorPackageDomainTrait
         return null;
     }
 
-    /***** STUB REPLACEMENT LOGIC *****/
+    /*****
+     * STUB REPLACEMENT LOGIC
+     *****/
 
     /**
-     * @param Collection|array $more
+     * @param  Collection|array $more
      * @return Collection
      */
     public function addMoreReplaceNamespace(Collection|array $more): Collection
@@ -557,8 +627,7 @@ trait UsesCommandVendorPackageDomainTrait
         if (count($more)) {
             if (! $this->moreReplaceNamespace) {
                 $this->moreReplaceNamespace = collect($more);
-            }
-            else {
+            } else {
                 $this->moreReplaceNamespace = $this->moreReplaceNamespace->merge($more);
             }
         }
@@ -567,8 +636,8 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param string $namespacedClass
-     * @param string|null $classType
+     * @param  string      $namespacedClass
+     * @param  string|null $classType
      * @return Collection
      */
     protected function addMoreCasedReplaceNamespace(string $namespacedClass, string $classType = null): Collection
@@ -577,13 +646,15 @@ trait UsesCommandVendorPackageDomainTrait
 
         $key = $classType ?? $class->jsonSerialize();
 
-        $more = collect([
+        $more = collect(
+            [
             'Namespaced' . $key => $namespacedClass,
             $key . 'Class' => $class,
             $key . 'Snake' => $class->snake(),
             $key . 'Slug' => $class->snake('-'),
             $key . 'Camel' => $class->camel(),
-        ]);
+            ]
+        );
 
         $this->addMoreReplaceNamespace($more);
 
@@ -594,8 +665,8 @@ trait UsesCommandVendorPackageDomainTrait
      * Overriding to inject more namespace.
      * Replace the namespace for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $name
+     * @param  string $stub
+     * @param  string $name
      * @return $this
      */
     protected function replaceNamespace(&$stub, $name): static
@@ -606,20 +677,26 @@ trait UsesCommandVendorPackageDomainTrait
             ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}'],
         ];
 
-        $replacements = [$this->getNamespace($name), $this->getRootNamespaceDuringReplaceNamespace(), $this->userProviderModel()];
+        $replacements = [
+            $this->getNamespace($name),
+            $this->getRootNamespaceDuringReplaceNamespace(),
+            $this->userProviderModel()
+        ];
 
         if ($this->moreReplaceNamespace && Arr::isAssoc($this->moreReplaceNamespace->toArray())) {
-            $this->moreReplaceNamespace->each(function ($item, $key) use (&$searches, &$replacements) {
-                $item = trim($item);
-                $key = trim($key);
+            $this->moreReplaceNamespace->each(
+                function ($item, $key) use (&$searches, &$replacements) {
+                    $item = trim($item);
+                    $key = trim($key);
 
-                if ($item && $key) {
-                    $searches[0][] = Str::studly($key);
-                    $searches[1][] = '{{ ' . Str::camel($key) . ' }}';
-                    $searches[2][] = '{{' . Str::camel($key) . '}}';
-                    $replacements[] = $item;
+                    if ($item && $key) {
+                        $searches[0][] = Str::studly($key);
+                        $searches[1][] = '{{ ' . Str::camel($key) . ' }}';
+                        $searches[2][] = '{{' . Str::camel($key) . '}}';
+                        $replacements[] = $item;
+                    }
                 }
-            });
+            );
         }
 
         foreach ($searches as $search) {
@@ -642,7 +719,7 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param string $classNamespace
+     * @param  string $classNamespace
      * @return array|string
      */
     protected function cleanClassNamespace(string $classNamespace): array|string
@@ -668,10 +745,12 @@ trait UsesCommandVendorPackageDomainTrait
         return $this->hasOption('force-domain') && $this->option('force-domain');
     }
 
-    /***** ELOQUENT MODEL RELATED *****/
+    /*****
+     * ELOQUENT MODEL RELATED
+     *****/
 
     /**
-     * @param string $option
+     * @param  string $option
      * @return string
      */
     protected function getModelClass(string $option): string
@@ -679,13 +758,12 @@ trait UsesCommandVendorPackageDomainTrait
         $modelClass = $this->parseModel($this->option($option));
 
         if (! class_exists($modelClass)) {
-            if ($this->confirm("{$modelClass} model does not exist. Do you want to generate it?", true)) {
+            if ($this->confirm("$modelClass model does not exist. Do you want to generate it?", true)) {
                 $args = $this->getPackageArgs();
                 $args['name'] = $modelClass;
 
                 $this->call('gen:model', $args);
-            }
-            else {
+            } else {
                 $alternativeModels = collect();
 
                 if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
@@ -693,16 +771,25 @@ trait UsesCommandVendorPackageDomainTrait
                         $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
                     }
 
-                    if ($this->package_dir && ($temp = package_app_path($this->package_dir)) && $temp !== $packageDomainFullPath && file_exists($temp .= '/Models')) {
+                    if ($this->package_dir &&
+                        ($temp = package_app_path($this->package_dir)) &&
+                        $temp !== $packageDomainFullPath &&
+                        file_exists($temp .= '/Models')
+                    ) {
                         $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
                     }
                 }
 
-                $alternativeModels = $alternativeModels->merge(collect_classes_from_path(app_path('Models'))?->values());
+                $alternativeModels = $alternativeModels
+                    ->merge(collect_classes_from_path(app_path('Models'))?->values());
 
                 $defaultAlternativeModel = 'none';
 
-                $modelClass = $this->choice('Choose alternative ' . ($option === 'parent' ? $option . ' ' : null) . 'model', $alternativeModels->prepend($defaultAlternativeModel)->toArray(), 0);
+                $modelClass = $this->choice(
+                    'Choose alternative ' . ($option === 'parent' ? $option . ' ' : null) . 'model',
+                    $alternativeModels->prepend($defaultAlternativeModel)->toArray(),
+                    0
+                );
 
                 $modelClass = $modelClass === $defaultAlternativeModel ? null : $modelClass;
 
@@ -716,26 +803,28 @@ trait UsesCommandVendorPackageDomainTrait
     /**
      * Get the fully-qualified model class name.
      *
-     * @param  string  $model
+     * @param  string $model
      * @return string
      *
      * @throws InvalidArgumentException
      */
     protected function parseModel($model): string
     {
-        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
+        if (preg_match('([^A-Za-z\d_/\\\\])', $model)) {
             throw new InvalidArgumentException('Model name contains invalid characters.');
         }
 
         return $this->qualifyModel($model);
     }
 
-    /***** TEST RELATED *****/
+    /*****
+     * TEST RELATED
+     *****/
 
     /**
      * Create the matching test case if requested.
      *
-     * @param  string  $path
+     * @param  string $path
      * @return void
      */
     protected function handleTestCreation($path): void

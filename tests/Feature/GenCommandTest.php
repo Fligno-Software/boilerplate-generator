@@ -33,7 +33,9 @@ class GenCommandTest extends TestCase
         $this->assertSame($code, 0);
     }
 
-    /***** ClassMakeCommand *****/
+    /*****
+     * ClassMakeCommand
+     *****/
 
     /**
      * @return void
@@ -42,9 +44,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomClassWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:class', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:class',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Class created successfully.')
             ->assertSuccessful();
@@ -57,23 +62,36 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomClassWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:class', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:class',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Class created successfully.')
             ->assertSuccessful();
     }
 
-    /***** DddActionMakeCommand *****/
+    /*****
+     * DddActionMakeCommand
+     *****/
 
-    /***** DddControllerMakeCommand *****/
+    /*****
+     * DddControllerMakeCommand
+     *****/
 
-    /***** DtoMakeCommand *****/
+    /*****
+     * DtoMakeCommand
+     *****/
 
-    /***** DocsGenCommand *****/
+    /*****
+     * DocsGenCommand
+     *****/
 
-    /***** ExtendedMakeCast *****/
+    /*****
+     * ExtendedMakeCast
+     *****/
 
     /**
      * @return void
@@ -82,9 +100,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomCastWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:cast', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:cast',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Cast created successfully.')
             ->assertSuccessful();
@@ -97,15 +118,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomCastWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:cast', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:cast',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Cast created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeChannel *****/
+    /*****
+     * ExtendedMakeChannel
+     *****/
 
     /**
      * @return void
@@ -114,9 +140,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomChannelWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:channel', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:channel',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Channel created successfully.')
             ->assertSuccessful();
@@ -129,15 +158,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomChannelWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:channel', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:channel',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Channel created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeCommand *****/
+    /*****
+     * ExtendedMakeCommand
+     *****/
 
     /**
      * @return void
@@ -146,9 +180,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomCommandWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:command', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:command',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Console command created successfully.')
             ->expectsOutput('Test created successfully.')
@@ -162,16 +199,21 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomCommandWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:command', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:command',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Console command created successfully.')
             ->expectsOutput('Test created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeComponent *****/
+    /*****
+     * ExtendedMakeComponent
+     *****/
 
     /**
      * @return void
@@ -180,9 +222,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomComponentWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:component', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:component',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Component created successfully.')
             ->assertSuccessful();
@@ -195,15 +240,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomComponentWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:component', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:component',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Component created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeController *****/
+    /*****
+     * ExtendedMakeController
+     *****/
 
     /**
      * @return void
@@ -212,9 +262,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomControllerWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:controller', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:controller',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Controller created successfully.')
             ->assertSuccessful();
@@ -227,15 +280,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomControllerWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:controller', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:controller',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Controller created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeEvent *****/
+    /*****
+     * ExtendedMakeEvent
+     *****/
 
     /**
      * @return void
@@ -244,9 +302,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomEventWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:event', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:event',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Event created successfully.')
             ->assertSuccessful();
@@ -259,15 +320,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomEventWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:event', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:event',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Event created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeException *****/
+    /*****
+     * ExtendedMakeException
+     *****/
 
     /**
      * @return void
@@ -276,9 +342,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomExceptionWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:exception', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:exception',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Exception created successfully.')
             ->assertSuccessful();
@@ -291,15 +360,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomExceptionWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:exception', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:exception',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Exception created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeFactory *****/
+    /*****
+     * ExtendedMakeFactory
+     *****/
 
     /**
      * @return void
@@ -308,10 +382,13 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomFactoryWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:factory', [
-            'name' => 'RandomOne',
-            '--model' => 'User',
-        ])
+        $this->artisan(
+            'gen:factory',
+            [
+                'name' => 'RandomOne',
+                '--model' => 'User',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Factory created successfully.')
             ->assertSuccessful();
@@ -324,16 +401,21 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomFactoryWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:factory', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package',
-            '--model' => 'User',
-        ])
+        $this->artisan(
+            'gen:factory',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package',
+                '--model' => 'User',
+            ]
+        )
             ->expectsOutput('Factory created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeJob *****/
+    /*****
+     * ExtendedMakeJob
+     *****/
 
     /**
      * @return void
@@ -342,9 +424,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomJobWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:job', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:job',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Job created successfully.')
             ->assertSuccessful();
@@ -357,15 +442,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomJobWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:job', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:job',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Job created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeListener *****/
+    /*****
+     * ExtendedMakeListener
+     *****/
 
     /**
      * @return void
@@ -374,9 +464,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomListenerWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:listener', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:listener',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Listener created successfully.')
             ->assertSuccessful();
@@ -389,15 +482,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomListenerWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:listener', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:listener',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Listener created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeMail *****/
+    /*****
+     * ExtendedMakeMail
+     *****/
 
     /**
      * @return void
@@ -406,9 +504,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomMailWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:mail', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:mail',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Mail created successfully.')
             ->assertSuccessful();
@@ -421,15 +522,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomMailWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:mail', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:mail',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Mail created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeMiddleware *****/
+    /*****
+     * ExtendedMakeMiddleware
+     *****/
 
     /**
      * @return void
@@ -438,9 +544,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomMiddlewareWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:middleware', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:middleware',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Middleware created successfully.')
             ->assertSuccessful();
@@ -453,14 +562,19 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomMiddlewareWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:middleware', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:middleware',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeMigration *****/
+    /*****
+     * ExtendedMakeMigration
+     *****/
 
     /**
      * @return void
@@ -469,9 +583,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomMigrationWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:migration', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:migration',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->assertSuccessful();
     }
@@ -483,14 +600,19 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomMigrationWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:migration', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:migration',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeModel *****/
+    /*****
+     * ExtendedMakeModel
+     *****/
 
     /**
      * @return void
@@ -499,9 +621,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomModelWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:model', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:model',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Model created successfully.')
             ->assertSuccessful();
@@ -514,10 +639,13 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomModelWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:model', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:model',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Model created successfully.')
             ->assertSuccessful();
     }
@@ -529,16 +657,21 @@ class GenCommandTest extends TestCase
      */
     public function canCreateSomethingModelWithAllOption(): void
     {
-        $this->artisan('gen:model', [
-            'name' => 'Something',
-            '--package' => 'dummy/package',
-            '--all' => true
-        ])
+        $this->artisan(
+            'gen:model',
+            [
+                'name' => 'Something',
+                '--package' => 'dummy/package',
+                '--all' => true
+            ]
+        )
             ->expectsOutput('Model created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeNotification *****/
+    /*****
+     * ExtendedMakeNotification
+     *****/
 
     /**
      * @return void
@@ -547,9 +680,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomNotificationWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:notification', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:notification',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Notification created successfully.')
             ->assertSuccessful();
@@ -562,15 +698,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomNotificationWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:notification', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:notification',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Notification created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeObserver *****/
+    /*****
+     * ExtendedMakeObserver
+     *****/
 
     /**
      * @return void
@@ -579,9 +720,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomObserverWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:observer', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:observer',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Observer created successfully.')
             ->assertSuccessful();
@@ -594,15 +738,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomObserverWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:observer', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:observer',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Observer created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakePolicy *****/
+    /*****
+     * ExtendedMakePolicy
+     *****/
 
     /**
      * @return void
@@ -611,9 +760,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomPolicyWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:policy', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:policy',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Policy created successfully.')
             ->assertSuccessful();
@@ -626,15 +778,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomPolicyWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:policy', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:policy',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Policy created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeProvider *****/
+    /*****
+     * ExtendedMakeProvider
+     *****/
 
     /**
      * @return void
@@ -643,9 +800,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomProviderWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:provider', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:provider',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Provider created successfully.')
             ->assertSuccessful();
@@ -658,15 +818,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomProviderWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:provider', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:provider',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Provider created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeRequest *****/
+    /*****
+     * ExtendedMakeRequest
+     *****/
 
     /**
      * @return void
@@ -675,9 +840,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRequestWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:request', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:request',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Request created successfully.')
             ->assertSuccessful();
@@ -690,15 +858,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRequestWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:request', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:request',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Request created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeResource *****/
+    /*****
+     * ExtendedMakeResource
+     *****/
 
     /**
      * @return void
@@ -707,9 +880,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomResourceWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:resource', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:resource',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Resource created successfully.')
             ->assertSuccessful();
@@ -722,15 +898,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomResourceWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:resource', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:resource',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Resource created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeRule *****/
+    /*****
+     * ExtendedMakeRule
+     *****/
 
     /**
      * @return void
@@ -739,9 +920,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRuleWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:rule', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:rule',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Rule created successfully.')
             ->assertSuccessful();
@@ -754,15 +938,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRuleWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:rule', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:rule',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Rule created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeSeeder *****/
+    /*****
+     * ExtendedMakeSeeder
+     *****/
 
     /**
      * @return void
@@ -771,9 +960,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomSeedWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:seeder', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:seeder',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Seeder created successfully.')
             ->assertSuccessful();
@@ -786,15 +978,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomSeedWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:seeder', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:seeder',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Seeder created successfully.')
             ->assertSuccessful();
     }
 
-    /***** ExtendedMakeTest *****/
+    /*****
+     * ExtendedMakeTest
+     *****/
 
     /**
      * @return void
@@ -803,9 +1000,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomTestWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:test', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:test',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Test created successfully.')
             ->assertSuccessful();
@@ -818,15 +1018,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomTestWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:test', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:test',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Test created successfully.')
             ->assertSuccessful();
     }
 
-    /***** GitlabCiMakeCommand *****/
+    /*****
+     * GitlabCiMakeCommand
+     *****/
 
     /**
      * @return void
@@ -835,9 +1040,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomGitlabCiWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:gitlab', [
-            '--force' => true
-        ])
+        $this->artisan(
+            'gen:gitlab',
+            [
+                '--force' => true
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Gitlab file created successfully.')
             ->assertSuccessful();
@@ -850,15 +1058,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomGitlabCiWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:gitlab', [
-            '--package' => 'dummy/package',
-            '--force' => true
-        ])
+        $this->artisan(
+            'gen:gitlab',
+            [
+                '--package' => 'dummy/package',
+                '--force' => true
+            ]
+        )
             ->expectsOutput('Gitlab file created successfully.')
             ->assertSuccessful();
     }
 
-    /***** InterfaceMakeCommand *****/
+    /*****
+     * InterfaceMakeCommand
+     *****/
 
     /**
      * @return void
@@ -867,9 +1080,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomInterfaceWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:interface', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:interface',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Interface created successfully.')
             ->assertSuccessful();
@@ -882,15 +1098,20 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomInterfaceWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:interface', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:interface',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Interface created successfully.')
             ->assertSuccessful();
     }
 
-    /***** RepositoryMakeCommand *****/
+    /*****
+     * RepositoryMakeCommand
+     *****/
 
     /**
      * @return void
@@ -899,10 +1120,13 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRepositoryWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:repository', [
-            'name' => 'RandomOne',
-            '--model' => 'RandomOne'
-        ])
+        $this->artisan(
+            'gen:repository',
+            [
+                'name' => 'RandomOne',
+                '--model' => 'RandomOne'
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Repository created successfully.')
             ->assertSuccessful();
@@ -915,16 +1139,21 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRepositoryWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:repository', [
-            'name' => 'RandomTwo',
-            '--model' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:repository',
+            [
+                'name' => 'RandomTwo',
+                '--model' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Repository created successfully.')
             ->assertSuccessful();
     }
 
-    /***** RouteMakeCommand *****/
+    /*****
+     * RouteMakeCommand
+     *****/
 
     /**
      * @return void
@@ -933,9 +1162,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRouteWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:routes', [
-            '--force' => true
-        ])
+        $this->artisan(
+            'gen:routes',
+            [
+                '--force' => true
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Route created successfully.')
             ->expectsOutput('Route created successfully.')
@@ -949,16 +1181,21 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomRouteWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:routes', [
-            '--package' => 'dummy/package',
-            '--force' => true
-        ])
+        $this->artisan(
+            'gen:routes',
+            [
+                '--package' => 'dummy/package',
+                '--force' => true
+            ]
+        )
             ->expectsOutput('Route created successfully.')
             ->expectsOutput('Route created successfully.')
             ->assertSuccessful();
     }
 
-    /***** TraitMakeCommand *****/
+    /*****
+     * TraitMakeCommand
+     *****/
 
     /**
      * @return void
@@ -967,9 +1204,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomTraitWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:trait', [
-            'name' => 'RandomOne',
-        ])
+        $this->artisan(
+            'gen:trait',
+            [
+                'name' => 'RandomOne',
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Trait created successfully.')
             ->assertSuccessful();
@@ -982,17 +1222,22 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomTraitWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:trait', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:trait',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Trait created successfully.')
             ->assertSuccessful();
     }
 
     // Service Container
 
-    /***** ContainerMakeCommand *****/
+    /*****
+     * ContainerMakeCommand
+     *****/
 
     /**
      * @return void
@@ -1001,9 +1246,12 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomContainerWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:container', [
-            'name' => 'RandomOne'
-        ])
+        $this->artisan(
+            'gen:container',
+            [
+                'name' => 'RandomOne'
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Service Container created successfully.')
             ->expectsOutput('Helper created successfully.')
@@ -1018,17 +1266,22 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomContainerWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:container', [
-            'name' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:container',
+            [
+                'name' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Service Container created successfully.')
             ->expectsOutput('Helper created successfully.')
             ->expectsOutput('Facade created successfully.')
             ->assertSuccessful();
     }
 
-    /***** HelperMakeCommand *****/
+    /*****
+     * HelperMakeCommand
+     *****/
 
     /**
      * @return void
@@ -1037,10 +1290,13 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomHelperWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:helper', [
-            'name' => 'OtherOne',
-            '--container' => 'RandomOne'
-        ])
+        $this->artisan(
+            'gen:helper',
+            [
+                'name' => 'OtherOne',
+                '--container' => 'RandomOne'
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Helper created successfully.')
             ->assertSuccessful();
@@ -1053,16 +1309,21 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomHelperWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:helper', [
-            'name' => 'OtherTwo',
-            '--container' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:helper',
+            [
+                'name' => 'OtherTwo',
+                '--container' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Helper created successfully.')
             ->assertSuccessful();
     }
 
-    /***** FacadeMakeCommand *****/
+    /*****
+     * FacadeMakeCommand
+     *****/
 
     /**
      * @return void
@@ -1071,10 +1332,13 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomFacadeWithoutSpecifiedPackage(): void
     {
-        $this->artisan('gen:facade', [
-            'name' => 'OtherOne',
-            '--container' => 'RandomOne'
-        ])
+        $this->artisan(
+            'gen:facade',
+            [
+                'name' => 'OtherOne',
+                '--container' => 'RandomOne'
+            ]
+        )
             ->expectsQuestion('Choose target package', 'dummy/package')
             ->expectsOutput('Facade created successfully.')
             ->assertSuccessful();
@@ -1087,11 +1351,14 @@ class GenCommandTest extends TestCase
      */
     public function canCreateRandomFacadeWithSpecifiedPackage(): void
     {
-        $this->artisan('gen:facade', [
-            'name' => 'OtherTwo',
-            '--container' => 'RandomTwo',
-            '--package' => 'dummy/package'
-        ])
+        $this->artisan(
+            'gen:facade',
+            [
+                'name' => 'OtherTwo',
+                '--container' => 'RandomTwo',
+                '--package' => 'dummy/package'
+            ]
+        )
             ->expectsOutput('Facade created successfully.')
             ->assertSuccessful();
     }

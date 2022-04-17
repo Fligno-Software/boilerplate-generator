@@ -14,7 +14,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class ContainerMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2022-01-13
+ * @since  2022-01-13
  */
 class ContainerMakeCommand extends GeneratorCommand
 {
@@ -44,7 +44,7 @@ class ContainerMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -54,7 +54,9 @@ class ContainerMakeCommand extends GeneratorCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -79,13 +81,16 @@ class ContainerMakeCommand extends GeneratorCommand
      */
     protected function createContainerHelper(): void
     {
-        $this->call('gen:helper', array_merge(
-            $this->getPackageArgs(),
-            [
-                'name' => $this->getNameInput(),
-                '--container' => $this->getNameInput()
-            ]
-        ));
+        $this->call(
+            'gen:helper',
+            array_merge(
+                $this->getPackageArgs(),
+                [
+                    'name' => $this->getNameInput(),
+                    '--container' => $this->getNameInput()
+                ]
+            )
+        );
     }
 
     /**
@@ -94,13 +99,16 @@ class ContainerMakeCommand extends GeneratorCommand
      */
     protected function createContainerFacade(): void
     {
-        $this->call('gen:facade', array_merge(
-            $this->getPackageArgs(),
-            [
-                'name' => $this->getNameInput(),
-                '--container' => $this->getNameInput()
-            ]
-        ));
+        $this->call(
+            'gen:facade',
+            array_merge(
+                $this->getPackageArgs(),
+                [
+                    'name' => $this->getNameInput(),
+                    '--container' => $this->getNameInput()
+                ]
+            )
+        );
     }
 
     /**
@@ -112,7 +120,7 @@ class ContainerMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param $rootNamespace
+     * @param  string $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string

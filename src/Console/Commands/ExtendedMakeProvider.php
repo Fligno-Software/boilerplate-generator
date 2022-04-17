@@ -14,7 +14,7 @@ use Illuminate\Foundation\Console\ProviderMakeCommand;
  * Class ExtendedMakeProvider
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-19
+ * @since  2021-11-19
  */
 class ExtendedMakeProvider extends ProviderMakeCommand
 {
@@ -37,7 +37,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -47,7 +47,9 @@ class ExtendedMakeProvider extends ProviderMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

@@ -53,15 +53,13 @@ class FlignoDomainListCommand extends Command
         $this->setVendorPackageDomain(true, false);
 
         if ($domains = $this->getAllDomains(true)) {
-
             $domains = $domains->mapWithKeys(fn($item, $key) => [[$key, $item]]);
 
             $this->table(
                 ['Domain', 'Path'],
                 $domains
             );
-        }
-        else {
+        } else {
             $this->note('No domains found.');
         }
 

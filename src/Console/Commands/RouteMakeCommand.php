@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class RouteMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-25
+ * @since  2021-11-25
  */
 class RouteMakeCommand extends GeneratorCommand
 {
@@ -44,12 +44,14 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected $type = 'Route';
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -84,7 +86,7 @@ class RouteMakeCommand extends GeneratorCommand
 
         $this->info($this->type.' created successfully.');
 
-        return self::SUCCESS && ! starterKit()->clearCache();
+        return starterKit()->clearCache();
     }
 
     /**
@@ -124,9 +126,9 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getValidatedNameInput(): string
     {
-        return Str::of(preg_replace('/[^A-Za-z0-9]/', ' ', trim($this->argument('name'))))
+        return Str::of(preg_replace('/[^A-Za-z\d]/', ' ', trim($this->argument('name'))))
             ->snake('-')
-            ->replace('api','')
+            ->replace('api', '')
             ->trim('-')
             ->when($this->option('api'), fn(Stringable $str) => $str->append('.api'))
             ->trim('.');
@@ -138,7 +140,8 @@ class RouteMakeCommand extends GeneratorCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) : app_path()) . '/' . $this->domain_dir . '/routes';
+            return ($this->package_dir ? package_app_path($this->package_dir) :
+                    app_path()) . '/' . $this->domain_dir . '/routes';
         }
 
         return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');

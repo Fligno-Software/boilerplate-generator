@@ -13,7 +13,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class ExtendedMakeSeeder
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-15
+ * @since  2021-11-15
  */
 class ExtendedMakeSeeder extends SeederMakeCommand
 {
@@ -36,7 +36,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -46,7 +46,9 @@ class ExtendedMakeSeeder extends SeederMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return void
@@ -72,7 +74,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function getPath($name): string
@@ -102,7 +104,8 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database';
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  :
+                    app_path($this->domain_dir)) . '/database';
         }
 
         return $this->package_dir ? package_database_path($this->package_dir)  : database_path();

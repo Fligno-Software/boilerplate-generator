@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class FlignoTest
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-17
+ * @since  2021-11-17
  */
 class FlignoTest extends Command
 {
@@ -64,30 +64,26 @@ class FlignoTest extends Command
         $testPackages = false;
         $normalTest = true;
 
-        if ($this->option('all'))
-        {
+        if ($this->option('all')) {
             $testPackages = true;
-        }
-        else if ($this->package_dir || $this->option('packages'))
-        {
+        } elseif ($this->package_dir || $this->option('packages')) {
             $testPackages = true;
             $normalTest = false;
         }
 
-        if ($testPackages)
-        {
+        if ($testPackages) {
             if ($this->package_dir) {
                 $this->executeTests($this->package_dir);
-            }
-            else {
-                $this->getEnabledPackages()->each(function ($package_name) {
-                    $this->executeTests($package_name);
-                });
+            } else {
+                $this->getEnabledPackages()->each(
+                    function ($package_name) {
+                        $this->executeTests($package_name);
+                    }
+                );
             }
         }
 
-        if ($normalTest)
-        {
+        if ($normalTest) {
             $this->executeTests();
         }
 
@@ -117,7 +113,7 @@ class FlignoTest extends Command
     }
 
     /**
-     * @param string|null $package_name
+     * @param  string|null $package_name
      * @return void
      */
     public function executeTests(string $package_name = null): void
