@@ -14,7 +14,7 @@ use Illuminate\Foundation\Console\ConsoleMakeCommand;
  * Class ExtendedMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-19
+ * @since  2021-11-19
  */
 class ExtendedMakeCommand extends ConsoleMakeCommand
 {
@@ -37,7 +37,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -47,7 +47,9 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

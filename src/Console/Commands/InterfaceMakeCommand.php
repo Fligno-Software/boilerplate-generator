@@ -14,7 +14,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class InterfaceMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
+ * @since  2021-11-10
  */
 class InterfaceMakeCommand extends GeneratorCommand
 {
@@ -44,7 +44,7 @@ class InterfaceMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -54,7 +54,9 @@ class InterfaceMakeCommand extends GeneratorCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

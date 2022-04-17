@@ -63,7 +63,7 @@ class GitlabCIMakeCommand extends Command
 
         $target = $packagePath . '/' . $file;
 
-        if ($this->option('force') || file_exists($target) === FALSE) {
+        if ($this->option('force') || file_exists($target) === false) {
             File::copy($source, $target);
 
             $this->info('Gitlab file created successfully.');

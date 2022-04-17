@@ -51,13 +51,29 @@ trait UsesCommandEloquentModelTrait
      */
     protected function addModelOptions(): void
     {
-        if ($this->getDefinition()->hasOption('model') === FALSE) {
-            $this->getDefinition()->addOption(new InputOption('model', 'm', InputOption::VALUE_REQUIRED, 'Specify model to consider.'));
+        if ($this->getDefinition()->hasOption('model') === false) {
+            $this->getDefinition()->addOption(
+                new InputOption(
+                    'model',
+                    'm',
+                    InputOption::VALUE_REQUIRED,
+                    'Specify model to consider.'
+                )
+            );
         }
-        $this->getDefinition()->addOption(new InputOption('skip', 's', InputOption::VALUE_NONE, 'Skip model existence check. Use if Laravel fails to verify a legitimate Eloquent Model class.'));
+        $this->getDefinition()->addOption(
+            new InputOption(
+                'skip',
+                's',
+                InputOption::VALUE_NONE,
+                'Skip model existence check. Use if Laravel fails to verify a legitimate Eloquent Model class.'
+            )
+        );
     }
 
-    /***** SETTERS & GETTERS *****/
+    /*****
+     * SETTERS & GETTERS
+     *****/
 
     /**
      * @return void
@@ -87,9 +103,11 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_class = $str;
 
-        $this->addMoreReplaceNamespace([
-            'ModelClass' => $this->model_class
-        ]);
+        $this->addMoreReplaceNamespace(
+            [
+                'ModelClass' => $this->model_class
+            ]
+        );
     }
 
     /**
@@ -99,9 +117,11 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_snake = Str::of($str)->afterLast('\\')->snake();
 
-        $this->addMoreReplaceNamespace([
-            'ModelSnake' => $this->model_snake
-        ]);
+        $this->addMoreReplaceNamespace(
+            [
+                'ModelSnake' => $this->model_snake
+            ]
+        );
     }
 
     /**
@@ -111,9 +131,11 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_kebab = Str::of($str)->afterLast('\\')->kebab();
 
-        $this->addMoreReplaceNamespace([
-            'ModelKebab' => $this->model_kebab
-        ]);
+        $this->addMoreReplaceNamespace(
+            [
+                'ModelKebab' => $this->model_kebab
+            ]
+        );
     }
 
     /**
@@ -123,8 +145,10 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_name = Str::of($str)->afterLast('\\');
 
-        $this->addMoreReplaceNamespace([
-            'ModelName' => $this->model_name
-        ]);
+        $this->addMoreReplaceNamespace(
+            [
+                'ModelName' => $this->model_name
+            ]
+        );
     }
 }

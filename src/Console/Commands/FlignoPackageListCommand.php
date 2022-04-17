@@ -10,7 +10,7 @@ use JsonException;
  * Class FlignoPackageListCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-12-06
+ * @since  2021-12-06
  */
 class FlignoPackageListCommand extends Command
 {
@@ -32,6 +32,7 @@ class FlignoPackageListCommand extends Command
 
     /**
      * Execute the console command.
+     *
      * @throws JsonException
      */
     public function handle(): void

@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  * Class ExtendedMakeFactory
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-15
+ * @since  2021-11-15
  */
 class ExtendedMakeFactory extends FactoryMakeCommand
 {
@@ -47,7 +47,9 @@ class ExtendedMakeFactory extends FactoryMakeCommand
         $this->addModelOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -68,19 +70,22 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /**
      * return void
+     *
      * @throws MissingNameArgumentException
      */
     protected function createFactoryTrait(): void
     {
-        if (($this->package_name || $this->domain_name) && $this->model_name)
-        {
-            $this->call('gen:trait', array_merge(
-                $this->getPackageArgs(),
-                [
-                    'name' => 'Has' . $this->getNameInput(),
-                    '--factory' => $this->getNameInput()
-                ]
-            ));
+        if (($this->package_name || $this->domain_name) && $this->model_name) {
+            $this->call(
+                'gen:trait',
+                array_merge(
+                    $this->getPackageArgs(),
+                    [
+                        'name' => 'Has' . $this->getNameInput(),
+                        '--factory' => $this->getNameInput()
+                    ]
+                )
+            );
         }
     }
 
@@ -95,7 +100,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function getPath($name): string
@@ -137,7 +142,8 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database';
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  :
+                    app_path($this->domain_dir)) . '/database';
         }
 
         return $this->package_dir ? package_database_path($this->package_dir)  : database_path();

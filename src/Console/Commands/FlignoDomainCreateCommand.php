@@ -40,7 +40,7 @@ class FlignoDomainCreateCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -54,10 +54,10 @@ class FlignoDomainCreateCommand extends GeneratorCommand
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return bool|null
      * @throws MissingNameArgumentException|PackageNotFoundException
      */
-    public function handle(): int
+    public function handle(): bool|null
     {
         $this->setVendorPackageDomain(true, false);
 
@@ -68,18 +68,19 @@ class FlignoDomainCreateCommand extends GeneratorCommand
 
         $success = false;
 
-        collect(['web', 'api'])->each(function ($value) use ($args, &$success) {
-            $args['name'] = $value;
-            $args['--api'] = $value !== 'web';
-            if ($this->call('gen:route', $args) === self::SUCCESS) {
-                $success = true;
+        collect(['web', 'api'])->each(
+            function ($value) use ($args, &$success) {
+                $args['name'] = $value;
+                $args['--api'] = $value !== 'web';
+                if ($this->call('gen:route', $args) === self::SUCCESS) {
+                    $success = true;
+                }
             }
-        });
+        );
 
         if ($success) {
             $this->done('Domain created successfully.');
-        }
-        else {
+        } else {
             $this->failed('Domain was not created or already existing.');
         }
 

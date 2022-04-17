@@ -9,11 +9,12 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ListenerMakeCommand;
+
 /**
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-20
+ * @since  2021-11-20
  */
 class ExtendedMakeListener extends ListenerMakeCommand
 {
@@ -36,7 +37,7 @@ class ExtendedMakeListener extends ListenerMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -46,7 +47,9 @@ class ExtendedMakeListener extends ListenerMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null

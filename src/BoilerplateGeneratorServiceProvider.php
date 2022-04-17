@@ -119,9 +119,12 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
     protected function bootForConsole(): void
     {
         // Publishing the configuration file.
-        $this->publishes([
-            __DIR__.'/../config/boilerplate-generator.php' => config_path('boilerplate-generator.php'),
-        ], 'boilerplate-generator.config');
+        $this->publishes(
+            [
+                __DIR__.'/../config/boilerplate-generator.php' => config_path('boilerplate-generator.php'),
+            ],
+            'boilerplate-generator.config'
+        );
 
         // Publishing the views.
         /*$this->publishes([

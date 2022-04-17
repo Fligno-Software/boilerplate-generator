@@ -6,18 +6,16 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandEloquentModelTrait;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\TestMakeCommand;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 /**
  * Class ExtendedMakeTest
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
+ * @since  2021-11-10
  */
 class ExtendedMakeTest extends TestMakeCommand
 {
@@ -37,7 +35,9 @@ class ExtendedMakeTest extends TestMakeCommand
      */
     protected $description = 'Create a new test class in Laravel or in a specific package.';
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * Override Constructor to add model option.
@@ -50,7 +50,7 @@ class ExtendedMakeTest extends TestMakeCommand
 
         $this->addModelOptions();
 
-        $this->addPackageOptions(true);
+        $this->addPackageOptions();
     }
 
     /**
@@ -71,13 +71,14 @@ class ExtendedMakeTest extends TestMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/test' . ($this->option('unit') ? '.unit' : null). ($this->option('model') ? '.model' : null) . '.custom.stub';
+        return __DIR__ . '/../../../stubs/test' . ($this->option('unit') ? '.unit' : null) .
+            ($this->option('model') ? '.model' : null) . '.custom.stub';
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function getPath($name): string

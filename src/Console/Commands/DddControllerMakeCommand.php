@@ -38,7 +38,7 @@ class DddControllerMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -79,7 +79,7 @@ class DddControllerMakeCommand extends GeneratorCommand
     /**
      * Build the class with the given name.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      *
      * @throws FileNotFoundException
@@ -95,8 +95,8 @@ class DddControllerMakeCommand extends GeneratorCommand
      * Overriding to inject more namespace.
      * Replace the namespace for the given stub.
      *
-     * @param string $stub
-     * @param string $name
+     * @param  string $stub
+     * @param  string $name
      * @return $this
      */
     protected function replaceRequestNamespace(string &$stub, string $name): static
@@ -131,7 +131,7 @@ class DddControllerMakeCommand extends GeneratorCommand
     /**
      * Get the default namespace for the class.
      *
-     * @param  string  $rootNamespace
+     * @param  string $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string

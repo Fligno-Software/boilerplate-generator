@@ -9,11 +9,12 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ComponentMakeCommand;
 use Illuminate\Foundation\Inspiring;
+
 /**
  * Class ExtendedMakeChannel
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-20
+ * @since  2021-11-20
  */
 class ExtendedMakeComponent extends ComponentMakeCommand
 {
@@ -36,7 +37,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -46,7 +47,9 @@ class ExtendedMakeComponent extends ComponentMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -78,8 +81,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
 
         if ($this->package_dir) {
             $path = package_view_path($this->package_dir) . DIRECTORY_SEPARATOR . $path;
-        }
-        else {
+        } else {
             $path = $this->viewPath($path);
         }
 

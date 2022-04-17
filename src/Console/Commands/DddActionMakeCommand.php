@@ -37,7 +37,7 @@ class DddActionMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -78,7 +78,7 @@ class DddActionMakeCommand extends GeneratorCommand
     /**
      * Get the default namespace for the class.
      *
-     * @param  string  $rootNamespace
+     * @param  string $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string

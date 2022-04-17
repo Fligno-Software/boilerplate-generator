@@ -10,15 +10,13 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Pure;
-use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class DtoMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-25
+ * @since  2021-11-25
  */
 class DtoMakeCommand extends GeneratorCommand
 {
@@ -53,7 +51,7 @@ class DtoMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -63,7 +61,9 @@ class DtoMakeCommand extends GeneratorCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
@@ -72,7 +72,7 @@ class DtoMakeCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain();
 
-        if ($this->option('request') === FALSE && $this->option('response') === FALSE) {
+        if ($this->option('request') === false && $this->option('response') === false) {
             $this->input->setOption('request', true);
             $this->input->setOption('response', true);
         }
@@ -117,7 +117,7 @@ class DtoMakeCommand extends GeneratorCommand
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function getPath($name): string
@@ -143,7 +143,6 @@ class DtoMakeCommand extends GeneratorCommand
     /**
      * @return string
      */
-    #[Pure]
     protected function getStub(): string
     {
         return __DIR__ . '/../../../stubs/dto.' . $this->dtoType . '.custom.stub';

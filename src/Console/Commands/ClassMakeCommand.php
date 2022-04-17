@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class ClassMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-10
+ * @since  2021-11-10
  */
 class ClassMakeCommand extends GeneratorCommand
 {
@@ -45,27 +45,31 @@ class ClassMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions(true);
+        $this->addPackageOptions();
 
         if ($this->getDefinition()->hasOption('abstract') === false) {
-            $this->getDefinition()->addOptions([
-                new InputOption(
-                    'abstract',
-                    'a',
-                    InputOption::VALUE_NONE,
-                    'Generate an abstract class.'
-                ),
-                new InputOption(
-                    'invokable',
-                    'i',
-                    InputOption::VALUE_NONE,
-                    'Generate a single method, invokable class.'
-                )
-            ]);
+            $this->getDefinition()->addOptions(
+                [
+                    new InputOption(
+                        'abstract',
+                        'a',
+                        InputOption::VALUE_NONE,
+                        'Generate an abstract class.'
+                    ),
+                    new InputOption(
+                        'invokable',
+                        'i',
+                        InputOption::VALUE_NONE,
+                        'Generate a single method, invokable class.'
+                    )
+                ]
+            );
         }
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -74,7 +78,7 @@ class ClassMakeCommand extends GeneratorCommand
      */
     public function handle(): ?bool
     {
-       $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain();
 
         return parent::handle() && starterKit()->clearCache();
     }
@@ -86,10 +90,9 @@ class ClassMakeCommand extends GeneratorCommand
     {
         $type = '';
 
-        if($this->option('abstract')) {
+        if ($this->option('abstract')) {
             $type = '.abstract';
-        }
-        elseif ($this->option('invokable')) {
+        } elseif ($this->option('invokable')) {
             $type = '.invokable';
         }
 

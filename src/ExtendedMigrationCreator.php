@@ -3,7 +3,7 @@
 namespace Fligno\BoilerplateGenerator;
 
 use Exception;
-use \Illuminate\Database\Migrations\MigrationCreator;
+use Illuminate\Database\Migrations\MigrationCreator;
 
 class ExtendedMigrationCreator extends MigrationCreator
 {
@@ -20,10 +20,10 @@ class ExtendedMigrationCreator extends MigrationCreator
     /**
      * Create a new migration at the given path.
      *
-     * @param  string  $name
-     * @param  string  $path
-     * @param  string|null  $table
-     * @param  bool  $create
+     * @param  string      $name
+     * @param  string      $path
+     * @param  string|null $table
+     * @param  bool        $create
      * @return string
      *
      * @throws Exception
@@ -34,19 +34,22 @@ class ExtendedMigrationCreator extends MigrationCreator
     }
 
     /**
-     * @param string $defaultPath
+     * @param  string $defaultPath
      * @return string
      */
     protected function getPackageDomainFullPath(string $defaultPath): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  : app_path($this->domain_dir)) . '/database/migrations';
+            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  :
+                    app_path($this->domain_dir)) . '/database/migrations';
         }
 
         return $this->package_dir ? package_migration_path($this->package_dir) : $defaultPath;
     }
 
-    /***** SETTER & GETTER *****/
+    /*****
+     * SETTER & GETTER
+     *****/
 
     /**
      * @param string|null $package_dir

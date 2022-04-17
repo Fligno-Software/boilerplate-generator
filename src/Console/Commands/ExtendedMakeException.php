@@ -14,7 +14,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class ExtendedMakeException
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-20
+ * @since  2021-11-20
  */
 class ExtendedMakeException extends ExceptionMakeCommand
 {
@@ -37,7 +37,7 @@ class ExtendedMakeException extends ExceptionMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -47,7 +47,9 @@ class ExtendedMakeException extends ExceptionMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -70,11 +72,10 @@ class ExtendedMakeException extends ExceptionMakeCommand
         $exceptionReportStub = __DIR__ . '/../../../stubs/exception-report.custom.stub';
         $exceptionStub = __DIR__ . '/../../../stubs/exception.custom.stub';
 
-        if (
-            file_exists($exceptionRenderReportStub) === FALSE ||
-            file_exists($exceptionRenderStub) === FALSE ||
-            file_exists($exceptionReportStub) === FALSE ||
-            file_exists($exceptionStub) === FALSE
+        if (file_exists($exceptionRenderReportStub) === false ||
+            file_exists($exceptionRenderStub) === false ||
+            file_exists($exceptionReportStub) === false ||
+            file_exists($exceptionStub) === false
         ) {
             return parent::getStub();
         }

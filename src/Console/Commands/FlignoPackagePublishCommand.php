@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
  * Class FlignoPackagePublishCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-12-06
+ * @since  2021-12-06
  */
 class FlignoPackagePublishCommand extends Command
 {
@@ -43,13 +43,18 @@ class FlignoPackagePublishCommand extends Command
 
         $this->addPackageArguments();
 
-        $this->getDefinition()->addArgument(new InputArgument(
-            'url', InputArgument::REQUIRED, 'The Git URL where the package should be published.'
-        ));
+        $this->getDefinition()->addArgument(
+            new InputArgument(
+                'url',
+                InputArgument::REQUIRED,
+                'The Git URL where the package should be published.'
+            )
+        );
     }
 
     /**
      * Execute the console command.
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -58,11 +63,14 @@ class FlignoPackagePublishCommand extends Command
 
         $this->setVendorPackageDomain();
 
-        $this->call('packager:publish', [
-            'vendor' => $this->vendor_name,
-            'name' => $this->package_name,
-            'url' => $this->argument('url')
-        ]);
+        $this->call(
+            'packager:publish',
+            [
+                'vendor' => $this->vendor_name,
+                'name' => $this->package_name,
+                'url' => $this->argument('url')
+            ]
+        );
     }
 
     /**

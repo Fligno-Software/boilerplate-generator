@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class ExtendedMakeModel
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-09
+ * @since  2021-11-09
  */
 class ExtendedMakeModel extends ModelMakeCommand
 {
@@ -38,7 +38,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -48,7 +48,9 @@ class ExtendedMakeModel extends ModelMakeCommand
         $this->addPackageOptions();
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return void

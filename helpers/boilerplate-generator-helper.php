@@ -2,12 +2,12 @@
 
 /**
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- * @since 2021-11-09
+ * @since  2021-11-09
  */
 
 if (! function_exists('package_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_path(string $path = null): string
@@ -20,7 +20,7 @@ if (! function_exists('package_path')) {
 
 if (! function_exists('package_app_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_app_path(string $path = null): string
@@ -33,7 +33,7 @@ if (! function_exists('package_app_path')) {
 
 if (! function_exists('package_database_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_database_path(string $path = null): string
@@ -44,7 +44,7 @@ if (! function_exists('package_database_path')) {
 
 if (! function_exists('package_migration_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_migration_path(string $path = null): string
@@ -55,7 +55,7 @@ if (! function_exists('package_migration_path')) {
 
 if (! function_exists('package_seeder_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_seeder_path(string $path = null): string
@@ -66,7 +66,7 @@ if (! function_exists('package_seeder_path')) {
 
 if (! function_exists('package_factory_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_factory_path(string $path = null): string
@@ -77,7 +77,7 @@ if (! function_exists('package_factory_path')) {
 
 if (! function_exists('package_database_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_database_path(string $path = null): string
@@ -90,7 +90,7 @@ if (! function_exists('package_database_path')) {
 
 if (! function_exists('package_resource_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_resource_path(string $path = null): string
@@ -101,7 +101,7 @@ if (! function_exists('package_resource_path')) {
 
 if (! function_exists('package_view_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_view_path(string $path = null): string
@@ -114,7 +114,7 @@ if (! function_exists('package_view_path')) {
 
 if (! function_exists('package_test_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_test_path(string $path = null): string
@@ -127,7 +127,7 @@ if (! function_exists('package_test_path')) {
 
 if (! function_exists('package_routes_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_routes_path(string $path = null): string
@@ -140,7 +140,7 @@ if (! function_exists('package_routes_path')) {
 
 if (! function_exists('package_helpers_path')) {
     /**
-     * @param string|null $path
+     * @param  string|null $path
      * @return string
      */
     function package_helpers_path(string $path = null): string
@@ -148,4 +148,3 @@ if (! function_exists('package_helpers_path')) {
         return package_path($path) . '/helpers';
     }
 }
-
