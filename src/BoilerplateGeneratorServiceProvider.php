@@ -3,6 +3,7 @@
 namespace Fligno\BoilerplateGenerator;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DddControllerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DtoMakeCommand;
@@ -53,6 +54,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
     protected array $commands = [
         ClassMakeCommand::class,
+        DataFactoryMakeCommand::class,
         DddControllerMakeCommand::class,
         DtoMakeCommand::class,
         DocsGenCommand::class,
@@ -106,8 +108,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        parent::register();
-
         $this->mergeConfigFrom(__DIR__.'/../config/boilerplate-generator.php', 'boilerplate-generator');
     }
 

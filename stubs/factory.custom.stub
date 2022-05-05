@@ -8,7 +8,7 @@ use {{ modelClass }};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * Class {{ modelName }}
+ * Class {{ factory }}
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */

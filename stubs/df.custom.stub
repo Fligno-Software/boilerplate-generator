@@ -1,0 +1,26 @@
+<?php
+
+namespace {{ namespace }};
+
+use Fligno\StarterKit\Abstracts\BaseDataFactory;
+use Illuminate\Database\Eloquent\Builder;
+
+// Model
+use {{ modelClass }};
+
+/**
+ * Class {{ class }}
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ */
+class {{ class }} extends BaseDataFactory
+{
+    /**
+     * @return Builder
+     * @example User::query()
+     */
+    public function getBuilder(): Builder
+    {
+        return {{ modelName }}::query();
+    }
+}

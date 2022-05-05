@@ -20,11 +20,6 @@ trait UsesCommandEloquentModelTrait
     protected bool $model_exists = false;
 
     /**
-     * @var bool
-     */
-    protected bool $skip_model_check = false;
-
-    /**
      * @var string|null
      */
     protected ?string $model_name = null;
@@ -80,8 +75,6 @@ trait UsesCommandEloquentModelTrait
      */
     public function setModelFields(): void
     {
-        $this->skip_model_check = $this->option('skip');
-
         if ($this->hasOption('model') && $model = $this->option('model')) {
             if (! class_exists($model)) {
                 $model = $this->getModelClass('model');
@@ -103,11 +96,7 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_class = $str;
 
-        $this->addMoreReplaceNamespace(
-            [
-                'ModelClass' => $this->model_class
-            ]
-        );
+        $this->addMoreReplaceNamespace([ 'ModelClass' => $this->model_class ]);
     }
 
     /**
@@ -117,11 +106,7 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_snake = Str::of($str)->afterLast('\\')->snake();
 
-        $this->addMoreReplaceNamespace(
-            [
-                'ModelSnake' => $this->model_snake
-            ]
-        );
+        $this->addMoreReplaceNamespace([ 'ModelSnake' => $this->model_snake ]);
     }
 
     /**
@@ -131,11 +116,7 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_kebab = Str::of($str)->afterLast('\\')->kebab();
 
-        $this->addMoreReplaceNamespace(
-            [
-                'ModelKebab' => $this->model_kebab
-            ]
-        );
+        $this->addMoreReplaceNamespace([ 'ModelKebab' => $this->model_kebab ]);
     }
 
     /**
@@ -145,10 +126,6 @@ trait UsesCommandEloquentModelTrait
     {
         $this->model_name = Str::of($str)->afterLast('\\');
 
-        $this->addMoreReplaceNamespace(
-            [
-                'ModelName' => $this->model_name
-            ]
-        );
+        $this->addMoreReplaceNamespace([ 'ModelName' => $this->model_name ]);
     }
 }
