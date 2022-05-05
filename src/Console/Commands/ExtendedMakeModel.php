@@ -63,6 +63,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         if ($this->option('all')) {
             $this->input->setOption('repository', true);
             $this->input->setOption('observer', true);
+            $this->input->setOption('df', true);
         }
 
         parent::handle();
@@ -73,6 +74,10 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         if ($this->option('observer')) {
             $this->createObserver();
+        }
+
+        if ($this->option('df')) {
+            $this->createDataFactory();
         }
 
         starterKit()->clearCache();
@@ -211,6 +216,23 @@ class ExtendedMakeModel extends ModelMakeCommand
         $this->call('gen:policy', $args);
     }
 
+    /**
+     * Create a policy file for the model.
+     *
+     * @return void
+     */
+    protected function createDataFactory(): void
+    {
+        $dataFactory = Str::studly(class_basename($this->argument('name')));
+
+        $args = $this->getPackageArgs();
+        $args['name'] = $dataFactory;
+        $args['--model'] = $this->qualifyClass($dataFactory);
+        $args['--no-interaction'] = true;
+
+        $this->call('gen:df', $args);
+    }
+
 
     /**
      * Get the stub file for the generator.
@@ -232,6 +254,7 @@ class ExtendedMakeModel extends ModelMakeCommand
             [
                 ['repository', null, InputOption::VALUE_NONE, 'Create new repository class based on the model.'],
                 ['observer', 'o', InputOption::VALUE_NONE, 'Create new observer class based on the model.'],
+                ['df', null, InputOption::VALUE_NONE, 'Create new data factory class based on the model.'],
             ]
         );
     }
