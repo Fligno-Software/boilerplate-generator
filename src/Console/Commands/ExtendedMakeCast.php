@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\CastMakeCommand;
  * Class ExtendedMakeCast
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeCast extends CastMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeCast extends CastMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeCast extends CastMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
@@ -68,7 +69,7 @@ class ExtendedMakeCast extends CastMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/cast.custom.stub';
+        return __DIR__.'/../../../stubs/cast.custom.stub';
     }
 
     /**

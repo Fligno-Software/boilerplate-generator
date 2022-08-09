@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\ObserverMakeCommand;
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeObserver extends ObserverMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -68,8 +69,8 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? __DIR__ . '/../../../stubs/observer.custom.stub'
-            : __DIR__ . '/../../../stubs/observer.plain.custom.stub';
+            ? __DIR__.'/../../../stubs/observer.custom.stub'
+            : __DIR__.'/../../../stubs/observer.plain.custom.stub';
     }
 
     /**

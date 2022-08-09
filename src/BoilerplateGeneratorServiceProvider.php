@@ -3,6 +3,7 @@
 namespace Fligno\BoilerplateGenerator;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ContainerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DddControllerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
@@ -34,6 +35,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\FacadeMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageDisableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageEnableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageListCommand;
@@ -43,10 +45,8 @@ use Fligno\BoilerplateGenerator\Console\Commands\FlignoTest;
 use Fligno\BoilerplateGenerator\Console\Commands\GitlabCIMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\ContainerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
 use Fligno\StarterKit\Providers\BaseStarterKitServiceProvider as ServiceProvider;
 
@@ -142,6 +142,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ], 'boilerplate-generator.views');*/
 
         // Registering package commands.
-         $this->commands($this->commands);
+        $this->commands($this->commands);
     }
 }

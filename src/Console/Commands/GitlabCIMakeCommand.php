@@ -44,11 +44,11 @@ class GitlabCIMakeCommand extends Command
         $this->addPackageOptions();
     }
 
-
     /**
      * Execute the console command.
      *
      * @return int
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): int
@@ -59,9 +59,9 @@ class GitlabCIMakeCommand extends Command
 
         $packagePath = package_path($this->package_dir);
 
-        $source = __DIR__ . '/../../../stubs/' . $file;
+        $source = __DIR__.'/../../../stubs/'.$file;
 
-        $target = $packagePath . '/' . $file;
+        $target = $packagePath.'/'.$file;
 
         if ($this->option('force') || file_exists($target) === false) {
             File::copy($source, $target);
@@ -84,7 +84,7 @@ class GitlabCIMakeCommand extends Command
     protected function getOptions(): array
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Force create Gitlab CI yml file.']
+            ['force', 'f', InputOption::VALUE_NONE, 'Force create Gitlab CI yml file.'],
         ];
     }
 

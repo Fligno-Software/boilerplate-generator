@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\ChannelMakeCommand;
  * Class ExtendedMakeChannel
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeChannel extends ChannelMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
@@ -68,7 +69,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/channel.custom.stub';
+        return __DIR__.'/../../../stubs/channel.custom.stub';
     }
 
     /**

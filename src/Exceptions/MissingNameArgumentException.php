@@ -13,6 +13,6 @@ class MissingNameArgumentException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("Name argument is required!");
+        parent::__construct('Name argument is required!');
     }
 }

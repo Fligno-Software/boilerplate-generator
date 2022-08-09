@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\RequestMakeCommand;
  * Class ExtendedMakeRequest
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-09
  */
 class ExtendedMakeRequest extends RequestMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -69,7 +70,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/request.custom.stub';
+        return __DIR__.'/../../../stubs/request.custom.stub';
     }
 
     /**

@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class FlignoTest
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-17
  */
 class FlignoTest extends Command
@@ -46,9 +47,9 @@ class FlignoTest extends Command
         $this->addPackageOptions();
     }
 
-
     /**
      * @return int
+     *
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException
      * @throws JsonException
@@ -113,12 +114,12 @@ class FlignoTest extends Command
     }
 
     /**
-     * @param  string|null $package_name
+     * @param  string|null  $package_name
      * @return void
      */
     public function executeTests(string $package_name = null): void
     {
-        $this->info('<fg=white;bg=green>[ ONGOING ]</> Running tests for ' . ($package_name ?? 'Laravel') . '...');
-        exec('php artisan test' . ($package_name ? ' packages' . '/' . $package_name : null));
+        $this->info('<fg=white;bg=green>[ ONGOING ]</> Running tests for '.($package_name ?? 'Laravel').'...');
+        exec('php artisan test'.($package_name ? ' packages'.'/'.$package_name : null));
     }
 }

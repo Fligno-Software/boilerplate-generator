@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\ConsoleMakeCommand;
  * Class ExtendedMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-19
  */
 class ExtendedMakeCommand extends ConsoleMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -67,7 +68,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/console.custom.stub';
+        return __DIR__.'/../../../stubs/console.custom.stub';
     }
 
     /**

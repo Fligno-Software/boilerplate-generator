@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\ListenerMakeCommand;
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeListener extends ListenerMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeListener extends ListenerMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeListener extends ListenerMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -69,13 +70,13 @@ class ExtendedMakeListener extends ListenerMakeCommand
     {
         if ($this->option('queued')) {
             return $this->option('event')
-                ? __DIR__ . '/../../../stubs/listener-queued.custom.stub'
-                : __DIR__ . '/../../../stubs/listener-queued-duck.custom.stub';
+                ? __DIR__.'/../../../stubs/listener-queued.custom.stub'
+                : __DIR__.'/../../../stubs/listener-queued-duck.custom.stub';
         }
 
         return $this->option('event')
-            ? __DIR__ . '/../../../stubs/listener.custom.stub'
-            : __DIR__ . '/../../../stubs/listener-duck.custom.stub';
+            ? __DIR__.'/../../../stubs/listener.custom.stub'
+            : __DIR__.'/../../../stubs/listener-duck.custom.stub';
     }
 
     /**

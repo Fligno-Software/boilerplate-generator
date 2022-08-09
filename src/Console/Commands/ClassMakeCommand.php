@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class ClassMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-10
  */
 class ClassMakeCommand extends GeneratorCommand
@@ -61,7 +62,7 @@ class ClassMakeCommand extends GeneratorCommand
                         'i',
                         InputOption::VALUE_NONE,
                         'Generate a single method, invokable class.'
-                    )
+                    ),
                 ]
             );
         }
@@ -73,6 +74,7 @@ class ClassMakeCommand extends GeneratorCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
@@ -96,7 +98,7 @@ class ClassMakeCommand extends GeneratorCommand
             $type = '.invokable';
         }
 
-        return __DIR__ . '/../../../stubs/class' . $type .'.custom.stub';
+        return __DIR__.'/../../../stubs/class'.$type.'.custom.stub';
     }
 
     /**

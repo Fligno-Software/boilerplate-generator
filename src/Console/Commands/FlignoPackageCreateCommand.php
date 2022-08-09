@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class FlignoPackageCreateCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-09
  */
 class FlignoPackageCreateCommand extends Command
@@ -44,7 +45,6 @@ class FlignoPackageCreateCommand extends Command
         $this->addPackageArguments();
     }
 
-
     /**
      * Execute the console command.
      *
@@ -59,7 +59,7 @@ class FlignoPackageCreateCommand extends Command
             [
                 'vendor' => $this->vendor_name,
                 'name' => $this->package_name,
-                '--i' => true
+                '--i' => true,
             ]
         );
 
@@ -71,7 +71,7 @@ class FlignoPackageCreateCommand extends Command
                         [
                             'name' => $value,
                             '--package' => $this->package_dir,
-                            '--api' => $value !== 'web'
+                            '--api' => $value !== 'web',
                         ]
                     );
                 }
@@ -80,7 +80,7 @@ class FlignoPackageCreateCommand extends Command
             $this->call(
                 'gen:gitlab',
                 [
-                    '--package' => $this->package_dir
+                    '--package' => $this->package_dir,
                 ]
             );
 
@@ -88,7 +88,7 @@ class FlignoPackageCreateCommand extends Command
                 'gen:helper',
                 [
                     'name' => $this->package_name,
-                    '--package' => $this->package_dir
+                    '--package' => $this->package_dir,
                 ]
             );
         }

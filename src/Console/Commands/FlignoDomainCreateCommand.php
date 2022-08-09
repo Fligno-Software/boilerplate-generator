@@ -40,7 +40,7 @@ class FlignoDomainCreateCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -50,11 +50,11 @@ class FlignoDomainCreateCommand extends GeneratorCommand
         $this->addPackageOptions(false, false, false);
     }
 
-
     /**
      * Execute the console command.
      *
      * @return bool|null
+     *
      * @throws MissingNameArgumentException|PackageNotFoundException
      */
     public function handle(): bool|null

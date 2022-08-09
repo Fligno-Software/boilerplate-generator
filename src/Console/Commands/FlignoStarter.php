@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class FlignoStarter
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-09
  */
 class FlignoStarter extends Command
@@ -187,10 +188,10 @@ class FlignoStarter extends Command
     public function generateResource(): void
     {
         if ($this->is_model_created &&
-            ($this->yes_to_questions || $this->confirm("Do you want to generate RESOURCE file?", true))
+            ($this->yes_to_questions || $this->confirm('Do you want to generate RESOURCE file?', true))
         ) {
             $args = $this->getPackageArgs();
-            $args['name'] = $this->getModelName() . 'Resource';
+            $args['name'] = $this->getModelName().'Resource';
             $this->call('gen:resource', $args);
         }
     }
@@ -201,13 +202,13 @@ class FlignoStarter extends Command
     public function generateTests(): void
     {
         if ($this->is_model_created &&
-            ($this->yes_to_questions || $this->confirm("Do you want to generate a test file?", true))
+            ($this->yes_to_questions || $this->confirm('Do you want to generate a test file?', true))
         ) {
             $model = $this->getModelName();
             $folder = $this->option('requestsFolder');
 
             $args = $this->getPackageArgs();
-            $args['name'] = $folder . $model . '/' . $model . 'Test';
+            $args['name'] = $folder.$model.'/'.$model.'Test';
             $args['--model'] = $model;
             $args['--skip'] = true;
 
@@ -222,7 +223,7 @@ class FlignoStarter extends Command
     /**
      * Qualify the given model class base name.
      *
-     * @param  string $model
+     * @param  string  $model
      * @return string
      */
     protected function qualifyModel(string $model): string
@@ -260,7 +261,7 @@ class FlignoStarter extends Command
         return array_merge(
             parent::getOptions(),
             [
-                ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.']
+                ['yes', 'y', InputOption::VALUE_NONE, 'Yes to all generate questions.'],
             ]
         );
     }

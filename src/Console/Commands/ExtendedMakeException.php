@@ -1,19 +1,19 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
-use Illuminate\Foundation\Console\ExceptionMakeCommand;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Console\ExceptionMakeCommand;
 
 /**
  * Class ExtendedMakeException
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeException extends ExceptionMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeException extends ExceptionMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeException extends ExceptionMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -67,10 +68,10 @@ class ExtendedMakeException extends ExceptionMakeCommand
      */
     protected function getStub(): string
     {
-        $exceptionRenderReportStub = __DIR__ . '/../../../stubs/exception-render-report.custom.stub';
-        $exceptionRenderStub = __DIR__ . '/../../../stubs/exception-render.custom.stub';
-        $exceptionReportStub = __DIR__ . '/../../../stubs/exception-report.custom.stub';
-        $exceptionStub = __DIR__ . '/../../../stubs/exception.custom.stub';
+        $exceptionRenderReportStub = __DIR__.'/../../../stubs/exception-render-report.custom.stub';
+        $exceptionRenderStub = __DIR__.'/../../../stubs/exception-render.custom.stub';
+        $exceptionReportStub = __DIR__.'/../../../stubs/exception-report.custom.stub';
+        $exceptionStub = __DIR__.'/../../../stubs/exception.custom.stub';
 
         if (file_exists($exceptionRenderReportStub) === false ||
             file_exists($exceptionRenderStub) === false ||

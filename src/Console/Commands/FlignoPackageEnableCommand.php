@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
  * Class FlignoPackageEnableCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-12-06
  */
 class FlignoPackageEnableCommand extends Command
@@ -56,7 +57,7 @@ class FlignoPackageEnableCommand extends Command
             'packager:enable',
             [
                 'vendor' => $this->vendor_name,
-                'name' => $this->package_name
+                'name' => $this->package_name,
             ]
         );
 

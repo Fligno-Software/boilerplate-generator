@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -13,6 +12,7 @@ use Illuminate\Foundation\Console\NotificationMakeCommand;
  * Class ExtendedMakeNotification
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-17
  */
 class ExtendedMakeNotification extends NotificationMakeCommand
@@ -36,7 +36,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -52,6 +52,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
 
     /**
      * @return void
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -68,7 +69,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/notification.custom.stub';
+        return __DIR__.'/../../../stubs/notification.custom.stub';
     }
 
     /**

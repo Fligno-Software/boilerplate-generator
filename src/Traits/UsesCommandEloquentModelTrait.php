@@ -90,42 +90,42 @@ trait UsesCommandEloquentModelTrait
     }
 
     /**
-     * @param string|null $str
+     * @param  string|null  $str
      */
     public function setModelClass(?string $str): void
     {
         $this->model_class = $str;
 
-        $this->addMoreReplaceNamespace([ 'ModelClass' => $this->model_class ]);
+        $this->addMoreReplaceNamespace(['ModelClass' => $this->model_class]);
     }
 
     /**
-     * @param string|null $str
+     * @param  string|null  $str
      */
     public function setModelSnake(?string $str): void
     {
         $this->model_snake = Str::of($str)->afterLast('\\')->snake();
 
-        $this->addMoreReplaceNamespace([ 'ModelSnake' => $this->model_snake ]);
+        $this->addMoreReplaceNamespace(['ModelSnake' => $this->model_snake]);
     }
 
     /**
-     * @param string|null $str
+     * @param  string|null  $str
      */
     public function setModelKebab(?string $str): void
     {
         $this->model_kebab = Str::of($str)->afterLast('\\')->kebab();
 
-        $this->addMoreReplaceNamespace([ 'ModelKebab' => $this->model_kebab ]);
+        $this->addMoreReplaceNamespace(['ModelKebab' => $this->model_kebab]);
     }
 
     /**
-     * @param string|null $str
+     * @param  string|null  $str
      */
     public function setModelName(?string $str): void
     {
         $this->model_name = Str::of($str)->afterLast('\\');
 
-        $this->addMoreReplaceNamespace([ 'ModelName' => $this->model_name ]);
+        $this->addMoreReplaceNamespace(['ModelName' => $this->model_name]);
     }
 }

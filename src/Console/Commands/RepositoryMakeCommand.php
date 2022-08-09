@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class RepositoryMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-10
  */
 class RepositoryMakeCommand extends GeneratorCommand
@@ -44,7 +44,7 @@ class RepositoryMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -60,6 +60,7 @@ class RepositoryMakeCommand extends GeneratorCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -74,12 +75,12 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/repository.custom.stub';
+        return __DIR__.'/../../../stubs/repository.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '/Repositories';
+        return $rootNamespace.'/Repositories';
     }
 
     /**

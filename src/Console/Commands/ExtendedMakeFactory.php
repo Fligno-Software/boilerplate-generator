@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -15,6 +14,7 @@ use Illuminate\Support\Str;
  * Class ExtendedMakeFactory
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-15
  */
 class ExtendedMakeFactory extends FactoryMakeCommand
@@ -36,7 +36,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected $description = 'Create a new model factory in Laravel or in a specific package.';
 
     /**
-     * @param Filesystem $files
+     * @param  Filesystem  $files
      */
     public function __construct(Filesystem $files)
     {
@@ -53,6 +53,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -81,8 +82,8 @@ class ExtendedMakeFactory extends FactoryMakeCommand
                 array_merge(
                     $this->getPackageArgs(),
                     [
-                        'name' => 'Has' . $this->getNameInput(),
-                        '--factory' => $this->getNameInput()
+                        'name' => 'Has'.$this->getNameInput(),
+                        '--factory' => $this->getNameInput(),
                     ]
                 )
             );
@@ -94,13 +95,13 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/factory.custom.stub';
+        return __DIR__.'/../../../stubs/factory.custom.stub';
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return string
      */
     protected function getPath($name): string
@@ -142,10 +143,10 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) . '/' . $this->domain_dir  :
-                    app_path($this->domain_dir)) . '/database';
+            return ($this->package_dir ? package_app_path($this->package_dir).'/'.$this->domain_dir :
+                    app_path($this->domain_dir)).'/database';
         }
 
-        return $this->package_dir ? package_database_path($this->package_dir)  : database_path();
+        return $this->package_dir ? package_database_path($this->package_dir) : database_path();
     }
 }

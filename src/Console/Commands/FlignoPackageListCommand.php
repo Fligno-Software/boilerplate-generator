@@ -10,6 +10,7 @@ use JsonException;
  * Class FlignoPackageListCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-12-06
  */
 class FlignoPackageListCommand extends Command
@@ -42,7 +43,7 @@ class FlignoPackageListCommand extends Command
         $this->table(
             [
                 'Package',
-                'Status'
+                'Status',
             ],
             $this->getPackagesRows()
         );

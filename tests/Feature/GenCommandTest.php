@@ -2,10 +2,6 @@
 
 namespace Fligno\BoilerplateGenerator\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Storage;
-use RuntimeException;
 use Tests\TestCase;
 
 /**
@@ -66,7 +62,7 @@ class GenCommandTest extends TestCase
             'gen:class',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Class created successfully.')
@@ -122,7 +118,7 @@ class GenCommandTest extends TestCase
             'gen:cast',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Cast created successfully.')
@@ -162,7 +158,7 @@ class GenCommandTest extends TestCase
             'gen:channel',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Channel created successfully.')
@@ -203,7 +199,7 @@ class GenCommandTest extends TestCase
             'gen:command',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Console command created successfully.')
@@ -244,7 +240,7 @@ class GenCommandTest extends TestCase
             'gen:component',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Component created successfully.')
@@ -284,7 +280,7 @@ class GenCommandTest extends TestCase
             'gen:controller',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Controller created successfully.')
@@ -324,7 +320,7 @@ class GenCommandTest extends TestCase
             'gen:event',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Event created successfully.')
@@ -364,7 +360,7 @@ class GenCommandTest extends TestCase
             'gen:exception',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Exception created successfully.')
@@ -446,7 +442,7 @@ class GenCommandTest extends TestCase
             'gen:job',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Job created successfully.')
@@ -486,7 +482,7 @@ class GenCommandTest extends TestCase
             'gen:listener',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Listener created successfully.')
@@ -526,7 +522,7 @@ class GenCommandTest extends TestCase
             'gen:mail',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Mail created successfully.')
@@ -566,7 +562,7 @@ class GenCommandTest extends TestCase
             'gen:middleware',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->assertSuccessful();
@@ -604,7 +600,7 @@ class GenCommandTest extends TestCase
             'gen:migration',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->assertSuccessful();
@@ -643,7 +639,7 @@ class GenCommandTest extends TestCase
             'gen:model',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Model created successfully.')
@@ -660,9 +656,9 @@ class GenCommandTest extends TestCase
         $this->artisan(
             'gen:model',
             [
-                'name' => 'Something',
+                'name' => 'UserDataFactory',
                 '--package' => 'dummy/package',
-                '--all' => true
+                '--all' => true,
             ]
         )
             ->expectsOutput('Model created successfully.')
@@ -702,7 +698,7 @@ class GenCommandTest extends TestCase
             'gen:notification',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Notification created successfully.')
@@ -742,7 +738,7 @@ class GenCommandTest extends TestCase
             'gen:observer',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Observer created successfully.')
@@ -782,7 +778,7 @@ class GenCommandTest extends TestCase
             'gen:policy',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Policy created successfully.')
@@ -822,7 +818,7 @@ class GenCommandTest extends TestCase
             'gen:provider',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Provider created successfully.')
@@ -862,7 +858,7 @@ class GenCommandTest extends TestCase
             'gen:request',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Request created successfully.')
@@ -902,7 +898,7 @@ class GenCommandTest extends TestCase
             'gen:resource',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Resource created successfully.')
@@ -942,7 +938,7 @@ class GenCommandTest extends TestCase
             'gen:rule',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Rule created successfully.')
@@ -982,7 +978,7 @@ class GenCommandTest extends TestCase
             'gen:seeder',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Seeder created successfully.')
@@ -1022,7 +1018,7 @@ class GenCommandTest extends TestCase
             'gen:test',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Test created successfully.')
@@ -1043,7 +1039,7 @@ class GenCommandTest extends TestCase
         $this->artisan(
             'gen:gitlab',
             [
-                '--force' => true
+                '--force' => true,
             ]
         )
             ->expectsQuestion('Choose target package', 'dummy/package')
@@ -1062,7 +1058,7 @@ class GenCommandTest extends TestCase
             'gen:gitlab',
             [
                 '--package' => 'dummy/package',
-                '--force' => true
+                '--force' => true,
             ]
         )
             ->expectsOutput('Gitlab file created successfully.')
@@ -1102,7 +1098,7 @@ class GenCommandTest extends TestCase
             'gen:interface',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Interface created successfully.')
@@ -1124,7 +1120,7 @@ class GenCommandTest extends TestCase
             'gen:repository',
             [
                 'name' => 'RandomOne',
-                '--model' => 'RandomOne'
+                '--model' => 'RandomOne',
             ]
         )
             ->expectsQuestion('Choose target package', 'dummy/package')
@@ -1144,7 +1140,7 @@ class GenCommandTest extends TestCase
             [
                 'name' => 'RandomTwo',
                 '--model' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Repository created successfully.')
@@ -1165,7 +1161,7 @@ class GenCommandTest extends TestCase
         $this->artisan(
             'gen:routes',
             [
-                '--force' => true
+                '--force' => true,
             ]
         )
             ->expectsQuestion('Choose target package', 'dummy/package')
@@ -1185,7 +1181,7 @@ class GenCommandTest extends TestCase
             'gen:routes',
             [
                 '--package' => 'dummy/package',
-                '--force' => true
+                '--force' => true,
             ]
         )
             ->expectsOutput('Route created successfully.')
@@ -1226,7 +1222,7 @@ class GenCommandTest extends TestCase
             'gen:trait',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Trait created successfully.')
@@ -1249,7 +1245,7 @@ class GenCommandTest extends TestCase
         $this->artisan(
             'gen:container',
             [
-                'name' => 'RandomOne'
+                'name' => 'RandomOne',
             ]
         )
             ->expectsQuestion('Choose target package', 'dummy/package')
@@ -1270,7 +1266,7 @@ class GenCommandTest extends TestCase
             'gen:container',
             [
                 'name' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Service Container created successfully.')
@@ -1294,7 +1290,7 @@ class GenCommandTest extends TestCase
             'gen:helper',
             [
                 'name' => 'OtherOne',
-                '--container' => 'RandomOne'
+                '--container' => 'RandomOne',
             ]
         )
             ->expectsQuestion('Choose target package', 'dummy/package')
@@ -1314,7 +1310,7 @@ class GenCommandTest extends TestCase
             [
                 'name' => 'OtherTwo',
                 '--container' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Helper created successfully.')
@@ -1336,7 +1332,7 @@ class GenCommandTest extends TestCase
             'gen:facade',
             [
                 'name' => 'OtherOne',
-                '--container' => 'RandomOne'
+                '--container' => 'RandomOne',
             ]
         )
             ->expectsQuestion('Choose target package', 'dummy/package')
@@ -1356,7 +1352,7 @@ class GenCommandTest extends TestCase
             [
                 'name' => 'OtherTwo',
                 '--container' => 'RandomTwo',
-                '--package' => 'dummy/package'
+                '--package' => 'dummy/package',
             ]
         )
             ->expectsOutput('Facade created successfully.')

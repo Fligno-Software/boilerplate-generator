@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -17,6 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class RouteMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-25
  */
 class RouteMakeCommand extends GeneratorCommand
@@ -51,7 +51,7 @@ class RouteMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -73,7 +73,8 @@ class RouteMakeCommand extends GeneratorCommand
         $path = $this->getPath($name);
 
         if (! $this->shouldOverwrite() && file_exists($path)) {
-            $this->error(Str::ucfirst($name) . ' route already exists!');
+            $this->error(Str::ucfirst($name).' route already exists!');
+
             return self::FAILURE;
         }
 
@@ -95,7 +96,7 @@ class RouteMakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['api', null, InputOption::VALUE_NONE, 'Generate api route.']
+            ['api', null, InputOption::VALUE_NONE, 'Generate api route.'],
         ];
     }
 
@@ -106,7 +107,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/route.custom.stub';
+        return __DIR__.'/../../../stubs/route.custom.stub';
     }
 
     /**
@@ -130,7 +131,7 @@ class RouteMakeCommand extends GeneratorCommand
             ->snake('-')
             ->replace('api', '')
             ->trim('-')
-            ->when($this->option('api'), fn(Stringable $str) => $str->append('.api'))
+            ->when($this->option('api'), fn (Stringable $str) => $str->append('.api'))
             ->trim('.');
     }
 
@@ -141,7 +142,7 @@ class RouteMakeCommand extends GeneratorCommand
     {
         if ($this->domain_dir) {
             return ($this->package_dir ? package_app_path($this->package_dir) :
-                    app_path()) . '/' . $this->domain_dir . '/routes';
+                    app_path()).'/'.$this->domain_dir.'/routes';
         }
 
         return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');

@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
  * Class FlignoPackageRemoveCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-12-06
  */
 class FlignoPackageRemoveCommand extends Command
@@ -57,7 +58,7 @@ class FlignoPackageRemoveCommand extends Command
                 'packager:remove',
                 [
                     'vendor' => $this->vendor_name,
-                    'name' => $this->package_name
+                    'name' => $this->package_name,
                 ]
             );
         }
