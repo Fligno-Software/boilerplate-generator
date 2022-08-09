@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -15,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class ExtendedMakeModel
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-09
  */
 class ExtendedMakeModel extends ModelMakeCommand
@@ -38,7 +38,7 @@ class ExtendedMakeModel extends ModelMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -54,6 +54,7 @@ class ExtendedMakeModel extends ModelMakeCommand
 
     /**
      * @return void
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -233,7 +234,6 @@ class ExtendedMakeModel extends ModelMakeCommand
         $this->call('gen:df', $args);
     }
 
-
     /**
      * Get the stub file for the generator.
      *
@@ -241,7 +241,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/model.custom.stub';
+        return __DIR__.'/../../../stubs/model.custom.stub';
     }
 
     /**

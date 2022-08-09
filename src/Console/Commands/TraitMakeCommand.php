@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -16,6 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class TraitMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-10
  */
 class TraitMakeCommand extends GeneratorCommand
@@ -58,6 +58,7 @@ class TraitMakeCommand extends GeneratorCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
@@ -103,16 +104,16 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/trait' . ($this->option('factory') ? '.factory' : '') . '.custom.stub';
+        return __DIR__.'/../../../stubs/trait'.($this->option('factory') ? '.factory' : '').'.custom.stub';
     }
 
     /**
-     * @param  string $rootNamespace
+     * @param  string  $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '/Traits';
+        return $rootNamespace.'/Traits';
     }
 
     /**
@@ -130,25 +131,25 @@ class TraitMakeCommand extends GeneratorCommand
      *****/
 
     /**
-     * @param string|null $factory
+     * @param  string|null  $factory
      */
     public function setFactoryClass(?string $factory): void
     {
         $this->addMoreReplaceNamespace(
             [
-            'FactoryClass' => $factory
+                'FactoryClass' => $factory,
             ]
         );
     }
 
     /**
-     * @param string|null $factory
+     * @param  string|null  $factory
      */
     public function setFactoryName(?string $factory): void
     {
         $this->addMoreReplaceNamespace(
             [
-            'FactoryName' => Str::of($factory)->afterLast('\\')
+                'FactoryName' => Str::of($factory)->afterLast('\\'),
             ]
         );
     }
@@ -156,7 +157,7 @@ class TraitMakeCommand extends GeneratorCommand
     /**
      * Parse the class name and format according to the root namespace.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return string
      */
     protected function qualifyFactoryClass(string $name): string

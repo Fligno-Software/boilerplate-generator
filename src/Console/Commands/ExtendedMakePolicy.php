@@ -1,19 +1,19 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Foundation\Console\PolicyMakeCommand;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Console\PolicyMakeCommand;
 
 /**
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakePolicy extends PolicyMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakePolicy extends PolicyMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
@@ -69,8 +70,8 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? __DIR__ . '/../../../stubs/policy.custom.stub'
-            : __DIR__ . '/../../../stubs/policy.plain.custom.stub';
+            ? __DIR__.'/../../../stubs/policy.custom.stub'
+            : __DIR__.'/../../../stubs/policy.plain.custom.stub';
     }
 
     /**

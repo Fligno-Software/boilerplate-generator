@@ -1,19 +1,19 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Routing\Console\MiddlewareMakeCommand;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Routing\Console\MiddlewareMakeCommand;
 
 /**
  * Class ExtendedMakeListener
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeMiddleware extends MiddlewareMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -67,7 +68,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/middleware.custom.stub';
+        return __DIR__.'/../../../stubs/middleware.custom.stub';
     }
 
     /**

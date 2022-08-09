@@ -2,17 +2,17 @@
 
 /**
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-09
  */
-
 if (! function_exists('package_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_path(string $path = null): string
     {
-        return base_path('packages' . ($path ? '/' . $path : null));
+        return base_path('packages'.($path ? '/'.$path : null));
     }
 }
 
@@ -20,12 +20,12 @@ if (! function_exists('package_path')) {
 
 if (! function_exists('package_app_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_app_path(string $path = null): string
     {
-        return package_path($path) . '/src';
+        return package_path($path).'/src';
     }
 }
 
@@ -33,56 +33,56 @@ if (! function_exists('package_app_path')) {
 
 if (! function_exists('package_database_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_database_path(string $path = null): string
     {
-        return package_path($path) . '/database';
+        return package_path($path).'/database';
     }
 }
 
 if (! function_exists('package_migration_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_migration_path(string $path = null): string
     {
-        return package_path($path) . '/database/migrations';
+        return package_path($path).'/database/migrations';
     }
 }
 
 if (! function_exists('package_seeder_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_seeder_path(string $path = null): string
     {
-        return package_path($path) . '/database/seeders';
+        return package_path($path).'/database/seeders';
     }
 }
 
 if (! function_exists('package_factory_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_factory_path(string $path = null): string
     {
-        return package_path($path) . '/database/factories';
+        return package_path($path).'/database/factories';
     }
 }
 
 if (! function_exists('package_database_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_database_path(string $path = null): string
     {
-        return package_path($path) . '/database';
+        return package_path($path).'/database';
     }
 }
 
@@ -90,23 +90,23 @@ if (! function_exists('package_database_path')) {
 
 if (! function_exists('package_resource_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_resource_path(string $path = null): string
     {
-        return package_path($path) . '/resources';
+        return package_path($path).'/resources';
     }
 }
 
 if (! function_exists('package_view_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_view_path(string $path = null): string
     {
-        return package_path($path) . '/resources/views';
+        return package_path($path).'/resources/views';
     }
 }
 
@@ -114,12 +114,12 @@ if (! function_exists('package_view_path')) {
 
 if (! function_exists('package_test_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_test_path(string $path = null): string
     {
-        return package_path($path) . '/tests';
+        return package_path($path).'/tests';
     }
 }
 
@@ -127,12 +127,12 @@ if (! function_exists('package_test_path')) {
 
 if (! function_exists('package_routes_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_routes_path(string $path = null): string
     {
-        return package_path($path) . '/routes';
+        return package_path($path).'/routes';
     }
 }
 
@@ -140,11 +140,11 @@ if (! function_exists('package_routes_path')) {
 
 if (! function_exists('package_helpers_path')) {
     /**
-     * @param  string|null $path
+     * @param  string|null  $path
      * @return string
      */
     function package_helpers_path(string $path = null): string
     {
-        return package_path($path) . '/helpers';
+        return package_path($path).'/helpers';
     }
 }

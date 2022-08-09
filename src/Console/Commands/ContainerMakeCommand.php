@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class ContainerMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2022-01-13
  */
 class ContainerMakeCommand extends GeneratorCommand
@@ -44,7 +44,7 @@ class ContainerMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -60,6 +60,7 @@ class ContainerMakeCommand extends GeneratorCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -77,6 +78,7 @@ class ContainerMakeCommand extends GeneratorCommand
 
     /**
      * @return void
+     *
      * @throws MissingNameArgumentException
      */
     protected function createContainerHelper(): void
@@ -87,7 +89,7 @@ class ContainerMakeCommand extends GeneratorCommand
                 $this->getPackageArgs(),
                 [
                     'name' => $this->getNameInput(),
-                    '--container' => $this->getNameInput()
+                    '--container' => $this->getNameInput(),
                 ]
             )
         );
@@ -95,6 +97,7 @@ class ContainerMakeCommand extends GeneratorCommand
 
     /**
      * @return void
+     *
      * @throws MissingNameArgumentException
      */
     protected function createContainerFacade(): void
@@ -105,7 +108,7 @@ class ContainerMakeCommand extends GeneratorCommand
                 $this->getPackageArgs(),
                 [
                     'name' => $this->getNameInput(),
-                    '--container' => $this->getNameInput()
+                    '--container' => $this->getNameInput(),
                 ]
             )
         );
@@ -116,16 +119,16 @@ class ContainerMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/container.custom.stub';
+        return __DIR__.'/../../../stubs/container.custom.stub';
     }
 
     /**
-     * @param  string $rootNamespace
+     * @param  string  $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '/Containers';
+        return $rootNamespace.'/Containers';
     }
 
     /**

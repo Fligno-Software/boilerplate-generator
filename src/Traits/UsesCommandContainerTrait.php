@@ -20,7 +20,7 @@ trait UsesCommandContainerTrait
     protected bool $container_exists = false;
 
     /**
-     * @param  string|null $description
+     * @param  string|null  $description
      * @return void
      */
     protected function addContainerOptions(string $description = null): void
@@ -36,10 +36,10 @@ trait UsesCommandContainerTrait
     }
 
     /**
-     * @param  string      $container
-     * @param  string|null $additionalNamespace
-     * @param  bool        $qualifyContainer
-     * @param  bool        $disablePackageNamespaceTemporarily
+     * @param  string  $container
+     * @param  string|null  $additionalNamespace
+     * @param  bool  $qualifyContainer
+     * @param  bool  $disablePackageNamespaceTemporarily
      * @return bool
      */
     protected function checkContainerExists(
@@ -62,7 +62,7 @@ trait UsesCommandContainerTrait
 
         $this->is_package_namespace_disabled = false;
 
-        if (!($this->container_exists = class_exists($container))) {
+        if (! ($this->container_exists = class_exists($container))) {
             $container = $containerCopy;
         }
 
@@ -75,13 +75,13 @@ trait UsesCommandContainerTrait
     protected function addContainerReplaceNamespace(): void
     {
         if (($container = $this->option('container')) && (
-                $this->checkContainerExists($container) ||
+            $this->checkContainerExists($container) ||
                 $this->checkContainerExists($container, null, false) ||
                 $this->checkContainerExists($container, null, true, true) ||
                 $this->checkContainerExists($container, 'Containers') ||
                 $this->checkContainerExists($container, 'Containers', false) ||
                 $this->checkContainerExists($container, 'Containers', true, true)
-            )
+        )
         ) {
             $this->addMoreCasedReplaceNamespace($container, 'Container');
         }
@@ -90,20 +90,20 @@ trait UsesCommandContainerTrait
     /**
      * Qualify the given model class base name.
      *
-     * @param  string      $container
-     * @param  string|null $additionalNamespace
+     * @param  string  $container
+     * @param  string|null  $additionalNamespace
      * @return string
      */
     protected function qualifyContainer(string $container, string $additionalNamespace = null): string
     {
         $container = (string) $this->cleanClassNamespace($container);
 
-        $rootContainerNamespace = trim($this->rootNamespace() . $additionalNamespace, '\\');
+        $rootContainerNamespace = trim($this->rootNamespace().$additionalNamespace, '\\');
 
         if (Str::startsWith($container, $rootContainerNamespace)) {
             return $container;
         }
 
-        return $this->qualifyContainer($rootContainerNamespace . '\\' . $container, $additionalNamespace);
+        return $this->qualifyContainer($rootContainerNamespace.'\\'.$container, $additionalNamespace);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -13,6 +12,7 @@ use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
  * Class ExtendedMakeMigration
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-10
  */
 class ExtendedMakeMigration extends MigrateMakeCommand
@@ -40,7 +40,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
 
     public function __construct()
     {
-        $realPath = dirname(__DIR__, 3) . '/stubs';
+        $realPath = dirname(__DIR__, 3).'/stubs';
 
         $creator = new ExtendedMigrationCreator(app('files'), $realPath);
 
@@ -55,6 +55,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
 
     /**
      * @return void
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void

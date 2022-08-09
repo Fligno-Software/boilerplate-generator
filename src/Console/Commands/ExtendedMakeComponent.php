@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Inspiring;
  * Class ExtendedMakeChannel
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeComponent extends ComponentMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -67,7 +68,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/view-component.custom.stub';
+        return __DIR__.'/../../../stubs/view-component.custom.stub';
     }
 
     /**
@@ -80,7 +81,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
         $path = str_replace('.', '/', 'components.'.$this->getView()).'.blade.php';
 
         if ($this->package_dir) {
-            $path = package_view_path($this->package_dir) . DIRECTORY_SEPARATOR . $path;
+            $path = package_view_path($this->package_dir).DIRECTORY_SEPARATOR.$path;
         } else {
             $path = $this->viewPath($path);
         }

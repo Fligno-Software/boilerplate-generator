@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -13,6 +12,7 @@ use Illuminate\Foundation\Console\ResourceMakeCommand;
  * Class ExtendedMakeResource
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-09
  */
 class ExtendedMakeResource extends ResourceMakeCommand
@@ -36,7 +36,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -52,6 +52,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
 
     /**
      * @return void
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -68,7 +69,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/resource.custom.stub';
+        return __DIR__.'/../../../stubs/resource.custom.stub';
     }
 
     /**

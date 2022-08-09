@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -14,6 +13,7 @@ use Illuminate\Foundation\Console\JobMakeCommand;
  * Class ExtendedMakeJob
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeJob extends JobMakeCommand
@@ -37,7 +37,7 @@ class ExtendedMakeJob extends JobMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,6 +53,7 @@ class ExtendedMakeJob extends JobMakeCommand
 
     /**
      * @return bool|null
+     *
      * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
@@ -68,8 +69,8 @@ class ExtendedMakeJob extends JobMakeCommand
     protected function getStub(): string
     {
         return $this->option('sync')
-            ? __DIR__ . '/../../../stubs/job.custom.stub'
-            : __DIR__ . '/../../../stubs/job.queued.custom.stub';
+            ? __DIR__.'/../../../stubs/job.custom.stub'
+            : __DIR__.'/../../../stubs/job.queued.custom.stub';
     }
 
     /**

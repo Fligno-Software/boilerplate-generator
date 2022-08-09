@@ -13,6 +13,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class FacadeMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2022-01-17
  */
 class FacadeMakeCommand extends GeneratorCommand
@@ -41,7 +42,7 @@ class FacadeMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -53,9 +54,9 @@ class FacadeMakeCommand extends GeneratorCommand
         $this->addContainerOptions();
     }
 
-
     /**
      * @return bool|null
+     *
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException|FileNotFoundException
      */
@@ -77,17 +78,17 @@ class FacadeMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return $this->moreReplaceNamespace ? __DIR__ . '/../../../stubs/facade.container.custom.stub' :
-            __DIR__ . '/../../../stubs/facade.custom.stub';
+        return $this->moreReplaceNamespace ? __DIR__.'/../../../stubs/facade.container.custom.stub' :
+            __DIR__.'/../../../stubs/facade.custom.stub';
     }
 
     /**
-     * @param  string $rootNamespace
+     * @param  string  $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '/Facades';
+        return $rootNamespace.'/Facades';
     }
 
     /**

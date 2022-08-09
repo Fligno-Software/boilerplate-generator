@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -13,6 +12,7 @@ use Illuminate\Foundation\Console\MailMakeCommand;
  * Class ExtendedMakeMail
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-20
  */
 class ExtendedMakeMail extends MailMakeCommand
@@ -36,7 +36,7 @@ class ExtendedMakeMail extends MailMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -52,6 +52,7 @@ class ExtendedMakeMail extends MailMakeCommand
 
     /**
      * @return void
+     *
      * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): void
@@ -68,8 +69,8 @@ class ExtendedMakeMail extends MailMakeCommand
      */
     protected function getStub(): string
     {
-        return $this->option('markdown') !== false ? __DIR__ . '/../../../stubs/markdown-mail.custom.stub' :
-            __DIR__ . '/../../../stubs/mail.custom.stub';
+        return $this->option('markdown') !== false ? __DIR__.'/../../../stubs/markdown-mail.custom.stub' :
+            __DIR__.'/../../../stubs/mail.custom.stub';
     }
 
     /**

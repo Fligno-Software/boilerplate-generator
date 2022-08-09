@@ -11,16 +11,17 @@ use Fligno\StarterKit\Traits\UsesCommandCustomMessagesTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Illuminate\Support\Str;
 
 /**
  * Trait UsesCommandVendorPackageDomainTrait
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-11
  */
 trait UsesCommandVendorPackageDomainTrait
@@ -115,9 +116,9 @@ trait UsesCommandVendorPackageDomainTrait
     protected ?Collection $moreReplaceNamespace = null;
 
     /**
-     * @param  bool $ddd_enabled
-     * @param  bool $has_force
-     * @param  bool $has_force_domain
+     * @param  bool  $ddd_enabled
+     * @param  bool  $has_force
+     * @param  bool  $has_force_domain
      * @return void
      */
     public function addPackageOptions(
@@ -168,7 +169,7 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  bool $isRequired
+     * @param  bool  $isRequired
      * @return void
      */
     public function addPackageArguments(bool $isRequired = true): void
@@ -202,10 +203,11 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  bool $showPackageChoices
-     * @param  bool $showDomainChoices
-     * @param  bool $showDefaultPackage
+     * @param  bool  $showPackageChoices
+     * @param  bool  $showDomainChoices
+     * @param  bool  $showDefaultPackage
      * @return void
+     *
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException
      */
@@ -215,13 +217,13 @@ trait UsesCommandVendorPackageDomainTrait
         bool $showDefaultPackage = true
     ): void {
         if ($this->isGeneratorSubclass()) {
-            $this->note($this->type . ($this->getNameInput() ? ': ' . $this->getNameInput() : null), 'ONGOING');
+            $this->note($this->type.($this->getNameInput() ? ': '.$this->getNameInput() : null), 'ONGOING');
         }
 
         $package = $this->hasOption('package') ? $this->option('package') : null;
 
         if ($this->hasArgument('vendor') && $this->hasArgument('package')) {
-            $package = $this->argument('vendor') . '/' . $this->argument('package');
+            $package = $this->argument('vendor').'/'.$this->argument('package');
         }
 
         $package = trim($package, '/');
@@ -242,8 +244,8 @@ trait UsesCommandVendorPackageDomainTrait
                 $this->package_name = Str::kebab($this->package_name);
                 $this->vendor_name_studly = Str::studly($this->vendor_name);
                 $this->package_name_studly = Str::studly($this->package_name);
-                $this->package_dir = $this->vendor_name . '/' . $this->package_name;
-                $this->package_namespace = $this->vendor_name_studly . '\\' . $this->package_name_studly . '\\';
+                $this->package_dir = $this->vendor_name.'/'.$this->package_name;
+                $this->package_namespace = $this->vendor_name_studly.'\\'.$this->package_name_studly.'\\';
 
                 // Check if folder exists
                 if (
@@ -270,8 +272,8 @@ trait UsesCommandVendorPackageDomainTrait
         }
 
         if ($showDomainChoices && $this->domain_name = $this->getDomainFromOptions()) {
-            $this->domain_dir = 'Domains/' . $this->domain_name;
-            $this->domain_namespace = ($this->package_namespace ?: 'App\\') . 'Domains\\' . $this->domain_name . '\\';
+            $this->domain_dir = 'Domains/'.$this->domain_name;
+            $this->domain_namespace = ($this->package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
         }
     }
 
@@ -306,6 +308,7 @@ trait UsesCommandVendorPackageDomainTrait
                         $args['name'] = $domain;
                         $this->call('fligno:domain:create', $args);
                     }
+
                     return $domain;
                 }
 
@@ -325,6 +328,7 @@ trait UsesCommandVendorPackageDomainTrait
                     if ($domain === $this->default_domain) {
                         return null;
                     }
+
                     return $domain;
                 }
 
@@ -341,7 +345,7 @@ trait UsesCommandVendorPackageDomainTrait
                     'Choose what to do',
                     [
                         'create new domain',
-                        'choose from domains'
+                        'choose from domains',
                     ],
                     0
                 );
@@ -366,7 +370,7 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  bool $withDomain
+     * @param  bool  $withDomain
      * @return array
      */
     public function getPackageArgs(bool $withDomain = true): array
@@ -415,7 +419,7 @@ trait UsesCommandVendorPackageDomainTrait
         $name = trim($this->argument('name'));
 
         if ($classType) {
-            return Str::of($name)->before($classType) . $classType;
+            return Str::of($name)->before($classType).$classType;
         }
 
         return $name;
@@ -425,6 +429,7 @@ trait UsesCommandVendorPackageDomainTrait
      * Get the desired class name from the input.
      *
      * @return string|null
+     *
      * @throws MissingNameArgumentException
      */
     protected function getNameInput(): ?string
@@ -437,6 +442,7 @@ trait UsesCommandVendorPackageDomainTrait
 
                 $this->error('You need to specify the class name.');
                 $this->input->setArgument('name', $this->ask("What's the name of the class?"));
+
                 return $this->getNameInput();
             }
 
@@ -480,13 +486,13 @@ trait UsesCommandVendorPackageDomainTrait
     protected function getPackageDomainFullPath(): string
     {
         return ($this->package_dir ? package_app_path($this->package_dir) :
-                app_path()) . ($this->domain_dir ? '/' . $this->domain_dir : null);
+                app_path()).($this->domain_dir ? '/'.$this->domain_dir : null);
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return string
      */
     protected function getPath($name): string
@@ -510,7 +516,7 @@ trait UsesCommandVendorPackageDomainTrait
                 function ($vendor) use ($allPackages) {
                     collect_files_or_directories(package_path($vendor), true, false)?->each(
                         function ($package) use ($allPackages, $vendor) {
-                            $allPackages->add($vendor . '/' .$package);
+                            $allPackages->add($vendor.'/'.$package);
                         }
                     );
                 }
@@ -527,13 +533,13 @@ trait UsesCommandVendorPackageDomainTrait
     {
         $enabled = collect($this->getEnabledPackages())->map(
             function ($value) {
-                return $value . ' <fg=white;bg=green>[ENABLED]</>';
+                return $value.' <fg=white;bg=green>[ENABLED]</>';
             }
         );
 
         $disabled = collect($this->collectDisabledPackages())->map(
             function ($value) {
-                return $value . ' <fg=white;bg=red>[DISABLED]</>';
+                return $value.' <fg=white;bg=red>[DISABLED]</>';
             }
         );
 
@@ -542,19 +548,20 @@ trait UsesCommandVendorPackageDomainTrait
 
     /**
      * @return array
+     *
      * @throws JsonException
      */
     public function getPackagesRows(): array
     {
         $enabled = collect($this->getEnabledPackages())->map(
             function ($value) {
-                return [ $value, '<fg=white;bg=green>[ ENABLED ]</>' ];
+                return [$value, '<fg=white;bg=green>[ ENABLED ]</>'];
             }
         );
 
         $disabled = collect($this->collectDisabledPackages())->map(
             function ($value) {
-                return [ $value, '<fg=white;bg=red>[ DISABLED ]</>' ];
+                return [$value, '<fg=white;bg=red>[ DISABLED ]</>'];
             }
         );
 
@@ -565,6 +572,7 @@ trait UsesCommandVendorPackageDomainTrait
      * Get all the packages installed with Package.
      *
      * @return Collection
+     *
      * @throws JsonException
      */
     public function getEnabledPackages(): Collection
@@ -586,6 +594,7 @@ trait UsesCommandVendorPackageDomainTrait
 
     /**
      * @return Collection
+     *
      * @throws JsonException
      */
     public function collectDisabledPackages(): Collection
@@ -598,7 +607,7 @@ trait UsesCommandVendorPackageDomainTrait
      *****/
 
     /**
-     * @param  bool $prependDirectory
+     * @param  bool  $prependDirectory
      * @return Collection|null
      */
     public function getAllDomains(bool $prependDirectory = false): ?Collection
@@ -619,7 +628,7 @@ trait UsesCommandVendorPackageDomainTrait
      *****/
 
     /**
-     * @param  Collection|array $more
+     * @param  Collection|array  $more
      * @return Collection
      */
     public function addMoreReplaceNamespace(Collection|array $more): Collection
@@ -636,8 +645,8 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  string      $namespacedClass
-     * @param  string|null $classType
+     * @param  string  $namespacedClass
+     * @param  string|null  $classType
      * @return Collection
      */
     protected function addMoreCasedReplaceNamespace(string $namespacedClass, string $classType = null): Collection
@@ -648,11 +657,11 @@ trait UsesCommandVendorPackageDomainTrait
 
         $more = collect(
             [
-            'Namespaced' . $key => $namespacedClass,
-            $key . 'Class' => $class,
-            $key . 'Snake' => $class->snake(),
-            $key . 'Slug' => $class->snake('-'),
-            $key . 'Camel' => $class->camel(),
+                'Namespaced'.$key => $namespacedClass,
+                $key.'Class' => $class,
+                $key.'Snake' => $class->snake(),
+                $key.'Slug' => $class->snake('-'),
+                $key.'Camel' => $class->camel(),
             ]
         );
 
@@ -665,8 +674,8 @@ trait UsesCommandVendorPackageDomainTrait
      * Overriding to inject more namespace.
      * Replace the namespace for the given stub.
      *
-     * @param  string $stub
-     * @param  string $name
+     * @param  string  $stub
+     * @param  string  $name
      * @return $this
      */
     protected function replaceNamespace(&$stub, $name): static
@@ -680,7 +689,7 @@ trait UsesCommandVendorPackageDomainTrait
         $replacements = [
             $this->getNamespace($name),
             $this->getRootNamespaceDuringReplaceNamespace(),
-            $this->userProviderModel()
+            $this->userProviderModel(),
         ];
 
         if ($this->moreReplaceNamespace && Arr::isAssoc($this->moreReplaceNamespace->toArray())) {
@@ -691,8 +700,8 @@ trait UsesCommandVendorPackageDomainTrait
 
                     if ($item && $key) {
                         $searches[0][] = Str::studly($key);
-                        $searches[1][] = '{{ ' . Str::camel($key) . ' }}';
-                        $searches[2][] = '{{' . Str::camel($key) . '}}';
+                        $searches[1][] = '{{ '.Str::camel($key).' }}';
+                        $searches[2][] = '{{'.Str::camel($key).'}}';
                         $replacements[] = $item;
                     }
                 }
@@ -719,7 +728,7 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  string $classNamespace
+     * @param  string  $classNamespace
      * @return array|string
      */
     protected function cleanClassNamespace(string $classNamespace): array|string
@@ -750,7 +759,7 @@ trait UsesCommandVendorPackageDomainTrait
      *****/
 
     /**
-     * @param  string $option
+     * @param  string  $option
      * @return string
      */
     protected function getModelClass(string $option): string
@@ -767,7 +776,7 @@ trait UsesCommandVendorPackageDomainTrait
                 $alternativeModels = collect();
 
                 if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
-                    if (file_exists($temp = $packageDomainFullPath . '/Models')) {
+                    if (file_exists($temp = $packageDomainFullPath.'/Models')) {
                         $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
                     }
 
@@ -786,7 +795,7 @@ trait UsesCommandVendorPackageDomainTrait
                 $defaultAlternativeModel = 'none';
 
                 $modelClass = $this->choice(
-                    'Choose alternative ' . ($option === 'parent' ? $option . ' ' : null) . 'model',
+                    'Choose alternative '.($option === 'parent' ? $option.' ' : null).'model',
                     $alternativeModels->prepend($defaultAlternativeModel)->toArray(),
                     0
                 );
@@ -803,7 +812,7 @@ trait UsesCommandVendorPackageDomainTrait
     /**
      * Get the fully-qualified model class name.
      *
-     * @param  string $model
+     * @param  string  $model
      * @return string
      *
      * @throws InvalidArgumentException
@@ -824,7 +833,7 @@ trait UsesCommandVendorPackageDomainTrait
     /**
      * Create the matching test case if requested.
      *
-     * @param  string $path
+     * @param  string  $path
      * @return void
      */
     protected function handleTestCreation($path): void

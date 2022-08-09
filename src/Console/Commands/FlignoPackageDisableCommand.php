@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
  * Class FlignoPackageDisableCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-12-06
  */
 class FlignoPackageDisableCommand extends Command
@@ -57,7 +58,7 @@ class FlignoPackageDisableCommand extends Command
                 'packager:disable',
                 [
                     'vendor' => $this->vendor_name,
-                    'name' => $this->package_name
+                    'name' => $this->package_name,
                 ]
             );
         }

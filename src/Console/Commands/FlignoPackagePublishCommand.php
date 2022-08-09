@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
  * Class FlignoPackagePublishCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-12-06
  */
 class FlignoPackagePublishCommand extends Command
@@ -68,7 +69,7 @@ class FlignoPackagePublishCommand extends Command
             [
                 'vendor' => $this->vendor_name,
                 'name' => $this->package_name,
-                'url' => $this->argument('url')
+                'url' => $this->argument('url'),
             ]
         );
     }

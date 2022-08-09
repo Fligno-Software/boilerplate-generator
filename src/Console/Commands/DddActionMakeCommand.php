@@ -37,7 +37,7 @@ class DddActionMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -72,13 +72,13 @@ class DddActionMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/controller.ddd.custom.stub';
+        return __DIR__.'/../../../stubs/controller.ddd.custom.stub';
     }
 
     /**
      * Get the default namespace for the class.
      *
-     * @param  string $rootNamespace
+     * @param  string  $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string

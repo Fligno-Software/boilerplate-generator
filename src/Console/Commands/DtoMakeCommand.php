@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -16,6 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
  * Class DtoMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2021-11-25
  */
 class DtoMakeCommand extends GeneratorCommand
@@ -51,7 +51,7 @@ class DtoMakeCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -91,7 +91,7 @@ class DtoMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param string $dtoType
+     * @param  string  $dtoType
      */
     protected function setDtoType(string $dtoType): void
     {
@@ -108,16 +108,16 @@ class DtoMakeCommand extends GeneratorCommand
         $nameInput = trim($this->argument('name'));
 
         if ($this->dtoType === 'request') {
-            return 'DataTransferObjects/' . $nameInput . 'RequestData';
+            return 'DataTransferObjects/'.$nameInput.'RequestData';
         }
 
-        return 'DataTransferObjects/' . $nameInput . 'ResponseData';
+        return 'DataTransferObjects/'.$nameInput.'ResponseData';
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return string
      */
     protected function getPath($name): string
@@ -145,7 +145,7 @@ class DtoMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/dto.' . $this->dtoType . '.custom.stub';
+        return __DIR__.'/../../../stubs/dto.'.$this->dtoType.'.custom.stub';
     }
 
     /**

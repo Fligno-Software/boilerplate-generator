@@ -44,6 +44,7 @@ class FlignoDomainListCommand extends Command
 
     /**
      * @return int
+     *
      * @throws MissingNameArgumentException|PackageNotFoundException
      */
     public function handle(): int
@@ -53,7 +54,7 @@ class FlignoDomainListCommand extends Command
         $this->setVendorPackageDomain(true, false);
 
         if ($domains = $this->getAllDomains(true)) {
-            $domains = $domains->mapWithKeys(fn($item, $key) => [[$key, $item]]);
+            $domains = $domains->mapWithKeys(fn ($item, $key) => [[$key, $item]]);
 
             $this->table(
                 ['Domain', 'Path'],
