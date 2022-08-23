@@ -74,9 +74,10 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     /**
      * Write the view for the component.
      *
+     * @param callable|null $onSuccess
      * @return void
      */
-    protected function writeView(): void
+    protected function writeView($onSuccess = null): void
     {
         $path = str_replace('.', '/', 'components.'.$this->getView()).'.blade.php';
 
@@ -102,6 +103,10 @@ class ExtendedMakeComponent extends ComponentMakeCommand
 <!-- '.Inspiring::quote().' -->
 </div>'
         );
+
+        if ($onSuccess) {
+            $onSuccess();
+        }
     }
 
     /**
