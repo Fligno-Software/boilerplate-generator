@@ -26,7 +26,7 @@ class ExtendedMakeTest extends TestMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:test';
+    protected $name = 'bg:make:test';
 
     /**
      * The console command description.
@@ -72,7 +72,7 @@ class ExtendedMakeTest extends TestMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/test'.($this->option('unit') ? '.unit' : null).
+        return __DIR__.'/../../../stubs/test/test'.($this->option('unit') ? '.unit' : null).
             ($this->option('model') ? '.model' : null).'.custom.stub';
     }
 

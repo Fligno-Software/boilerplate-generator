@@ -24,7 +24,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:seeder';
+    protected $name = 'bg:make:seeder';
 
     /**
      * The console command description.
@@ -69,7 +69,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/seeder.custom.stub';
+        return __DIR__ . '/../../../stubs/seeder/seeder.custom.stub';
     }
 
     /**

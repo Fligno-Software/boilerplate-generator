@@ -25,7 +25,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:provider';
+    protected $name = 'bg:make:provider';
 
     /**
      * The console command description.
@@ -68,7 +68,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/provider.custom.stub';
+        return __DIR__ . '/../../../stubs/provider/provider.custom.stub';
     }
 
     /**

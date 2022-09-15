@@ -25,7 +25,7 @@ class ExtendedMakePolicy extends PolicyMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:policy';
+    protected $name = 'bg:make:policy';
 
     /**
      * The console command description.
@@ -70,8 +70,8 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? __DIR__.'/../../../stubs/policy.custom.stub'
-            : __DIR__.'/../../../stubs/policy.plain.custom.stub';
+            ? __DIR__ . '/../../../stubs/policy/policy.custom.stub'
+            : __DIR__ . '/../../../stubs/policy/policy.plain.custom.stub';
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
@@ -11,6 +11,7 @@ use Fligno\StarterKit\Traits\UsesCommandCustomMessagesTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JsonException;
@@ -70,7 +71,7 @@ trait UsesCommandVendorPackageDomainTrait
     /**
      * @var string
      */
-    protected string $default_package = 'none';
+    protected string $default_package = 'root';
 
     /**
      * @var bool
@@ -122,8 +123,8 @@ trait UsesCommandVendorPackageDomainTrait
      * @return void
      */
     public function addPackageOptions(
-        bool $ddd_enabled = true,
         bool $has_force = false,
+        bool $ddd_enabled = false,
         bool $has_force_domain = true
     ): void {
         $this->getDefinition()->addOption(
@@ -178,8 +179,7 @@ trait UsesCommandVendorPackageDomainTrait
 
         $this->getDefinition()->addArguments(
             [
-                new InputArgument('vendor', $mode, 'The name of the vendor.'),
-                new InputArgument('package', $mode, 'The name of the package.'),
+                new InputArgument('package', $mode, 'The name of the package, e.g., `vendor-name/package-name`.'),
             ]
         );
 
@@ -203,37 +203,35 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  bool  $showPackageChoices
-     * @param  bool  $showDomainChoices
-     * @param  bool  $showDefaultPackage
+     * @param  bool  $show_package_choices
+     * @param  bool  $show_domain_choices
+     * @param  bool  $show_default_package
      * @return void
      *
      * @throws MissingNameArgumentException
      * @throws PackageNotFoundException
      */
     public function setVendorPackageDomain(
-        bool $showPackageChoices = true,
-        bool $showDomainChoices = true,
-        bool $showDefaultPackage = true
+        bool $show_package_choices = true,
+        bool $show_domain_choices = true,
+        bool $show_default_package = true
     ): void {
+        // Set Author Information
+        $this->setAuthorInformation();
+
         if ($this->isGeneratorSubclass()) {
             $this->note($this->type.($this->getNameInput() ? ': '.$this->getNameInput() : null), 'ONGOING');
         }
 
-        $package = $this->hasOption('package') ? $this->option('package') : null;
+        $package = $this->getPackageFromOptions() ?: $this->getPackageFromArguments();
 
-        if ($this->hasArgument('vendor') && $this->hasArgument('package')) {
-            $package = $this->argument('vendor').'/'.$this->argument('package');
+        if (! $package && $show_package_choices) {
+            $package = $this->choosePackageFromList($show_default_package);
         }
 
-        $package = trim($package, '/');
-
-        if ($showPackageChoices && ! $package && ($choices = $this->getAllPackages()) && $choices->count()) {
-            $choices = $choices->when($showDefaultPackage, fn ($choices) => $choices->prepend($this->default_package));
-            $package = $this->choice('Choose target package', $choices->toArray(), 0);
+        if ($package === $this->default_package) {
+            $package = null;
         }
-
-        $package = $package === $this->default_package ? null : $package;
 
         if ($package && str_contains($package, '/')) {
             [$this->vendor_name, $this->package_name] = explode('/', $package);
@@ -249,8 +247,8 @@ trait UsesCommandVendorPackageDomainTrait
 
                 // Check if folder exists
                 if (
-                    ! $this instanceof FlignoPackageCreateCommand &&
-                    ! $this instanceof FlignoPackageCloneCommand &&
+                    ! $this instanceof PackageCreateCommand &&
+                    ! $this instanceof PackageCloneCommand &&
                     ! file_exists(package_path($this->package_dir))
                 ) {
                     if ($this->isNoInteraction()) {
@@ -260,7 +258,6 @@ trait UsesCommandVendorPackageDomainTrait
                     $this->error('Package not found! Please choose an existing package.');
 
                     if ($this->is_package_argument) {
-                        $this->input->setArgument('vendor', null);
                         $this->input->setArgument('package', null);
                     } else {
                         $this->input->setOption('package', null);
@@ -271,10 +268,83 @@ trait UsesCommandVendorPackageDomainTrait
             }
         }
 
-        if ($showDomainChoices && $this->domain_name = $this->getDomainFromOptions()) {
+        if ($show_domain_choices && $this->domain_name = $this->getDomainFromOptions()) {
             $this->domain_dir = 'Domains/'.$this->domain_name;
             $this->domain_namespace = ($this->package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
         }
+    }
+
+    /**
+     * @param string|null $option_name
+     * @return bool
+     */
+    public function hasPackageAsOption(string $option_name = null): bool
+    {
+        return $this->hasOption($option_name ?? 'package');
+    }
+
+    /**
+     * @param bool $multiple
+     * @param string|null $option_name
+     * @return string|array|null
+     */
+    public function getPackageFromOptions(bool $multiple = false, string $option_name = null): string|array|null
+    {
+        if ($this->hasPackageAsOption($option_name) && $target = trim($this->option($option_name ?? 'package'), '/')) {
+            return $multiple ? explode(',', $target) : $target;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPackageAsArgument(): bool
+    {
+        return $this->hasArgument('package');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPackageFromArguments(): string|null
+    {
+        return $this->hasPackageAsArgument() ? trim($this->argument('package'), '/') : null;
+    }
+
+    /**
+     * @param bool $show_default_package
+     * @param bool $multiple
+     * @param array $default_choices
+     * @return array|string|null
+     */
+    public function choosePackageFromList(bool $show_default_package = true, bool $multiple = false, array $default_choices = []): array|string|null
+    {
+        if (($choices = boilerplateGenerator()->getLocalPackages()->keys()) && $choices->count()) {
+            $choices = $choices
+                ->when($show_default_package, fn ($choices) => $choices->prepend($this->default_package))
+                ->toArray();
+
+            if ($show_default_package && ! count($default_choices)) {
+                $default_choices[] = $this->default_package;
+            }
+
+            $default = null;
+
+            if (count($default_choices)) {
+                $default = collect($default_choices)
+                    ->map(function ($item) use ($choices) {
+                        return array_search($item, $choices);
+                    })
+                    ->filter(fn($item) => $item !== false)
+                    ->implode(',');
+            }
+
+            return $this->choice('Choose ' . ($multiple ? 'target' : 'targets'), $choices, $default, null, $multiple);
+        }
+
+        return null;
     }
 
     /**
@@ -289,7 +359,7 @@ trait UsesCommandVendorPackageDomainTrait
         }
 
         $domain = $domain ? Str::studly($domain) : null;
-        $domains = $this->getAllDomains();
+        $domains = starterKit()->getDomains($this->package_dir)?->keys();
 
         if ($this->ddd_enabled && ($domain || $domains)) {
             $createNewDomain = function () use ($domain, $domains, &$createNewDomain) {
@@ -306,7 +376,7 @@ trait UsesCommandVendorPackageDomainTrait
                     if (! $this instanceof RouteMakeCommand && ! ($domains?->contains($domain))) {
                         $args = $this->getPackageArgs(false);
                         $args['name'] = $domain;
-                        $this->call('fligno:domain:create', $args);
+                        $this->call('bg:domain:create', $args);
                     }
 
                     return $domain;
@@ -485,8 +555,8 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function getPackageDomainFullPath(): string
     {
-        return ($this->package_dir ? package_app_path($this->package_dir) :
-                app_path()).($this->domain_dir ? '/'.$this->domain_dir : null);
+        return ($this->package_dir ? package_app_path($this->package_dir) : app_path())
+            .($this->domain_dir ? '/'.$this->domain_dir : null);
     }
 
     /**
@@ -502,125 +572,6 @@ trait UsesCommandVendorPackageDomainTrait
         $path = $this->getPackageDomainFullPath();
 
         return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getAllPackages(): Collection
-    {
-        $allPackages = collect();
-
-        if (file_exists(package_path())) {
-            collect_files_or_directories(package_path(), true, false)?->each(
-                function ($vendor) use ($allPackages) {
-                    collect_files_or_directories(package_path($vendor), true, false)?->each(
-                        function ($package) use ($allPackages, $vendor) {
-                            $allPackages->add($vendor.'/'.$package);
-                        }
-                    );
-                }
-            );
-        }
-
-        return $allPackages;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function getPackageChoices(): Collection
-    {
-        $enabled = collect($this->getEnabledPackages())->map(
-            function ($value) {
-                return $value.' <fg=white;bg=green>[ENABLED]</>';
-            }
-        );
-
-        $disabled = collect($this->collectDisabledPackages())->map(
-            function ($value) {
-                return $value.' <fg=white;bg=red>[DISABLED]</>';
-            }
-        );
-
-        return $enabled->merge($disabled)->prepend($this->default_package);
-    }
-
-    /**
-     * @return array
-     *
-     * @throws JsonException
-     */
-    public function getPackagesRows(): array
-    {
-        $enabled = collect($this->getEnabledPackages())->map(
-            function ($value) {
-                return [$value, '<fg=white;bg=green>[ ENABLED ]</>'];
-            }
-        );
-
-        $disabled = collect($this->collectDisabledPackages())->map(
-            function ($value) {
-                return [$value, '<fg=white;bg=red>[ DISABLED ]</>'];
-            }
-        );
-
-        return $enabled->merge($disabled)->toArray();
-    }
-
-    /**
-     * Get all the packages installed with Package.
-     *
-     * @return Collection
-     *
-     * @throws JsonException
-     */
-    public function getEnabledPackages(): Collection
-    {
-        $composerFile = json_decode(file_get_contents(base_path('composer.json')), true, 512, JSON_THROW_ON_ERROR);
-        $packagesPath = base_path('packages/');
-        $repositories = $composerFile['repositories'] ?? [];
-        $enabledPackages = collect();
-        $pattern = '{'.addslashes($packagesPath).'(.*)$}';
-        foreach ($repositories as $name => $info) {
-            $path = $info['url'];
-            if (preg_match($pattern, $path, $match)) {
-                $enabledPackages->add($match[1]);
-            }
-        }
-
-        return $enabledPackages;
-    }
-
-    /**
-     * @return Collection
-     *
-     * @throws JsonException
-     */
-    public function collectDisabledPackages(): Collection
-    {
-        return $this->getAllPackages()->diff($this->getEnabledPackages());
-    }
-
-    /*****
-     * DOMAINS LIST
-     *****/
-
-    /**
-     * @param  bool  $prependDirectory
-     * @return Collection|null
-     */
-    public function getAllDomains(bool $prependDirectory = false): ?Collection
-    {
-        $path = $this->package_dir ? package_path($this->package_dir) : app_path();
-
-        if ($domainsPath = guess_file_or_directory_path($path, 'Domains')) {
-            $result = collect_files_or_directories($domainsPath, true, false, $prependDirectory);
-
-            return $result?->isNotEmpty() ? $result : null;
-        }
-
-        return null;
     }
 
     /*****
@@ -771,7 +722,7 @@ trait UsesCommandVendorPackageDomainTrait
                 $args = $this->getPackageArgs();
                 $args['name'] = $modelClass;
 
-                $this->call('gen:model', $args);
+                $this->call('bg:make:model', $args);
             } else {
                 $alternativeModels = collect();
 
@@ -838,13 +789,52 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function handleTestCreation($path): void
     {
-        $appPath = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
+        $app_path = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
 
-        $args = $this->getPackageArgs();
-        $args['name'] = Str::of($path)->after($appPath)->beforeLast('.php')->append('Test')->replace('\\', '/');
-        $args['--pest'] = $this->option('pest');
+        $name = Str::of($path)
+            ->after($app_path)
+            ->beforeLast('.php');
+
+        $args['name'] = $name->append('Test')
+            ->replace('\\', '/')
+            ->ltrim('/')
+            ->jsonSerialize();
+
         $args['--no-interaction'] = true;
 
-        $this->call('gen:test', $args);
+        if ($this->option('pest') || boilerplateGenerator()->isPestEnabled()) {
+            if ($this->package_dir) {
+                $args['--test-directory'] = Str::of(package_test_path($this->package_dir))
+                    ->after(base_path())
+                    ->replace('\\', '/')
+                    ->ltrim('/')
+                    ->jsonSerialize();
+            };
+
+            // Generate Pest Test
+            $this->call('pest:test', $args);
+
+            // Generate Dataset
+//            $args['name'] = $name->replace('\\', '/')->afterLast('/')->jsonSerialize();
+//            $this->call('pest:dataset', $args);
+        }
+        else {
+            $this->call('bg:make:test', array_merge($args, $this->getPackageArgs()));
+        }
+    }
+
+    /***** AUTHOR INFORMATION FOR FILE GENERATION *****/
+
+    /**
+     * @return void
+     */
+    public function setAuthorInformation(): void
+    {
+        $this->addMoreReplaceNamespace(
+            [
+                'authorName' => boilerplateGenerator()->getAuthorName(),
+                'authorEmail' => boilerplateGenerator()->getAuthorEmail(),
+            ]
+        );
     }
 }

@@ -23,7 +23,7 @@ class GitlabCIMakeCommand extends Command
      *
      * @var string
      */
-    protected $name = 'gen:gitlab';
+    protected $name = 'bg:make:gitlab';
 
     /**
      * The console command description.

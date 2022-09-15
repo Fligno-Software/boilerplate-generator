@@ -29,7 +29,7 @@ class ExtendedMakeController extends ControllerMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:controller';
+    protected $name = 'bg:make:controller';
 
     /**
      * The console command description.
@@ -103,26 +103,26 @@ class ExtendedMakeController extends ControllerMakeCommand
         $stub = null;
 
         if ($type = $this->option('type')) {
-            $stub = __DIR__."/stubs/controller.$type.stub";
+            $stub = __DIR__."/stubs/controller/controller.$type.stub";
         } elseif ($this->option('parent')) {
-            $stub = __DIR__.'/../../../stubs/controller.nested.custom.stub';
+            $stub = __DIR__ . '/../../../stubs/controller/controller.nested.custom.stub';
         } elseif ($this->option('model')) {
-            $stub = __DIR__.'/../../../stubs/controller.model.custom.stub';
+            $stub = __DIR__ . '/../../../stubs/controller/controller.model.custom.stub';
         } elseif ($this->option('invokable')) {
-            $stub = __DIR__.'/../../../stubs/controller.invokable.custom.stub';
+            $stub = __DIR__ . '/../../../stubs/controller/controller.invokable.custom.stub';
         } elseif ($this->option('resource')) {
-            $stub = __DIR__.'/../../../stubs/controller.custom.stub';
+            $stub = __DIR__ . '/../../../stubs/controller/controller.custom.stub';
         }
 
         if ($this->option('api')) {
             if (is_null($stub)) {
-                $stub = __DIR__.'/../../../stubs/controller.api.custom.stub';
+                $stub = __DIR__ . '/../../../stubs/controller/controller.api.custom.stub';
             } elseif (! $this->option('invokable')) {
                 $stub = str_replace('.custom.stub', '.api.custom.stub', $stub);
             }
         }
 
-        $stub = $stub ?? __DIR__.'/../../../stubs/controller.plain.custom.stub';
+        $stub = $stub ?? __DIR__ . '/../../../stubs/controller/controller.plain.custom.stub';
 
         if (file_exists($stub) === false) {
             return parent::getStub();
@@ -218,7 +218,7 @@ class ExtendedMakeController extends ControllerMakeCommand
 
                     $requestArgs = $this->getPackageArgs();
                     $requestArgs['name'] = $requestClassPath;
-                    $this->call('gen:request', $requestArgs);
+                    $this->call('bg:make:request', $requestArgs);
 
                     $res->put('{{ '.Str::camel($request.'Request').' }}', $requestClass);
                     $res->put('{{'.Str::camel($request.'Request').'}}', $requestClass);
@@ -232,7 +232,7 @@ class ExtendedMakeController extends ControllerMakeCommand
 
                     $eventArgs = $this->getPackageArgs();
                     $eventArgs['name'] = $eventClassPath;
-                    $this->call('gen:event', $eventArgs);
+                    $this->call('bg:make:event', $eventArgs);
 
                     $res->put('{{ '.Str::camel($request.'Event').' }}', $eventClass);
                     $res->put('{{'.Str::camel($request.'Event').'}}', $eventClass);

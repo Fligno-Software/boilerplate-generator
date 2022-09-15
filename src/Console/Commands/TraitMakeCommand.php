@@ -27,7 +27,7 @@ class TraitMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:trait';
+    protected $name = 'bg:make:trait';
 
     /**
      * The console command description.
@@ -104,7 +104,7 @@ class TraitMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/trait'.($this->option('factory') ? '.factory' : '').'.custom.stub';
+        return __DIR__.'/../../../stubs/trait/trait'.($this->option('factory') ? '.factory' : '').'.custom.stub';
     }
 
     /**

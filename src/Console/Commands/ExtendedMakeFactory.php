@@ -26,7 +26,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:factory';
+    protected $name = 'bg:make:factory';
 
     /**
      * The console command description.
@@ -78,7 +78,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         if (($this->package_name || $this->domain_name) && $this->model_name) {
             $this->call(
-                'gen:trait',
+                'bg:make:trait',
                 array_merge(
                     $this->getPackageArgs(),
                     [
@@ -95,7 +95,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/factory.custom.stub';
+        return __DIR__ . '/../../../stubs/factory/factory.custom.stub';
     }
 
     /**

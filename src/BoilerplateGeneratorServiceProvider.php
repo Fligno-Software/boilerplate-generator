@@ -3,9 +3,10 @@
 namespace Fligno\BoilerplateGenerator;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\ContainerMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DescribeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ScopeMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ServiceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\DddControllerMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DtoMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
@@ -32,16 +33,16 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRule;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeSeeder;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\FacadeMakeCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainCreateCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoDomainListCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCloneCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageCreateCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageDisableCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageEnableCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageListCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackagePublishCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoPackageRemoveCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\FlignoTest;
+use Fligno\BoilerplateGenerator\Console\Commands\DomainCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DomainListCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageDisableCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageEnableCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageListCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackagePublishCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\PackageRemoveCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\TestCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\GitlabCIMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
@@ -55,7 +56,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
     protected array $commands = [
         ClassMakeCommand::class,
         DataFactoryMakeCommand::class,
-        DddControllerMakeCommand::class,
         DtoMakeCommand::class,
         DocsGenCommand::class,
         ExtendedMakeCast::class,
@@ -82,22 +82,24 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
         FacadeMakeCommand::class,
-        FlignoDomainCreateCommand::class,
-        FlignoDomainListCommand::class,
-        FlignoPackageCloneCommand::class,
-        FlignoPackageCreateCommand::class,
-        FlignoPackageDisableCommand::class,
-        FlignoPackageEnableCommand::class,
-        FlignoPackageListCommand::class,
-        FlignoPackagePublishCommand::class,
-        FlignoPackageRemoveCommand::class,
-        FlignoTest::class,
+        DomainCreateCommand::class,
+        DomainListCommand::class,
+        PackageCloneCommand::class,
+        PackageCreateCommand::class,
+        PackageDisableCommand::class,
+        DescribeCommand::class,
+        PackageEnableCommand::class,
+        PackageListCommand::class,
+        PackagePublishCommand::class,
+        PackageRemoveCommand::class,
+        TestCommand::class,
         GitlabCIMakeCommand::class,
         HelperMakeCommand::class,
         InterfaceMakeCommand::class,
         RepositoryMakeCommand::class,
         RouteMakeCommand::class,
-        ContainerMakeCommand::class,
+        ServiceMakeCommand::class,
+        ScopeMakeCommand::class,
         TraitMakeCommand::class,
     ];
 
@@ -109,6 +111,14 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/boilerplate-generator.php', 'boilerplate-generator');
+
+        // Register the service the package provides.
+        $this->app->singleton(
+            'boilerplate-generator',
+            function () {
+                return new BoilerplateGenerator();
+            }
+        );
     }
 
     /**

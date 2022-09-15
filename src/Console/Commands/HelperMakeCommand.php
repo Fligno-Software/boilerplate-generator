@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandContainerTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandServiceTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -17,14 +17,14 @@ use Illuminate\Support\Str;
  */
 class HelperMakeCommand extends GeneratorCommand
 {
-    use UsesCommandContainerTrait;
+    use UsesCommandServiceTrait;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'gen:helper';
+    protected $name = 'bg:make:helper';
 
     /**
      * The console command description.
@@ -50,7 +50,7 @@ class HelperMakeCommand extends GeneratorCommand
 
         $this->addPackageOptions(true, true);
 
-        $this->addContainerOptions();
+        $this->addServiceOptions();
     }
 
     /**
@@ -62,8 +62,8 @@ class HelperMakeCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain();
 
-        if ($this->option('container')) {
-            $this->addContainerReplaceNamespace();
+        if ($this->getServiceFromOptions()) {
+            $this->addServiceReplaceNamespace();
         }
 
         return parent::handle() && starterKit()->clearCache();
@@ -76,8 +76,9 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return $this->moreReplaceNamespace ? __DIR__.'/../../../stubs/helper.container.custom.stub' :
-            __DIR__.'/../../../stubs/helper.custom.stub';
+        return $this->moreReplaceNamespace ?
+            __DIR__ . '/../../../stubs/helper/helper.service.custom.stub' :
+            __DIR__ . '/../../../stubs/helper/helper.custom.stub';
     }
 
     /**

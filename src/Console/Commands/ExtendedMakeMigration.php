@@ -24,7 +24,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
      *
      * @var string
      */
-    protected $signature = 'gen:migration {name : The name of the migration}
+    protected $signature = 'bg:make:migration {name : The name of the migration}
         {--create= : The table to be created}
         {--table= : The table to migrate}
         {--path= : The location where the migration file should be created}
@@ -40,7 +40,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
 
     public function __construct()
     {
-        $realPath = dirname(__DIR__, 3).'/stubs';
+        $realPath = dirname(__DIR__, 3).'/stubs/migration';
 
         $creator = new ExtendedMigrationCreator(app('files'), $realPath);
 

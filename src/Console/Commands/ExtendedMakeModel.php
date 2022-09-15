@@ -26,7 +26,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:model';
+    protected $name = 'bg:make:model';
 
     /**
      * The console command description.
@@ -102,7 +102,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--create'] = $table;
         $args['--no-interaction'] = true;
 
-        $this->call('gen:migration', $args);
+        $this->call('bg:make:migration', $args);
     }
 
     /**
@@ -121,7 +121,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--model'] = $this->qualifyClass($name);
         $args['--no-interaction'] = true;
 
-        $this->call('gen:factory', $args);
+        $this->call('bg:make:factory', $args);
     }
 
     /**
@@ -137,7 +137,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['name'] = $seeder;
         $args['--no-interaction'] = true;
 
-        $this->call('gen:seeder', $args);
+        $this->call('bg:make:seeder', $args);
     }
 
     /**
@@ -160,7 +160,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--skip-model'] = true;
         $args['--no-interaction'] = true;
 
-        $this->call('gen:controller', array_filter($args));
+        $this->call('bg:make:controller', array_filter($args));
     }
 
     /**
@@ -178,7 +178,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['name'] = $repository;
         $args['--no-interaction'] = true;
 
-        $this->call('gen:repository', $args);
+        $this->call('bg:make:repository', $args);
     }
 
     /**
@@ -195,7 +195,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--model'] = $this->qualifyClass($repository);
         $args['--no-interaction'] = true;
 
-        $this->call('gen:observer', $args);
+        $this->call('bg:make:observer', $args);
     }
 
     /**
@@ -214,7 +214,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--model'] = $this->qualifyClass($name);
         $args['--no-interaction'] = true;
 
-        $this->call('gen:policy', $args);
+        $this->call('bg:make:policy', $args);
     }
 
     /**
@@ -231,7 +231,7 @@ class ExtendedMakeModel extends ModelMakeCommand
         $args['--model'] = $this->qualifyClass($dataFactory);
         $args['--no-interaction'] = true;
 
-        $this->call('gen:df', $args);
+        $this->call('bg:make:df', $args);
     }
 
     /**
@@ -241,7 +241,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/model.custom.stub';
+        return __DIR__ . '/../../../stubs/model/model.custom.stub';
     }
 
     /**

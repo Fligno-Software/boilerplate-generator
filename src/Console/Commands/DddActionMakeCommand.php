@@ -23,7 +23,7 @@ class DddActionMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:ddd:action';
+    protected $name = 'bg:make:ddd:action';
 
     /**
      * The console command description.
@@ -72,7 +72,7 @@ class DddActionMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/controller.ddd.custom.stub';
+        return __DIR__ . '/../../../stubs/controller.ddd.custom.stub';
     }
 
     /**

@@ -24,7 +24,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:resource';
+    protected $name = 'bg:make:resource';
 
     /**
      * The console command description.
@@ -69,7 +69,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/resource.custom.stub';
+        return __DIR__ . '/../../../stubs/resource/resource.custom.stub';
     }
 
     /**

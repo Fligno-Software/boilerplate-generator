@@ -25,7 +25,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:component';
+    protected $name = 'bg:make:component';
 
     /**
      * The console command description.
@@ -68,7 +68,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/view-component.custom.stub';
+        return __DIR__.'/../../../stubs/component/component.custom.stub';
     }
 
     /**

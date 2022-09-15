@@ -26,7 +26,7 @@ class ClassMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:class';
+    protected $name = 'bg:make:class';
 
     /**
      * The console command description.
@@ -98,7 +98,7 @@ class ClassMakeCommand extends GeneratorCommand
             $type = '.invokable';
         }
 
-        return __DIR__.'/../../../stubs/class'.$type.'.custom.stub';
+        return __DIR__.'/../../../stubs/class/class'.$type.'.custom.stub';
     }
 
     /**

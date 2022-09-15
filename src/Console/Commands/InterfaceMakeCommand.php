@@ -25,7 +25,7 @@ class InterfaceMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:interface';
+    protected $name = 'bg:make:interface';
 
     /**
      * The console command description.
@@ -75,7 +75,7 @@ class InterfaceMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/interface.custom.stub';
+        return __DIR__ . '/../../../stubs/interface/interface.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string

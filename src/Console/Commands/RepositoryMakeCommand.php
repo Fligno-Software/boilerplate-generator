@@ -25,7 +25,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:repository';
+    protected $name = 'bg:make:repository';
 
     /**
      * The console command description.
@@ -75,7 +75,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/repository.custom.stub';
+        return __DIR__ . '/../../../stubs/repository/repository.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string

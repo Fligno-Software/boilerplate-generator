@@ -5,6 +5,29 @@
  *
  * @since  2021-11-09
  */
+
+use Fligno\BoilerplateGenerator\BoilerplateGenerator;
+
+if (! function_exists('boilerplateGenerator')) {
+    /**
+     * @return BoilerplateGenerator
+     */
+    function boilerplateGenerator(): BoilerplateGenerator
+    {
+        return resolve('boilerplate-generator');
+    }
+}
+
+if (! function_exists('boilerplate_generator')) {
+    /**
+     * @return BoilerplateGenerator
+     */
+    function boilerplate_generator(): BoilerplateGenerator
+    {
+        return boilerplateGenerator();
+    }
+}
+
 if (! function_exists('package_path')) {
     /**
      * @param  string|null  $path

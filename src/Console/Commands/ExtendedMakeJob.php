@@ -25,7 +25,7 @@ class ExtendedMakeJob extends JobMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:job';
+    protected $name = 'bg:make:job';
 
     /**
      * The console command description.
@@ -69,8 +69,8 @@ class ExtendedMakeJob extends JobMakeCommand
     protected function getStub(): string
     {
         return $this->option('sync')
-            ? __DIR__.'/../../../stubs/job.custom.stub'
-            : __DIR__.'/../../../stubs/job.queued.custom.stub';
+            ? __DIR__ . '/../../../stubs/job/job.custom.stub'
+            : __DIR__ . '/../../../stubs/job/job.queued.custom.stub';
     }
 
     /**

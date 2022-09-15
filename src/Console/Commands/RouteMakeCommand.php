@@ -28,7 +28,7 @@ class RouteMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:route';
+    protected $name = 'bg:make:route';
 
     /**
      * The console command description.
@@ -107,7 +107,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/route.custom.stub';
+        return __DIR__ . '/../../../stubs/route/route.custom.stub';
     }
 
     /**

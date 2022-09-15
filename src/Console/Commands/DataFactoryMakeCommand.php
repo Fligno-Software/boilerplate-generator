@@ -25,7 +25,7 @@ class DataFactoryMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:df';
+    protected $name = 'bg:make:df';
 
     /**
      * The console command description.
@@ -84,7 +84,7 @@ class DataFactoryMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/df.custom.stub';
+        return __DIR__ . '/../../../stubs/data-factory/df.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string
