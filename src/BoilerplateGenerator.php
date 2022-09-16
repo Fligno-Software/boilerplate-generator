@@ -98,6 +98,14 @@ class BoilerplateGenerator
         $this->author_homepage = $author_homepage;
     }
 
+    /**
+     * @return string
+     */
+    public function getPackageSkeleton(): string
+    {
+        return config('boilerplate-generator.skeleton');
+    }
+
     /***** PACKAGE RELATED *****/
 
     /**

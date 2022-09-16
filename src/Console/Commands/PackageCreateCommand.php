@@ -6,6 +6,8 @@ use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
+use Illuminate\Support\Composer;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -38,7 +40,7 @@ class PackageCreateCommand extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected Composer $composer)
     {
         parent::__construct();
 
@@ -58,6 +60,8 @@ class PackageCreateCommand extends Command
         config(['packager.author_name' => boilerplateGenerator()->getAuthorName()]);
         config(['packager.author_email' => boilerplateGenerator()->getAuthorEmail()]);
         config(['packager.author_homepage' => boilerplateGenerator()->getAuthorHomepage()]);
+        config(['packager.skeleton' => boilerplateGenerator()->getPackageSkeleton()]);
+
 
         $this->call(
             'packager:new',
@@ -68,38 +72,48 @@ class PackageCreateCommand extends Command
             ]
         );
 
-        if (! $this->isNoInteraction()) {
-            collect(['web', 'api'])->each(
-                function ($value) {
-                    $this->call(
-                        'bg:make:route',
-                        [
-                            'name' => $value,
-                            '--package' => $this->package_dir,
-                            '--api' => $value !== 'web',
-                            '--no-interaction' => true,
-                        ]
-                    );
-                }
-            );
+        // Clear starter kit cache and run composer dump
+        starterKit()->clearCache();
+        $this->composer->dumpAutoloads();
 
-            $this->call(
-                'bg:make:gitlab',
-                [
-                    '--package' => $this->package_dir,
-                    '--no-interaction' => true,
-                ]
-            );
+        // Run all necessary file generators
+        collect(['web', 'api'])->each(
+            function ($value) {
+                $this->call(
+                    'bg:make:route',
+                    [
+                        'name' => $value,
+                        '--package' => $this->package_dir,
+                        '--api' => $value !== 'web',
+                        '--no-interaction' => true,
+                    ]
+                );
+            }
+        );
 
-            $this->call(
-                'bg:make:helper',
-                [
-                    'name' => $this->package_name,
-                    '--package' => $this->package_dir,
-                    '--no-interaction' => true,
-                ]
-            );
-        }
+        $this->call(
+            'bg:make:gitlab',
+            [
+                '--package' => $this->package_dir,
+                '--no-interaction' => true,
+            ]
+        );
+
+        $test_directory  = Str::of(package_test_path($this->package_dir))
+            ->after(base_path())
+            ->replace('\\', '/')
+            ->ltrim('/')
+            ->jsonSerialize();
+
+        $this->ongoing('Running command: php artisan pest:install --test-directory=' . $test_directory, false);
+
+        $this->call(
+            'pest:install',
+            [
+                '--test-directory' => $test_directory,
+                '--no-interaction' => true,
+            ]
+        );
 
         starterKit()->clearCache();
     }

@@ -7,6 +7,7 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ModelMakeCommand;
+use Illuminate\Support\Composer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -38,10 +39,10 @@ class ExtendedMakeModel extends ModelMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem  $files
-     * @return void
+     * @param Filesystem $files
+     * @param Composer $composer
      */
-    public function __construct(Filesystem $files)
+    public function __construct(Filesystem $files, protected Composer $composer)
     {
         parent::__construct($files);
 
@@ -68,6 +69,10 @@ class ExtendedMakeModel extends ModelMakeCommand
         }
 
         parent::handle();
+
+        // Clear starter kit cache and run composer dump
+        starterKit()->clearCache();
+        $this->composer->dumpAutoloads();
 
         if ($this->option('repository')) {
             $this->createRepository();

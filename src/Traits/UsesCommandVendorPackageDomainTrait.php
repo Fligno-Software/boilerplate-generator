@@ -217,7 +217,7 @@ trait UsesCommandVendorPackageDomainTrait
         bool $show_default_package = true
     ): void {
         // Set Author Information
-        $this->setAuthorInformation();
+        $this->setAuthorInformationOnStub();
 
         if ($this->isGeneratorSubclass()) {
             $this->note($this->type.($this->getNameInput() ? ': '.$this->getNameInput() : null), 'ONGOING');
@@ -815,8 +815,8 @@ trait UsesCommandVendorPackageDomainTrait
             $this->call('pest:test', $args);
 
             // Generate Dataset
-//            $args['name'] = $name->replace('\\', '/')->afterLast('/')->jsonSerialize();
-//            $this->call('pest:dataset', $args);
+            $args['name'] = $name->replace('\\', '/')->afterLast('/')->jsonSerialize();
+            $this->call('pest:dataset', $args);
         }
         else {
             $this->call('bg:make:test', array_merge($args, $this->getPackageArgs()));
@@ -828,7 +828,7 @@ trait UsesCommandVendorPackageDomainTrait
     /**
      * @return void
      */
-    public function setAuthorInformation(): void
+    public function setAuthorInformationOnStub(): void
     {
         $this->addMoreReplaceNamespace(
             [

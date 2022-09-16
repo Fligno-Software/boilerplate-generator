@@ -6,6 +6,7 @@ use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
+use Illuminate\Support\Composer;
 
 /**
  * Class PackageRemoveCommand
@@ -37,7 +38,7 @@ class PackageRemoveCommand extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected Composer $composer)
     {
         parent::__construct();
 
@@ -59,12 +60,14 @@ class PackageRemoveCommand extends Command
                 [
                     'vendor' => $this->vendor_name,
                     'name' => $this->package_name,
-//                    '--no-interaction' => true,
+                    '--no-interaction' => true,
                 ]
             );
         }
 
+        // Clear starter kit cache and run composer dump
         starterKit()->clearCache();
+        $this->composer->dumpAutoloads();
     }
 
     /**
