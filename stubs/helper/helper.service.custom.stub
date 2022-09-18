@@ -9,20 +9,25 @@ use {{ namespacedService }};
 if (! function_exists('{{ serviceCamel }}'))
 {
     /**
-     * @return {{ serviceClass }}
+     * @return {{ serviceClass }}|null
      */
-    function {{ serviceCamel }}(): {{ serviceClass }}
+    function {{ serviceCamel }}(): {{ serviceClass }}|null
     {
-        return resolve('{{ serviceSlug }}');
+        try {
+            return resolve('{{ serviceSlug }}');
+        }
+        catch (Throwable) {
+            return null;
+        }
     }
 }
 
 if (! function_exists('{{ serviceSnake }}'))
 {
     /**
-     * @return {{ serviceClass }}
+     * @return {{ serviceClass }}|null
      */
-    function {{ serviceSnake }}(): {{ serviceClass }}
+    function {{ serviceSnake }}(): {{ serviceClass }}|null
     {
         return {{ serviceCamel }}();
     }
