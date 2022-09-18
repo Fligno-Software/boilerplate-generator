@@ -46,7 +46,7 @@ class ExtendedMakeMigration extends MigrateMakeCommand
 
         parent::__construct($creator, app('composer'));
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

@@ -58,7 +58,7 @@ class RouteMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions(true, true);
+        $this->addPackageDomainOptions(true);
     }
 
     /**
@@ -73,7 +73,7 @@ class RouteMakeCommand extends GeneratorCommand
         $path = $this->getPath($name);
 
         if (! $this->shouldOverwrite() && file_exists($path)) {
-            $this->error(Str::ucfirst($name).' route already exists!');
+            $this->warning(Str::ucfirst($name).' route already exists!');
 
             return self::FAILURE;
         }
@@ -87,7 +87,7 @@ class RouteMakeCommand extends GeneratorCommand
 
         $this->info($this->type.' created successfully.');
 
-        return starterKit()->clearCache();
+        return starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
     }
 
     /**
@@ -141,8 +141,11 @@ class RouteMakeCommand extends GeneratorCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) :
-                    app_path()).'/'.$this->domain_dir.'/routes';
+            return collect([
+                $this->package_dir ? package_app_path($this->package_dir) : app_path(),
+                $this->domain_dir,
+                'routes'
+            ])->implode('/');
         }
 
         return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');

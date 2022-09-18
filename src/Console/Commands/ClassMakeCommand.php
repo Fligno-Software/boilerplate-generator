@@ -46,7 +46,7 @@ class ClassMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
 
         if ($this->getDefinition()->hasOption('abstract') === false) {
             $this->getDefinition()->addOptions(

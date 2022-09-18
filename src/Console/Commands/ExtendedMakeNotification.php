@@ -43,7 +43,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

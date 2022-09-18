@@ -44,7 +44,7 @@ class ExtendedMakeEvent extends EventMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

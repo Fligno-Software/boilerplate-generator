@@ -44,7 +44,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

@@ -44,7 +44,7 @@ class ExtendedMakeRule extends RuleMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

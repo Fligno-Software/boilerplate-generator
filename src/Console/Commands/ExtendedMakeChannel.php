@@ -44,7 +44,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

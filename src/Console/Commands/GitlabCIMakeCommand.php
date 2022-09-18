@@ -41,7 +41,7 @@ class GitlabCIMakeCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /**

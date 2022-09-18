@@ -42,14 +42,12 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
 
         $this->addModelOptions();
     }
 
-    /*****
-     * OVERRIDDEN FUNCTIONS
-     *****/
+    /*****  OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
@@ -66,7 +64,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
         $this->createFactoryTrait();
 
-        return $res && starterKit()->clearCache();
+        return $res && (starterKit()->clearCache() ? self::SUCCESS : self::FAILURE);
     }
 
     /**
@@ -106,11 +104,25 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getPath($name): string
     {
-        $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
+        $name = Str::of($name)
+            ->replaceFirst($this->rootNamespace(), '')
+            ->after('Database\\Factories\\')
+            ->replace('\\', '/')
+            ->finish('Factory')
+            ->jsonSerialize();
 
         $path = $this->getPackageDomainFullPath();
 
-        return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
+        return $path.'/factories/'.$name.'.php';
+    }
+
+    /**
+     * @param $rootNamespace
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return $rootNamespace.'\\Database\\Factories';
     }
 
     /**

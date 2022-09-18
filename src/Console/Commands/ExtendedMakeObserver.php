@@ -44,7 +44,7 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

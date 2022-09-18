@@ -47,7 +47,7 @@ class TraitMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
 
         $this->addFactoryOptions();
     }

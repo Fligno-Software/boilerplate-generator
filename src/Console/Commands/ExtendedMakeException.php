@@ -44,7 +44,7 @@ class ExtendedMakeException extends ExceptionMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

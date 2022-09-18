@@ -44,7 +44,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

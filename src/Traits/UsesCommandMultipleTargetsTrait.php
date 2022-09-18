@@ -19,14 +19,17 @@ trait UsesCommandMultipleTargetsTrait
     protected array|null $targets = null;
 
     /**
+     * @param string $option_name
      * @return void
      */
-    public function addMultipleTargetsOption(): void
+    public function addMultipleTargetsOption(string $option_name = 'package'): void
     {
+        $this->package_option_argument_name = $option_name;
+
         $this->getDefinition()->addOptions([
-            new InputOption('all', 'a', InputOption::VALUE_NONE, 'Run all Laravel tests and tests within packages.'),
-            new InputOption('packages', 'p', InputOption::VALUE_NONE, 'Run all tests within packages.'),
-            new InputOption('target', null, InputOption::VALUE_OPTIONAL, 'Root and/or package/s (e.g., `vendor-name/package-name`).'),
+            new InputOption('all', 'a', InputOption::VALUE_NONE, 'Apply to Laravel and packages.'),
+            new InputOption('packages', 'p', InputOption::VALUE_NONE, 'Apply to packages only.'),
+            new InputOption($this->package_option_argument_name, null, InputOption::VALUE_OPTIONAL, 'Apply to  (e.g., `vendor-name/package-name`).'),
         ]);
     }
 }

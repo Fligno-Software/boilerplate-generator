@@ -44,7 +44,7 @@ class ExtendedMakeListener extends ListenerMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

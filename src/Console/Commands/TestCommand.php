@@ -53,7 +53,7 @@ class TestCommand extends Command
      */
     public function handle(): int
     {
-        $this->targets = $this->getPackageFromOptions(true, 'target');
+        $this->targets = $this->getPackageFromOptions(true);
 
         // check if it has default package
         $has_default_target = $this->targets && in_array($this->default_package, $this->targets);

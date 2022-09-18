@@ -7,6 +7,7 @@
  */
 
 use Fligno\BoilerplateGenerator\BoilerplateGenerator;
+use Illuminate\Support\Collection;
 
 if (! function_exists('boilerplateGenerator')) {
     /**
@@ -30,12 +31,15 @@ if (! function_exists('boilerplate_generator')) {
 
 if (! function_exists('package_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_path(string $path = null): string
+    function package_path(string $path = null, string $domain = null): string
     {
-        return base_path('packages'.($path ? '/'.$path : null));
+        return base_path(collect(['packages', $path, ($domain ? 'src/Domains/'.$domain : null)])
+            ->filter()
+            ->implode('/'));
     }
 }
 
@@ -43,12 +47,13 @@ if (! function_exists('package_path')) {
 
 if (! function_exists('package_app_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_app_path(string $path = null): string
+    function package_app_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/src';
+        return package_path($path, $domain).'/src';
     }
 }
 
@@ -56,56 +61,49 @@ if (! function_exists('package_app_path')) {
 
 if (! function_exists('package_database_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_database_path(string $path = null): string
+    function package_database_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/database';
+        return package_path($path, $domain).'/database';
     }
 }
 
 if (! function_exists('package_migration_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_migration_path(string $path = null): string
+    function package_migration_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/database/migrations';
+        return package_database_path($path, $domain).'/migrations';
     }
 }
 
 if (! function_exists('package_seeder_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_seeder_path(string $path = null): string
+    function package_seeder_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/database/seeders';
+        return package_database_path($path, $domain).'/seeders';
     }
 }
 
 if (! function_exists('package_factory_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_factory_path(string $path = null): string
+    function package_factory_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/database/factories';
-    }
-}
-
-if (! function_exists('package_database_path')) {
-    /**
-     * @param  string|null  $path
-     * @return string
-     */
-    function package_database_path(string $path = null): string
-    {
-        return package_path($path).'/database';
+        return package_database_path($path, $domain).'/factories';
     }
 }
 
@@ -113,23 +111,37 @@ if (! function_exists('package_database_path')) {
 
 if (! function_exists('package_resource_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_resource_path(string $path = null): string
+    function package_resource_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/resources';
+        return package_path($path, $domain).'/resources';
     }
 }
 
 if (! function_exists('package_view_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_view_path(string $path = null): string
+    function package_view_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/resources/views';
+        return package_resource_path($path, $domain).'/views';
+    }
+}
+
+if (! function_exists('package_lang_path')) {
+    /**
+     * @param string|null $path
+     * @param string|null $domain
+     * @return string
+     */
+    function package_lang_path(string $path = null, string $domain = null): string
+    {
+        return package_resource_path($path, $domain).'/lang';
     }
 }
 
@@ -137,12 +149,13 @@ if (! function_exists('package_view_path')) {
 
 if (! function_exists('package_test_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_test_path(string $path = null): string
+    function package_test_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/tests';
+        return package_path($path, $domain).'/tests';
     }
 }
 
@@ -150,12 +163,13 @@ if (! function_exists('package_test_path')) {
 
 if (! function_exists('package_routes_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_routes_path(string $path = null): string
+    function package_routes_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/routes';
+        return package_path($path, $domain).'/routes';
     }
 }
 
@@ -163,11 +177,44 @@ if (! function_exists('package_routes_path')) {
 
 if (! function_exists('package_helpers_path')) {
     /**
-     * @param  string|null  $path
+     * @param string|null $path
+     * @param string|null $domain
      * @return string
      */
-    function package_helpers_path(string $path = null): string
+    function package_helpers_path(string $path = null, string $domain = null): string
     {
-        return package_path($path).'/helpers';
+        return package_path($path, $domain).'/helpers';
+    }
+}
+
+/***** COMPOSER JSON RELATED *****/
+
+if (! function_exists('set_contents_to_composer_json')) {
+    /**
+     * @param Collection|array $contents
+     * @param string|null $path
+     * @return bool
+     */
+    function set_contents_to_composer_json(Collection|array $contents, string $path = null): bool
+    {
+        $path = qualify_composer_json($path);
+
+        // Encode associative array to string (prevent escaped slashes)
+        $encoded = json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+        // Save to actual composer.json
+        return file_put_contents($path, $encoded) !== false;
+    }
+}
+
+if (! function_exists('setContentsToComposerJson')) {
+    /**
+     * @param Collection|array $contents
+     * @param string|null $path
+     * @return bool
+     */
+    function setContentsToComposerJson(Collection|array $contents, string $path = null): bool
+    {
+        return set_contents_to_composer_json($contents, $path);
     }
 }

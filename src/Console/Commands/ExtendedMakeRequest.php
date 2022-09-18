@@ -44,7 +44,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

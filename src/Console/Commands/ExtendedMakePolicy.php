@@ -44,7 +44,7 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

@@ -44,7 +44,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

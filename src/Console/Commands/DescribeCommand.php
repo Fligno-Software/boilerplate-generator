@@ -18,7 +18,7 @@ use Symfony\Component\Console\Helper\TableSeparator;
  */
 class DescribeCommand extends Command
 {
-    use UsesCommandMultipleTargetsTrait;
+    use UsesCommandVendorPackageDomainTrait;
 
     /**
      * The name and signature of the console command.
@@ -41,7 +41,7 @@ class DescribeCommand extends Command
     {
         parent::__construct();
 
-        $this->addMultipleTargetsOption();
+        $this->addPackageDomainOptions(has_force_domain: false);
     }
 
     /**
@@ -138,7 +138,7 @@ class DescribeCommand extends Command
     {
         $path = $package ? package_path($package) : null;
 
-        $composerContents = getContentsFromComposerJson($path ? $path . '/composer.json' : null);
+        $composerContents = getContentsFromComposerJson($path);
 
         dd($path, $composerContents);
     }

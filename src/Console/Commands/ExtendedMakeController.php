@@ -61,7 +61,7 @@ class ExtendedMakeController extends ControllerMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /**

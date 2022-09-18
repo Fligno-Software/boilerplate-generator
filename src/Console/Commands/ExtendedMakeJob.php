@@ -44,7 +44,7 @@ class ExtendedMakeJob extends JobMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

@@ -4,17 +4,13 @@ namespace Fligno\BoilerplateGenerator\Traits;
 
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
-use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\StarterKit\Traits\UsesCommandCustomMessagesTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use JsonException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -27,11 +23,14 @@ use Symfony\Component\Console\Input\InputOption;
  */
 trait UsesCommandVendorPackageDomainTrait
 {
-    use UsesCommandCustomMessagesTrait;
+    use UsesCommandDomainTrait;
 
-    /*****
-     * PACKAGE RELATED FIELDS
-     *****/
+    /***** PACKAGE RELATED FIELDS *****/
+
+    /**
+     * @var string|null
+     */
+    protected ?string $package_option_argument_name = 'package';
 
     /**
      * @var string|null
@@ -78,38 +77,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected bool $is_package_argument = false;
 
-    /*****
-     * DOMAIN RELATED FIELDS
-     *****/
-
-    /**
-     * @var string|null
-     */
-    protected ?string $domain_name = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $domain_dir = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $domain_namespace = null;
-
-    /**
-     * @var string
-     */
-    protected string $default_domain = 'none';
-
-    /**
-     * @var bool
-     */
-    protected bool $ddd_enabled = true;
-
-    /*****
-     * OTHER FIELDS
-     *****/
+    /***** OTHER FIELDS *****/
 
     /**
      * @var Collection|null
@@ -117,44 +85,32 @@ trait UsesCommandVendorPackageDomainTrait
     protected ?Collection $moreReplaceNamespace = null;
 
     /**
-     * @param  bool  $ddd_enabled
-     * @param  bool  $has_force
-     * @param  bool  $has_force_domain
+     * @param bool $has_force
+     * @param bool $ddd_enabled
+     * @param bool $has_force_domain
+     * @param string $option_name
      * @return void
      */
-    public function addPackageOptions(
+    public function addPackageDomainOptions(
         bool $has_force = false,
-        bool $ddd_enabled = false,
-        bool $has_force_domain = true
+        bool $ddd_enabled = true,
+        bool $has_force_domain = true,
+        string $option_name = 'package',
     ): void {
+        $this->package_option_argument_name = $option_name;
+
         $this->getDefinition()->addOption(
             new InputOption(
-                'package',
+                $this->package_option_argument_name,
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Target package to generate the files (e.g., `vendor-name/package-name`).'
             )
         );
 
-        if ($this->ddd_enabled = $ddd_enabled) {
-            $this->getDefinition()->addOption(
-                new InputOption(
-                    'domain',
-                    'd',
-                    InputOption::VALUE_OPTIONAL,
-                    'Domain or module name'
-                )
-            );
-            if ($has_force_domain) {
-                $this->getDefinition()->addOption(
-                    new InputOption(
-                        'force-domain',
-                        null,
-                        InputOption::VALUE_NONE,
-                        'Create domain if does not exist.'
-                    )
-                );
-            }
+        // Add domain options
+        if ($ddd_enabled) {
+            $this->addDomainOptions($has_force_domain);
         }
 
         if ($has_force && $this->getDefinition()->hasOption('force') === false) {
@@ -167,19 +123,24 @@ trait UsesCommandVendorPackageDomainTrait
                 )
             );
         }
+
+        $this->is_package_argument = false;
     }
 
     /**
-     * @param  bool  $isRequired
+     * @param bool $isRequired
+     * @param string $argument_name
      * @return void
      */
-    public function addPackageArguments(bool $isRequired = true): void
+    public function addPackageArguments(bool $isRequired = true, string $argument_name = 'package'): void
     {
+        $this->package_option_argument_name = $argument_name;
+
         $mode = $isRequired ? InputArgument::REQUIRED : InputArgument::OPTIONAL;
 
         $this->getDefinition()->addArguments(
             [
-                new InputArgument('package', $mode, 'The name of the package, e.g., `vendor-name/package-name`.'),
+                new InputArgument($this->package_option_argument_name, $mode, 'The name of the package, e.g., `vendor-name/package-name`.'),
             ]
         );
 
@@ -258,9 +219,9 @@ trait UsesCommandVendorPackageDomainTrait
                     $this->error('Package not found! Please choose an existing package.');
 
                     if ($this->is_package_argument) {
-                        $this->input->setArgument('package', null);
+                        $this->input->setArgument($this->package_option_argument_name, null);
                     } else {
-                        $this->input->setOption('package', null);
+                        $this->input->setOption($this->package_option_argument_name, null);
                     }
 
                     $this->setVendorPackageDomain();
@@ -268,29 +229,33 @@ trait UsesCommandVendorPackageDomainTrait
             }
         }
 
-        if ($show_domain_choices && $this->domain_name = $this->getDomainFromOptions()) {
-            $this->domain_dir = 'Domains/'.$this->domain_name;
-            $this->domain_namespace = ($this->package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
+        if ($show_domain_choices) {
+            $this->setDomainFieldsFromOptions(
+                $this->package_option_argument_name,
+                $this->package_dir,
+                $this->package_namespace
+            );
         }
+
     }
 
     /**
-     * @param string|null $option_name
      * @return bool
      */
-    public function hasPackageAsOption(string $option_name = null): bool
+    public function hasPackageAsOption(): bool
     {
-        return $this->hasOption($option_name ?? 'package');
+        return $this->hasOption($this->package_option_argument_name);
     }
 
     /**
      * @param bool $multiple
-     * @param string|null $option_name
      * @return string|array|null
      */
-    public function getPackageFromOptions(bool $multiple = false, string $option_name = null): string|array|null
+    public function getPackageFromOptions(bool $multiple = false): string|array|null
     {
-        if ($this->hasPackageAsOption($option_name) && $target = trim($this->option($option_name ?? 'package'), '/')) {
+        if ($this->hasPackageAsOption() &&
+            $target = trim($this->option($this->package_option_argument_name), '/'))
+        {
             return $multiple ? explode(',', $target) : $target;
         }
 
@@ -302,7 +267,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     public function hasPackageAsArgument(): bool
     {
-        return $this->hasArgument('package');
+        return $this->hasArgument($this->package_option_argument_name);
     }
 
     /**
@@ -310,7 +275,9 @@ trait UsesCommandVendorPackageDomainTrait
      */
     public function getPackageFromArguments(): string|null
     {
-        return $this->hasPackageAsArgument() ? trim($this->argument('package'), '/') : null;
+        return $this->hasPackageAsArgument() ?
+            trim($this->argument($this->package_option_argument_name), '/') :
+            null;
     }
 
     /**
@@ -348,108 +315,15 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @return array|bool|string|null
-     */
-    public function getDomainFromOptions(): bool|array|string|null
-    {
-        $domain = $this->hasOption('domain') ? trim($this->option('domain')) : null;
-
-        if ($domain === $this->default_domain) {
-            return null;
-        }
-
-        $domain = $domain ? Str::studly($domain) : null;
-        $domains = starterKit()->getDomains($this->package_dir)?->keys();
-
-        if ($this->ddd_enabled && ($domain || $domains)) {
-            $createNewDomain = function () use ($domain, $domains, &$createNewDomain) {
-                $domain = trim($this->ask('Enter new domain name', $domain));
-
-                if ($domain === $this->default_domain) {
-                    $domain = null;
-                }
-
-                $domain = $domain ? Str::studly($domain) : null;
-
-                // create domain if it does not exist
-                if ($domain) {
-                    if (! $this instanceof RouteMakeCommand && ! ($domains?->contains($domain))) {
-                        $args = $this->getPackageArgs(false);
-                        $args['name'] = $domain;
-                        $this->call('bg:domain:create', $args);
-                    }
-
-                    return $domain;
-                }
-
-                $this->error('Failed to create new domain.');
-
-                return $createNewDomain();
-            };
-
-            $chooseFromDomains = function () use ($domains) {
-                if ($domains &&
-                    ($domain = $this->choice(
-                        'Choose a domain',
-                        $domains->prepend($this->default_domain)->toArray(),
-                        0
-                    ))
-                ) {
-                    if ($domain === $this->default_domain) {
-                        return null;
-                    }
-
-                    return $domain;
-                }
-
-                return null;
-            };
-
-            // domain IS NOT NULL and domain list IS NOT EMPTY
-            if ($domain && $domains) {
-                if (($this instanceof RouteMakeCommand && $this->shouldCreateDomain()) || $domains->contains($domain)) {
-                    return $domain;
-                }
-
-                $choice = $this->choice(
-                    'Choose what to do',
-                    [
-                        'create new domain',
-                        'choose from domains',
-                    ],
-                    0
-                );
-
-                if ($choice === 'create new domain') {
-                    return $createNewDomain();
-                }
-
-                return $chooseFromDomains();
-            }
-
-            // domain IS NULL and domain list IS NOT EMPTY
-            if ($domains) {
-                return $chooseFromDomains();
-            }
-
-            // domain IS NOT NULL and domain list IS EMPTY
-            return $createNewDomain();
-        }
-
-        return null;
-    }
-
-    /**
      * @param  bool  $withDomain
      * @return array
      */
     public function getPackageArgs(bool $withDomain = true): array
     {
-        $args['--package'] = $this->package_dir ?? $this->default_package;
+        $args['--'.$this->package_option_argument_name] = $this->package_dir ?? $this->default_package;
 
-        if ($withDomain && $this->domain_name) {
-            $args['--domain'] = $this->domain_name;
-            $args['--force-domain'] = $this->shouldCreateDomain();
+        if ($withDomain) {
+            $args = array_merge($args, $this->getDomainArgs());
         }
 
         return $args;
@@ -538,9 +412,7 @@ trait UsesCommandVendorPackageDomainTrait
         return is_subclass_of($this, GeneratorCommand::class);
     }
 
-    /*****
-     * PACKAGE LIST
-     *****/
+    /***** PACKAGE LIST *****/
 
     /**
      * @return string|null
@@ -555,8 +427,13 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function getPackageDomainFullPath(): string
     {
-        return ($this->package_dir ? package_app_path($this->package_dir) : app_path())
-            .($this->domain_dir ? '/'.$this->domain_dir : null);
+        return collect([
+            $this->package_dir ? package_app_path($this->package_dir) : app_path(),
+            $this->domain_dir,
+            $this->domain_dir ? 'src' : null
+        ])
+            ->filter()
+            ->implode('/');
     }
 
     /**
@@ -574,9 +451,7 @@ trait UsesCommandVendorPackageDomainTrait
         return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }
 
-    /*****
-     * STUB REPLACEMENT LOGIC
-     *****/
+    /***** STUB REPLACEMENT LOGIC *****/
 
     /**
      * @param  Collection|array  $more
@@ -697,33 +572,29 @@ trait UsesCommandVendorPackageDomainTrait
         return $this->hasOption('force') && $this->option('force');
     }
 
-    /**
-     * @return bool
-     */
-    protected function shouldCreateDomain(): bool
-    {
-        return $this->hasOption('force-domain') && $this->option('force-domain');
-    }
-
     /*****
      * ELOQUENT MODEL RELATED
      *****/
 
     /**
-     * @param  string  $option
+     * @param  string  $option_name
      * @return string
      */
-    protected function getModelClass(string $option): string
+    protected function getModelClass(string $option_name): string
     {
-        $modelClass = $this->parseModel($this->option($option));
+        $modelClass = $this->parseModel($this->option($option_name));
 
         if (! class_exists($modelClass)) {
+            // ask if the model should be generated instead
             if ($this->confirm("$modelClass model does not exist. Do you want to generate it?", true)) {
                 $args = $this->getPackageArgs();
                 $args['name'] = $modelClass;
 
                 $this->call('bg:make:model', $args);
-            } else {
+            }
+
+            // or maybe choose from possible Eloquent models
+            else {
                 $alternativeModels = collect();
 
                 if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
@@ -746,14 +617,14 @@ trait UsesCommandVendorPackageDomainTrait
                 $defaultAlternativeModel = 'none';
 
                 $modelClass = $this->choice(
-                    'Choose alternative '.($option === 'parent' ? $option.' ' : null).'model',
+                    'Choose alternative '.($option_name === 'parent' ? $option_name.' ' : null).'model',
                     $alternativeModels->prepend($defaultAlternativeModel)->toArray(),
                     0
                 );
 
                 $modelClass = $modelClass === $defaultAlternativeModel ? null : $modelClass;
 
-                $this->input->setOption($option, $modelClass);
+                $this->input->setOption($option_name, $modelClass);
             }
         }
 
@@ -777,9 +648,7 @@ trait UsesCommandVendorPackageDomainTrait
         return $this->qualifyModel($model);
     }
 
-    /*****
-     * TEST RELATED
-     *****/
+    /***** TEST RELATED *****/
 
     /**
      * Create the matching test case if requested.

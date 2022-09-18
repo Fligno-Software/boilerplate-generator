@@ -50,7 +50,7 @@ class ExtendedMakeTest extends TestMakeCommand
 
         $this->addModelOptions();
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /**

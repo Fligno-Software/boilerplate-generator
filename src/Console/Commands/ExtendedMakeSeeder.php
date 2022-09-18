@@ -7,6 +7,7 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Database\Console\Seeds\SeederMakeCommand;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 /**
  * Class ExtendedMakeSeeder
@@ -43,7 +44,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -80,13 +81,44 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getPath($name): string
     {
+        $name = Str::of($name)
+            ->replaceFirst($this->rootNamespace(), '')
+            ->after('Database\\Seeders\\')
+            ->replace('\\', '/')
+            ->finish('Factory')
+            ->jsonSerialize();
+
         $path = $this->getPackageDomainFullPath();
 
         if (is_dir($path.'/seeds')) {
             return $path.'/seeds/'.$name.'.php';
         }
 
+
         return $path.'/seeders/'.$name.'.php';
+    }
+
+    /**
+     * @param $rootNamespace
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return $rootNamespace.'\\Database\\Seeders';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRootNamespaceDuringReplaceNamespace(): string
+    {
+        $rootNameSpace = $this->rootNamespace();
+
+        if ($rootNameSpace !== $this->package_namespace) {
+            $rootNameSpace = '';
+        }
+
+        return $rootNameSpace;
     }
 
     /**
@@ -110,5 +142,28 @@ class ExtendedMakeSeeder extends SeederMakeCommand
         }
 
         return $this->package_dir ? package_database_path($this->package_dir) : database_path();
+    }
+
+    /**
+     * Overridden from SeederMakeCommand
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function qualifyClass($name): string
+    {
+        $name = ltrim($name, '\\/');
+
+        $name = str_replace('/', '\\', $name);
+
+        $rootNamespace = $this->rootNamespace();
+
+        if (Str::startsWith($name, $rootNamespace)) {
+            return $name;
+        }
+
+        return $this->qualifyClass(
+            $this->getDefaultNamespace(trim($rootNamespace, '\\')).'\\'.$name
+        );
     }
 }

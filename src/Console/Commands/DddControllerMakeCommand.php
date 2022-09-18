@@ -45,7 +45,7 @@ class DddControllerMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
         $this->addModelOptions();
     }
 

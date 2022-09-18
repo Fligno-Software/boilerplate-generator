@@ -44,7 +44,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

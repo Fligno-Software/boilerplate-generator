@@ -43,7 +43,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

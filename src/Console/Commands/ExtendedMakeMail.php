@@ -43,7 +43,7 @@ class ExtendedMakeMail extends MailMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****

@@ -7,6 +7,7 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -47,7 +48,7 @@ class DomainCreateCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions(has_force_domain: false);
+        $this->addPackageDomainOptions(has_force_domain: false);
     }
 
     /**
@@ -61,8 +62,13 @@ class DomainCreateCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain(true, false);
 
+        $this->domain_name = $this->getNameInput();
+
+        $this->domain_dir = 'Domains/'.$this->domain_name;
+        $this->domain_namespace = ($this->package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
+
         $args = $this->getPackageArgs();
-        $args['--domain'] = $this->getNameInput();
+        $args['--domain'] = $this->domain_name;
         $args['--force-domain'] = true;
         $args['--no-interaction'] = true;
 
@@ -80,11 +86,12 @@ class DomainCreateCommand extends GeneratorCommand
 
         if ($success) {
             $this->done('Domain created successfully.');
+            $this->addDomainSeedersFactoriesPathsToComposerJson();
         } else {
             $this->failed('Domain was not created or already existing.');
         }
 
-        return $success && starterKit()->clearCache();
+        return $success && (starterKit()->clearCache() ? self::SUCCESS : self::FAILURE);
     }
 
     /**
@@ -117,5 +124,48 @@ class DomainCreateCommand extends GeneratorCommand
         return [
             ['name', InputArgument::REQUIRED, 'Domain or module name'],
         ];
+    }
+
+    /**
+     * @return void
+     */
+    protected function addDomainSeedersFactoriesPathsToComposerJson(): void
+    {
+        $this->ongoing('Adding src, factories, and seeders paths to composer.json autoload');
+        $path = $this->package_dir ? Str::after(package_path($this->package_dir), base_path()) : null;
+        $contents = getContentsFromComposerJson($path)?->toArray();
+
+        if ($contents)
+        {
+            $namespace = $this->getPackageDomainNamespace();
+            $psr4_path = Str::of($this->getPackageDomainFullPath())
+                ->after($this->package_dir ? package_path($this->package_dir) : base_path())
+                ->ltrim('/')
+                ->finish('/');
+
+            $app_src_path = $psr4_path->jsonSerialize();
+            $factories_path = $psr4_path->replace(['/app', '/src'], '/database/factories')->jsonSerialize();
+            $seeders_path = $psr4_path->replace(['/app', '/src'], '/database/seeders')->jsonSerialize();
+
+            // load src or app folder
+            $contents['autoload']['psr-4'][$namespace] = $app_src_path;
+
+            // load factories folder
+            $contents['autoload']['psr-4'][$namespace.'Database\\Factories\\'] = $factories_path;
+
+            // load seeders folder
+            $contents['autoload']['psr-4'][$namespace.'Database\\Seeders\\'] = $seeders_path;
+
+            // set updated content to composer.json
+            if (set_contents_to_composer_json($contents, $path)) {
+                $this->done('Added src, factories, and seeders paths to composer.json autoload');
+            }
+            else {
+                $this->failed('Failed to add src, factories, and seeders paths to composer.json autoload');
+            }
+        }
+        else {
+            $this->failed('Failed to get contents from composer.json: ' . $path);
+        }
     }
 }

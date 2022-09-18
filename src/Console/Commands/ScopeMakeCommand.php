@@ -51,7 +51,7 @@ class ScopeMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /***** OVERRIDDEN FUNCTIONS *****/

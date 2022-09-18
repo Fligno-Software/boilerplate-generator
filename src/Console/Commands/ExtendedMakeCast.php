@@ -44,7 +44,7 @@ class ExtendedMakeCast extends CastMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
