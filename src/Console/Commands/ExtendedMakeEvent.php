@@ -68,7 +68,7 @@ class ExtendedMakeEvent extends EventMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/event/event.custom.stub';
+        return __DIR__.'/../../../stubs/event/event.custom.stub';
     }
 
     /**

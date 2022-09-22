@@ -68,7 +68,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/middleware/middleware.custom.stub';
+        return __DIR__.'/../../../stubs/middleware/middleware.custom.stub';
     }
 
     /**

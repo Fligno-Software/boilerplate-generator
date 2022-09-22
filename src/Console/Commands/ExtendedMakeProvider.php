@@ -68,7 +68,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/provider/provider.custom.stub';
+        return __DIR__.'/../../../stubs/provider/provider.custom.stub';
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 //
 //namespace Fligno\BoilerplateGenerator\Feature;
 //

@@ -75,7 +75,7 @@ class InterfaceMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/interface/interface.custom.stub';
+        return __DIR__.'/../../../stubs/interface/interface.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string

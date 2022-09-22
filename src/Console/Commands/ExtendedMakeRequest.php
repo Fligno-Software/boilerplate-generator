@@ -70,7 +70,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/request/request.custom.stub';
+        return __DIR__.'/../../../stubs/request/request.custom.stub';
     }
 
     /**

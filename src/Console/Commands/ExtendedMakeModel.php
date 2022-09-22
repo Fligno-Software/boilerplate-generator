@@ -39,8 +39,8 @@ class ExtendedMakeModel extends ModelMakeCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
-     * @param Composer $composer
+     * @param  Filesystem  $files
+     * @param  Composer  $composer
      */
     public function __construct(Filesystem $files, protected Composer $composer)
     {
@@ -246,7 +246,7 @@ class ExtendedMakeModel extends ModelMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/model/model.custom.stub';
+        return __DIR__.'/../../../stubs/model/model.custom.stub';
     }
 
     /**

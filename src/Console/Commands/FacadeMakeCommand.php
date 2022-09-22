@@ -78,8 +78,8 @@ class FacadeMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return $this->moreReplaceNamespace ? __DIR__ . '/../../../stubs/facade/facade.service.custom.stub' :
-            __DIR__ . '/../../../stubs/facade/facade.custom.stub';
+        return $this->moreReplaceNamespace ? __DIR__.'/../../../stubs/facade/facade.service.custom.stub' :
+            __DIR__.'/../../../stubs/facade/facade.custom.stub';
     }
 
     /**

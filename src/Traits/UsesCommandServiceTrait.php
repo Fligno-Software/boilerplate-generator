@@ -86,10 +86,10 @@ trait UsesCommandServiceTrait
 //                $this->checkServiceExists($service) ||
 //                $this->checkServiceExists($service, null, false) ||
 //                $this->checkServiceExists($service, null, true, true) ||
-                $this->checkServiceExists($service, 'Services') ||
-                $this->checkServiceExists($service, 'Services', false) ||
-                $this->checkServiceExists($service, 'Services', true, true)
-            )
+            $this->checkServiceExists($service, 'Services') ||
+            $this->checkServiceExists($service, 'Services', false) ||
+            $this->checkServiceExists($service, 'Services', true, true)
+        )
         ) {
             $this->addMoreCasedReplaceNamespace($service, 'Service');
         }

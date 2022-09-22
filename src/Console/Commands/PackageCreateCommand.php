@@ -62,7 +62,6 @@ class PackageCreateCommand extends Command
         config(['packager.author_homepage' => boilerplateGenerator()->getAuthorHomepage()]);
         config(['packager.skeleton' => boilerplateGenerator()->getPackageSkeleton()]);
 
-
         $this->call(
             'packager:new',
             [
@@ -99,13 +98,13 @@ class PackageCreateCommand extends Command
             ]
         );
 
-        $test_directory  = Str::of(package_test_path($this->package_dir))
+        $test_directory = Str::of(package_domain_tests_path($this->package_dir))
             ->after(base_path())
             ->replace('\\', '/')
             ->ltrim('/')
             ->jsonSerialize();
 
-        $this->ongoing('Running command: php artisan pest:install --test-directory=' . $test_directory, false);
+        $this->ongoing('Running command: php artisan pest:install --test-directory='.$test_directory, false);
 
         $this->call(
             'pest:install',

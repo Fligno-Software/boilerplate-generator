@@ -74,7 +74,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
     /**
      * Write the view for the component.
      *
-     * @param callable|null $onSuccess
+     * @param  callable|null  $onSuccess
      * @return void
      */
     protected function writeView($onSuccess = null): void
@@ -82,7 +82,7 @@ class ExtendedMakeComponent extends ComponentMakeCommand
         $path = str_replace('.', '/', 'components.'.$this->getView()).'.blade.php';
 
         if ($this->package_dir) {
-            $path = package_view_path($this->package_dir).DIRECTORY_SEPARATOR.$path;
+            $path = package_domain_views_path($this->package_dir).DIRECTORY_SEPARATOR.$path;
         } else {
             $path = $this->viewPath($path);
         }

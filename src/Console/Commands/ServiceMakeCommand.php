@@ -13,6 +13,7 @@ use Illuminate\Filesystem\Filesystem;
  * Class ServiceMakeCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ *
  * @since  2022-01-13
  */
 class ServiceMakeCommand extends GeneratorCommand

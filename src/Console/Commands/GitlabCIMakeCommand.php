@@ -57,7 +57,7 @@ class GitlabCIMakeCommand extends Command
 
         $file = '.gitlab-ci.yml';
 
-        $packagePath = package_path($this->package_dir);
+        $packagePath = package_domain_path($this->package_dir);
 
         $source = __DIR__.'/../../../stubs/'.$file;
 

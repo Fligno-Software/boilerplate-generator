@@ -2,16 +2,10 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
-use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandMultipleTargetsTrait;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Pure;
-use JsonException;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class TestCommand
@@ -45,6 +39,9 @@ class TestCommand extends Command
     {
         parent::__construct();
 
+        // To ignore validation errors
+        $this->ignoreValidationErrors();
+
         $this->addMultipleTargetsOption();
     }
 
@@ -65,14 +62,13 @@ class TestCommand extends Command
                 // add back 'root' to the list of default choices if previously typed
                 ->when(
                     $has_default_target,
-                    fn(Collection $collection) => $collection->prepend($this->default_package)
+                    fn (Collection $collection) => $collection->prepend($this->default_package)
                 )
                 ->toArray() :
                 [];
 
             $this->targets = $this->choosePackageFromList(multiple: true, default_choices: $default_choices);
-        }
-        else {
+        } else {
             $this->targets = null;
         }
 
@@ -95,7 +91,7 @@ class TestCommand extends Command
 
         $packages_to_test = $test_packages ?
             boilerplateGenerator()->getSummarizedPackages(is_loaded: true)
-            ->when($has_other_targets, fn(Collection $collection) => $collection->only($this->targets)) :
+            ->when($has_other_targets, fn (Collection $collection) => $collection->only($this->targets)) :
             null;
 
         $progress = $this->output->createProgressBar(intval($packages_to_test?->count()) + intval($test_root));
@@ -108,11 +104,11 @@ class TestCommand extends Command
         };
 
         if ($test_root) {
-            $executeStep(fn() => $this->executeTests());
+            $executeStep(fn () => $this->executeTests());
         }
 
-        $packages_to_test?->each(function(array $array, string $package) use ($progress, $executeStep) {
-            $executeStep(fn() => $this->executeTests($package, $array['path']));
+        $packages_to_test?->each(function (array $array, string $package) use ($executeStep) {
+            $executeStep(fn () => $this->executeTests($package, $array['path']));
         });
 
         $progress->finish();
@@ -131,30 +127,30 @@ class TestCommand extends Command
     }
 
     /**
-     * @param string|null $package_name
-     * @param string|null $package_path
+     * @param  string|null  $package_name
+     * @param  string|null  $package_path
      * @return void
      */
     public function executeTests(string $package_name = null, string $package_path = null): void
     {
-        $this->ongoing('Running tests for ' . ($package_name ?? 'Laravel'));
+        $this->ongoing('Running tests for '.($package_name ?? 'Laravel'));
 
         $test_directory = null;
 
         if ($package_path) {
             $package_path = Str::of($package_path)
                 ->after(base_path())
-                ->replace('\\','/')
+                ->replace('\\', '/')
                 ->ltrim('/')
                 ->append('/tests')
                 ->jsonSerialize();
 
-            $test_directory = '--test-directory=' . $package_path;
+            $test_directory = '--test-directory='.$package_path;
         }
 
-        $command = implode(' ', ['php artisan test', $package_path, $test_directory]);
+        $command = collect(['php artisan test', $package_path, $test_directory])->merge($this->collectRawOptions())->filter()->implode(' ');
 
-        $this->ongoing('Running command: ' . $command, false);
+        $this->ongoing('Running command: '.$command, false);
 
         exec($command, $this->output);
     }
@@ -170,5 +166,20 @@ class TestCommand extends Command
     protected function isPackagesOnly(): bool
     {
         return $this->option('packages');
+    }
+
+    /**
+     * @return Collection
+     */
+    protected function collectRawOptions(): Collection
+    {
+        $argv = collect($_SERVER['argv']);
+
+        // Only get the args that pass
+        return $argv->filter(function ($arg) {
+            $arg = Str::of($arg)->before('=');
+
+            return $arg->startsWith('--') && ! $arg->contains(['all', 'packages', 'package', 'test-directory']);
+        });
     }
 }

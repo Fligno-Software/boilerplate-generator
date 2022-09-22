@@ -105,24 +105,24 @@ class ExtendedMakeController extends ControllerMakeCommand
         if ($type = $this->option('type')) {
             $stub = __DIR__."/stubs/controller/controller.$type.stub";
         } elseif ($this->option('parent')) {
-            $stub = __DIR__ . '/../../../stubs/controller/controller.nested.custom.stub';
+            $stub = __DIR__.'/../../../stubs/controller/controller.nested.custom.stub';
         } elseif ($this->option('model')) {
-            $stub = __DIR__ . '/../../../stubs/controller/controller.model.custom.stub';
+            $stub = __DIR__.'/../../../stubs/controller/controller.model.custom.stub';
         } elseif ($this->option('invokable')) {
-            $stub = __DIR__ . '/../../../stubs/controller/controller.invokable.custom.stub';
+            $stub = __DIR__.'/../../../stubs/controller/controller.invokable.custom.stub';
         } elseif ($this->option('resource')) {
-            $stub = __DIR__ . '/../../../stubs/controller/controller.custom.stub';
+            $stub = __DIR__.'/../../../stubs/controller/controller.custom.stub';
         }
 
         if ($this->option('api')) {
             if (is_null($stub)) {
-                $stub = __DIR__ . '/../../../stubs/controller/controller.api.custom.stub';
+                $stub = __DIR__.'/../../../stubs/controller/controller.api.custom.stub';
             } elseif (! $this->option('invokable')) {
                 $stub = str_replace('.custom.stub', '.api.custom.stub', $stub);
             }
         }
 
-        $stub = $stub ?? __DIR__ . '/../../../stubs/controller/controller.plain.custom.stub';
+        $stub = $stub ?? __DIR__.'/../../../stubs/controller/controller.plain.custom.stub';
 
         if (file_exists($stub) === false) {
             return parent::getStub();

@@ -107,7 +107,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/route/route.custom.stub';
+        return __DIR__.'/../../../stubs/route/route.custom.stub';
     }
 
     /**
@@ -140,14 +140,10 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getPackageDomainFullPath(): string
     {
-        if ($this->domain_dir) {
-            return collect([
-                $this->package_dir ? package_app_path($this->package_dir) : app_path(),
-                $this->domain_dir,
-                'routes'
-            ])->implode('/');
+        if ($this->package_dir) {
+            return package_domain_routes_path($this->package_dir, $this->domain_dir);
         }
 
-        return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
+        return base_path($this->domain_dir).'/routes';
     }
 }

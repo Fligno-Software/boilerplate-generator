@@ -84,7 +84,7 @@ class DataFactoryMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/data-factory/df.custom.stub';
+        return __DIR__.'/../../../stubs/data-factory/df.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string

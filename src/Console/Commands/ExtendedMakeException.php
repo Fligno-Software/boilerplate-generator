@@ -68,10 +68,10 @@ class ExtendedMakeException extends ExceptionMakeCommand
      */
     protected function getStub(): string
     {
-        $exceptionRenderReportStub = __DIR__ . '/../../../stubs/exception/exception-render-report.custom.stub';
-        $exceptionRenderStub = __DIR__ . '/../../../stubs/exception/exception-render.custom.stub';
-        $exceptionReportStub = __DIR__ . '/../../../stubs/exception/exception-report.custom.stub';
-        $exceptionStub = __DIR__ . '/../../../stubs/exception/exception.custom.stub';
+        $exceptionRenderReportStub = __DIR__.'/../../../stubs/exception/exception-render-report.custom.stub';
+        $exceptionRenderStub = __DIR__.'/../../../stubs/exception/exception-render.custom.stub';
+        $exceptionReportStub = __DIR__.'/../../../stubs/exception/exception-report.custom.stub';
+        $exceptionStub = __DIR__.'/../../../stubs/exception/exception.custom.stub';
 
         if (file_exists($exceptionRenderReportStub) === false ||
             file_exists($exceptionRenderStub) === false ||

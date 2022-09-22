@@ -69,8 +69,8 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? __DIR__ . '/../../../stubs/observer/observer.custom.stub'
-            : __DIR__ . '/../../../stubs/observer/observer.plain.custom.stub';
+            ? __DIR__.'/../../../stubs/observer/observer.custom.stub'
+            : __DIR__.'/../../../stubs/observer/observer.plain.custom.stub';
     }
 
     /**

@@ -69,7 +69,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/channel/channel.custom.stub';
+        return __DIR__.'/../../../stubs/channel/channel.custom.stub';
     }
 
     /**

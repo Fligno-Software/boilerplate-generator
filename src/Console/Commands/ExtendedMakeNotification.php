@@ -69,7 +69,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/notification/notification.custom.stub';
+        return __DIR__.'/../../../stubs/notification/notification.custom.stub';
     }
 
     /**

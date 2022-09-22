@@ -69,7 +69,7 @@ class ExtendedMakeCast extends CastMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/cast/cast.custom.stub';
+        return __DIR__.'/../../../stubs/cast/cast.custom.stub';
     }
 
     /**

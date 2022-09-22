@@ -2,11 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
-use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use JsonException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -68,14 +64,14 @@ class PackageListCommand extends Command
 
     /**
      * Execute the console command.
-     *
      */
     public function handle(): void
     {
-        $validateBoolean = function(string $key): bool|null {
+        $validateBoolean = function (string $key): bool|null {
             if ($option = $this->option($key)) {
                 return filter_var($option, FILTER_VALIDATE_BOOLEAN);
             }
+
             return null;
         };
 
@@ -108,16 +104,17 @@ class PackageListCommand extends Command
     }
 
     /**
-     * @param string|null $filter
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
+     * @param  string|null  $filter
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
      * @return array
      */
     public function getPackagesRows(string $filter = null, bool $is_local = null, bool $is_enabled = null, bool $is_loaded = null): array
     {
         $yes = '<fg=white;bg=green> YES </>';
         $no = '<fg=white;bg=red> NO </>';
+
         return boilerplateGenerator()
             ->getSummarizedPackages($filter, $is_local, $is_enabled, $is_loaded)
             ->map(function (array $arr, string $package) use ($yes, $no) {
@@ -126,7 +123,7 @@ class PackageListCommand extends Command
                     $arr['path'],
                     $arr['is_local'] ? $yes : $no,
                     $arr['is_enabled'] ? $yes : $no,
-                    $arr['is_loaded'] ? $yes : $no
+                    $arr['is_loaded'] ? $yes : $no,
                 ];
             })
             ->toArray();

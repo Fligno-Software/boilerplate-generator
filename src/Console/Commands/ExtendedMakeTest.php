@@ -86,7 +86,7 @@ class ExtendedMakeTest extends TestMakeCommand
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
-        $path = $this->package_dir ? package_test_path($this->package_dir) : base_path('tests');
+        $path = $this->package_dir ? package_domain_tests_path($this->package_dir) : base_path('tests');
 
         return $path.DIRECTORY_SEPARATOR.str_replace('\\', '/', $name).'.php';
     }

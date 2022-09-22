@@ -43,7 +43,7 @@ trait UsesCommandDomainTrait
     protected bool $ddd_enabled = true;
 
     /**
-     * @param bool $has_force_domain
+     * @param  bool  $has_force_domain
      * @return void
      */
     public function addDomainOptions(bool $has_force_domain = true): void
@@ -95,26 +95,25 @@ trait UsesCommandDomainTrait
     }
 
     /**
-     * @param string $package_option_name
-     * @param string|null $package_dir
-     * @param string|null $package_namespace
+     * @param  string  $package_option_name
+     * @param  string|null  $package_dir
+     * @param  string|null  $package_namespace
      * @return void
      */
     public function setDomainFieldsFromOptions(
         string $package_option_name,
         string $package_dir = null,
         string $package_namespace = null
-    ): void
-    {
+    ): void {
         if ($this->domain_name = $this->getDomainFromOptions($package_option_name, $package_dir)) {
-            $this->domain_dir = 'Domains/'.$this->domain_name;
-            $this->domain_namespace = ($package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
+            $this->domain_dir = 'domains/'.$this->domain_name;
+            $this->domain_namespace = ($package_namespace).'Domains\\'.$this->domain_name.'\\';
         }
     }
 
     /**
-     * @param string $package_option_name
-     * @param string|null $package_dir
+     * @param  string  $package_option_name
+     * @param  string|null  $package_dir
      * @return array|bool|string|null
      */
     public function getDomainFromOptions(string $package_option_name, string $package_dir = null): bool|array|string|null
@@ -135,7 +134,7 @@ trait UsesCommandDomainTrait
                     return $domain;
                 }
 
-                $this->failed('Domain not found: ' . $domain);
+                $this->failed('Domain not found: '.$domain);
                 $choice = $this->choice(
                     'Choose what to do',
                     [
@@ -165,10 +164,10 @@ trait UsesCommandDomainTrait
     }
 
     /**
-     * @param string $domain
-     * @param string $package_option_name
-     * @param Collection|null $domain_choices
-     * @param string|null $package_dir
+     * @param  string  $domain
+     * @param  string  $package_option_name
+     * @param  Collection|null  $domain_choices
+     * @param  string|null  $package_dir
      * @return string
      */
     protected function createNewDomain(string $domain, string $package_option_name, Collection $domain_choices = null, string $package_dir = null): string
@@ -203,8 +202,8 @@ trait UsesCommandDomainTrait
     }
 
     /**
-     * @param Collection|null $domain_choices
-     * @param string|null $package_dir
+     * @param  Collection|null  $domain_choices
+     * @param  string|null  $package_dir
      * @return string|null
      */
     public function chooseFromDomains(Collection $domain_choices = null, string $package_dir = null): string|null

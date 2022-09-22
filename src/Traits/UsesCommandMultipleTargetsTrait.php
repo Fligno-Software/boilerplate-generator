@@ -19,7 +19,7 @@ trait UsesCommandMultipleTargetsTrait
     protected array|null $targets = null;
 
     /**
-     * @param string $option_name
+     * @param  string  $option_name
      * @return void
      */
     public function addMultipleTargetsOption(string $option_name = 'package'): void

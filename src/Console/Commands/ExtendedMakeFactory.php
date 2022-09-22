@@ -93,7 +93,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/factory/factory.custom.stub';
+        return __DIR__.'/../../../stubs/factory/factory.custom.stub';
     }
 
     /**
@@ -155,10 +155,10 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir).'/'.$this->domain_dir :
+            return ($this->package_dir ? package_domain_app_path($this->package_dir).'/'.$this->domain_dir :
                     app_path($this->domain_dir)).'/database';
         }
 
-        return $this->package_dir ? package_database_path($this->package_dir) : database_path();
+        return $this->package_dir ? package_domain_database_path($this->package_dir) : database_path();
     }
 }

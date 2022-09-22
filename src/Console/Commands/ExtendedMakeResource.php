@@ -69,7 +69,7 @@ class ExtendedMakeResource extends ResourceMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/resource/resource.custom.stub';
+        return __DIR__.'/../../../stubs/resource/resource.custom.stub';
     }
 
     /**

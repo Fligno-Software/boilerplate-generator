@@ -73,7 +73,7 @@ class ScopeMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/scope/scope.custom.stub';
+        return __DIR__.'/../../../stubs/scope/scope.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string

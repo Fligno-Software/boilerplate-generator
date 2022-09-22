@@ -70,13 +70,13 @@ class ExtendedMakeListener extends ListenerMakeCommand
     {
         if ($this->option('queued')) {
             return $this->option('event')
-                ? __DIR__ . '/../../../stubs/listener/listener-queued.custom.stub'
-                : __DIR__ . '/../../../stubs/listener/listener-queued-duck.custom.stub';
+                ? __DIR__.'/../../../stubs/listener/listener-queued.custom.stub'
+                : __DIR__.'/../../../stubs/listener/listener-queued-duck.custom.stub';
         }
 
         return $this->option('event')
-            ? __DIR__ . '/../../../stubs/listener/listener.custom.stub'
-            : __DIR__ . '/../../../stubs/listener/listener-duck.custom.stub';
+            ? __DIR__.'/../../../stubs/listener/listener.custom.stub'
+            : __DIR__.'/../../../stubs/listener/listener-duck.custom.stub';
     }
 
     /**

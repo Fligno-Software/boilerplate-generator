@@ -77,8 +77,8 @@ class HelperMakeCommand extends GeneratorCommand
     protected function getStub(): string
     {
         return $this->moreReplaceNamespace ?
-            __DIR__ . '/../../../stubs/helper/helper.service.custom.stub' :
-            __DIR__ . '/../../../stubs/helper/helper.custom.stub';
+            __DIR__.'/../../../stubs/helper/helper.service.custom.stub' :
+            __DIR__.'/../../../stubs/helper/helper.custom.stub';
     }
 
     /**
@@ -114,10 +114,10 @@ class HelperMakeCommand extends GeneratorCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) :
+            return ($this->package_dir ? package_domain_app_path($this->package_dir) :
                     app_path()).'/'.$this->domain_dir.'/helpers';
         }
 
-        return $this->package_dir ? package_helpers_path($this->package_dir) : base_path('helpers');
+        return $this->package_dir ? package_domain_helpers_path($this->package_dir) : base_path('helpers');
     }
 }

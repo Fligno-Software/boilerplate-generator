@@ -75,7 +75,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/repository/repository.custom.stub';
+        return __DIR__.'/../../../stubs/repository/repository.custom.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace): string

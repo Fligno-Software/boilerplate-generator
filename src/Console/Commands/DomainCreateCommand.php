@@ -64,7 +64,7 @@ class DomainCreateCommand extends GeneratorCommand
 
         $this->domain_name = $this->getNameInput();
 
-        $this->domain_dir = 'Domains/'.$this->domain_name;
+        $this->domain_dir = 'domains/'.$this->domain_name;
         $this->domain_namespace = ($this->package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
 
         $args = $this->getPackageArgs();
@@ -86,7 +86,7 @@ class DomainCreateCommand extends GeneratorCommand
 
         if ($success) {
             $this->done('Domain created successfully.');
-            $this->addDomainSeedersFactoriesPathsToComposerJson();
+//            $this->addDomainSeedersFactoriesPathsToComposerJson();
         } else {
             $this->failed('Domain was not created or already existing.');
         }
@@ -132,14 +132,13 @@ class DomainCreateCommand extends GeneratorCommand
     protected function addDomainSeedersFactoriesPathsToComposerJson(): void
     {
         $this->ongoing('Adding src, factories, and seeders paths to composer.json autoload');
-        $path = $this->package_dir ? Str::after(package_path($this->package_dir), base_path()) : null;
+        $path = $this->package_dir ? Str::after(package_domain_path($this->package_dir), base_path()) : null;
         $contents = getContentsFromComposerJson($path)?->toArray();
 
-        if ($contents)
-        {
+        if ($contents) {
             $namespace = $this->getPackageDomainNamespace();
             $psr4_path = Str::of($this->getPackageDomainFullPath())
-                ->after($this->package_dir ? package_path($this->package_dir) : base_path())
+                ->after($this->package_dir ? package_domain_path($this->package_dir) : base_path())
                 ->ltrim('/')
                 ->finish('/');
 
@@ -159,13 +158,11 @@ class DomainCreateCommand extends GeneratorCommand
             // set updated content to composer.json
             if (set_contents_to_composer_json($contents, $path)) {
                 $this->done('Added src, factories, and seeders paths to composer.json autoload');
-            }
-            else {
+            } else {
                 $this->failed('Failed to add src, factories, and seeders paths to composer.json autoload');
             }
-        }
-        else {
-            $this->failed('Failed to get contents from composer.json: ' . $path);
+        } else {
+            $this->failed('Failed to get contents from composer.json: '.$path);
         }
     }
 }

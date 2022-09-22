@@ -69,8 +69,8 @@ class ExtendedMakeMail extends MailMakeCommand
      */
     protected function getStub(): string
     {
-        return $this->option('markdown') !== false ? __DIR__ . '/../../../stubs/mail/mail-markdown.custom.stub' :
-            __DIR__ . '/../../../stubs/mail/mail.custom.stub';
+        return $this->option('markdown') !== false ? __DIR__.'/../../../stubs/mail/mail-markdown.custom.stub' :
+            __DIR__.'/../../../stubs/mail/mail.custom.stub';
     }
 
     /**

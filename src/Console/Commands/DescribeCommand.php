@@ -4,7 +4,6 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandMultipleTargetsTrait;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -48,6 +47,7 @@ class DescribeCommand extends Command
      * Execute the console command.
      *
      * @return int
+     *
      * @throws MissingNameArgumentException|PackageNotFoundException
      */
     public function handle(): int
@@ -61,7 +61,7 @@ class DescribeCommand extends Command
 
         // Set the table headers.
         $table->setHeaders([
-            'Site', 'Description', 'Status'
+            'Site', 'Description', 'Status',
         ]);
 
         // Create a new TableSeparator instance.
@@ -74,47 +74,47 @@ class DescribeCommand extends Command
             [
                 'https://laravel.com',
                 'The official Laravel website',
-                '<info>Online</info>'
+                '<info>Online</info>',
             ],
             [
                 'https://forge.laravel.com/',
                 'Painless PHP Servers',
-                '<info>Online</info>'
+                '<info>Online</info>',
             ],
             [
                 'https://envoyer.io/',
                 'Zero Downtime PHP Deployment',
-                '<info>Online</info>'
+                '<info>Online</info>',
             ],
-//            $separator,
-//            [new TableCell('Useful Resources', ['colspan' => 3])],
-//            $separator,
-//            [
-//                'https://laracasts.com/',
-//                'The Best Laravel and PHP Screencasts',
-//                '<info>Online</info>'
-//            ],
-//            [
-//                'https://laracasts.com/discuss',
-//                'Laracasts Web Development Forum',
-//                '<info>Online</info>'
-//            ],
-//            $separator,
-//            [new TableCell('Other', ['colspan' => 3])],
-//            $separator,
-//            [
-//                'example.org',
-//                'An example experiencing issues.',
-//                '<bg=yellow;fg=black>Experiencing Issues</>']
-//            ,
-//            ['example.org', 'An example offline site.', '<error>Offline</error>']
+            //            $separator,
+            //            [new TableCell('Useful Resources', ['colspan' => 3])],
+            //            $separator,
+            //            [
+            //                'https://laracasts.com/',
+            //                'The Best Laravel and PHP Screencasts',
+            //                '<info>Online</info>'
+            //            ],
+            //            [
+            //                'https://laracasts.com/discuss',
+            //                'Laracasts Web Development Forum',
+            //                '<info>Online</info>'
+            //            ],
+            //            $separator,
+            //            [new TableCell('Other', ['colspan' => 3])],
+            //            $separator,
+            //            [
+            //                'example.org',
+            //                'An example experiencing issues.',
+            //                '<bg=yellow;fg=black>Experiencing Issues</>']
+            //            ,
+            //            ['example.org', 'An example offline site.', '<error>Offline</error>']
         ]);
 
         // Render the table to the output.
         $table->render();
         $table->
         $table->setHeaders([
-            'Hello', 'World', 'Status'
+            'Hello', 'World', 'Status',
         ])->render();
 
         return self::SUCCESS;
@@ -131,12 +131,12 @@ class DescribeCommand extends Command
     }
 
     /**
-     * @param string|null $package
+     * @param  string|null  $package
      * @return void
      */
     public function describePackage(string $package = null): void
     {
-        $path = $package ? package_path($package) : null;
+        $path = $package ? package_domain_path($package) : null;
 
         $composerContents = getContentsFromComposerJson($path);
 

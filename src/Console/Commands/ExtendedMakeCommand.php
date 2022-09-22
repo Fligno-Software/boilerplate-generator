@@ -68,7 +68,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/command/command.custom.stub';
+        return __DIR__.'/../../../stubs/command/command.custom.stub';
     }
 
     /**

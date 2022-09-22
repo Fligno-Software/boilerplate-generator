@@ -68,7 +68,7 @@ class ExtendedMakeRule extends RuleMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../stubs/rule/rule.custom.stub';
+        return __DIR__.'/../../../stubs/rule/rule.custom.stub';
     }
 
     /**

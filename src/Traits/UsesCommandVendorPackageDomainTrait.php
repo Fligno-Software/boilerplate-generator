@@ -85,10 +85,10 @@ trait UsesCommandVendorPackageDomainTrait
     protected ?Collection $moreReplaceNamespace = null;
 
     /**
-     * @param bool $has_force
-     * @param bool $ddd_enabled
-     * @param bool $has_force_domain
-     * @param string $option_name
+     * @param  bool  $has_force
+     * @param  bool  $ddd_enabled
+     * @param  bool  $has_force_domain
+     * @param  string  $option_name
      * @return void
      */
     public function addPackageDomainOptions(
@@ -128,8 +128,8 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $isRequired
-     * @param string $argument_name
+     * @param  bool  $isRequired
+     * @param  string  $argument_name
      * @return void
      */
     public function addPackageArguments(bool $isRequired = true, string $argument_name = 'package'): void
@@ -210,7 +210,7 @@ trait UsesCommandVendorPackageDomainTrait
                 if (
                     ! $this instanceof PackageCreateCommand &&
                     ! $this instanceof PackageCloneCommand &&
-                    ! file_exists(package_path($this->package_dir))
+                    ! file_exists(package_domain_path($this->package_dir))
                 ) {
                     if ($this->isNoInteraction()) {
                         throw new PackageNotFoundException($this->package_dir);
@@ -236,7 +236,6 @@ trait UsesCommandVendorPackageDomainTrait
                 $this->package_namespace
             );
         }
-
     }
 
     /**
@@ -248,14 +247,13 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $multiple
+     * @param  bool  $multiple
      * @return string|array|null
      */
     public function getPackageFromOptions(bool $multiple = false): string|array|null
     {
         if ($this->hasPackageAsOption() &&
-            $target = trim($this->option($this->package_option_argument_name), '/'))
-        {
+            $target = trim($this->option($this->package_option_argument_name), '/')) {
             return $multiple ? explode(',', $target) : $target;
         }
 
@@ -281,9 +279,9 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $show_default_package
-     * @param bool $multiple
-     * @param array $default_choices
+     * @param  bool  $show_default_package
+     * @param  bool  $multiple
+     * @param  array  $default_choices
      * @return array|string|null
      */
     public function choosePackageFromList(bool $show_default_package = true, bool $multiple = false, array $default_choices = []): array|string|null
@@ -304,11 +302,11 @@ trait UsesCommandVendorPackageDomainTrait
                     ->map(function ($item) use ($choices) {
                         return array_search($item, $choices);
                     })
-                    ->filter(fn($item) => $item !== false)
+                    ->filter(fn ($item) => $item !== false)
                     ->implode(',');
             }
 
-            return $this->choice('Choose ' . ($multiple ? 'target' : 'targets'), $choices, $default, null, $multiple);
+            return $this->choice('Choose '.($multiple ? 'target' : 'targets'), $choices, $default, null, $multiple);
         }
 
         return null;
@@ -428,9 +426,9 @@ trait UsesCommandVendorPackageDomainTrait
     protected function getPackageDomainFullPath(): string
     {
         return collect([
-            $this->package_dir ? package_app_path($this->package_dir) : app_path(),
+            $this->package_dir ? package_domain_app_path($this->package_dir) : app_path(),
             $this->domain_dir,
-            $this->domain_dir ? 'src' : null
+            $this->domain_dir ? 'src' : null,
         ])
             ->filter()
             ->implode('/');
@@ -603,7 +601,7 @@ trait UsesCommandVendorPackageDomainTrait
                     }
 
                     if ($this->package_dir &&
-                        ($temp = package_app_path($this->package_dir)) &&
+                        ($temp = package_domain_app_path($this->package_dir)) &&
                         $temp !== $packageDomainFullPath &&
                         file_exists($temp .= '/Models')
                     ) {
@@ -658,7 +656,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function handleTestCreation($path): void
     {
-        $app_path = $this->package_dir ? package_app_path($this->package_dir) : $this->laravel['path'];
+        $app_path = $this->package_dir ? package_domain_app_path($this->package_dir) : $this->laravel['path'];
 
         $name = Str::of($path)
             ->after($app_path)
@@ -673,12 +671,12 @@ trait UsesCommandVendorPackageDomainTrait
 
         if ($this->option('pest') || boilerplateGenerator()->isPestEnabled()) {
             if ($this->package_dir) {
-                $args['--test-directory'] = Str::of(package_test_path($this->package_dir))
+                $args['--test-directory'] = Str::of(package_domain_tests_path($this->package_dir))
                     ->after(base_path())
                     ->replace('\\', '/')
                     ->ltrim('/')
                     ->jsonSerialize();
-            };
+            }
 
             // Generate Pest Test
             $this->call('pest:test', $args);
@@ -686,8 +684,7 @@ trait UsesCommandVendorPackageDomainTrait
             // Generate Dataset
             $args['name'] = $name->replace('\\', '/')->afterLast('/')->jsonSerialize();
             $this->call('pest:dataset', $args);
-        }
-        else {
+        } else {
             $this->call('bg:make:test', array_merge($args, $this->getPackageArgs()));
         }
     }
