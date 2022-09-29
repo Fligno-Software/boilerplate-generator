@@ -103,6 +103,11 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         TraitMakeCommand::class,
     ];
 
+    public function boot(): void
+    {
+        parent::boot();
+    }
+
     /**
      * Register any package services.
      *
@@ -110,8 +115,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/boilerplate-generator.php', 'boilerplate-generator');
-
         // Register the service the package provides.
         $this->app->singleton(
             'boilerplate-generator',
@@ -119,6 +122,8 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
                 return new BoilerplateGenerator();
             }
         );
+
+        parent::register();
     }
 
     /**

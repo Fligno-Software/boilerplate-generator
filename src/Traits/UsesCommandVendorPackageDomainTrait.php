@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
+use Fligno\BoilerplateGenerator\BoilerplateGenerator;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
