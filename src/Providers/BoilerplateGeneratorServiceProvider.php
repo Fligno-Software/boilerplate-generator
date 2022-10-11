@@ -1,13 +1,17 @@
 <?php
 
-namespace Fligno\BoilerplateGenerator;
+namespace Fligno\BoilerplateGenerator\Providers;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ConfigMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DescribeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DomainDisableCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DomainEnableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainListCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DomainPublishCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DtoMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
@@ -27,6 +31,9 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeNotification;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeObserver;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakePolicy;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeProvider;
+use Fligno\BoilerplateGenerator\Console\Commands\ModelCreateCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ModelListCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ProviderCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRequest;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeResource;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeRule;
@@ -43,21 +50,28 @@ use Fligno\BoilerplateGenerator\Console\Commands\PackageEnableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackagePublishCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageRemoveCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ProviderDisableCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ProviderEnableCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ProviderListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RepositoryMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\RouteMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ScopeMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ServiceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TestCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\TraitMakeCommand;
-use Fligno\StarterKit\Providers\BaseStarterKitServiceProvider as ServiceProvider;
+use Fligno\BoilerplateGenerator\Services\BoilerplateGenerator;
+use Fligno\StarterKit\Abstracts\BaseStarterKitServiceProvider as ServiceProvider;
 
+/**
+ * Class BoilerplateGeneratorServiceProvider
+ *
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
+ * @since 2022-10-10
+ */
 class BoilerplateGeneratorServiceProvider extends ServiceProvider
 {
     protected array $commands = [
-        ClassMakeCommand::class,
-        DataFactoryMakeCommand::class,
-        DtoMakeCommand::class,
-        DocsGenCommand::class,
+        // Extended
         ExtendedMakeCast::class,
         ExtendedMakeChannel::class,
         ExtendedMakeCommand::class,
@@ -71,42 +85,61 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ExtendedMakeMail::class,
         ExtendedMakeMiddleware::class,
         ExtendedMakeMigration::class,
-        ExtendedMakeModel::class,
         ExtendedMakeNotification::class,
         ExtendedMakeObserver::class,
         ExtendedMakePolicy::class,
-        ExtendedMakeProvider::class,
         ExtendedMakeRequest::class,
         ExtendedMakeResource::class,
         ExtendedMakeRule::class,
         ExtendedMakeSeeder::class,
         ExtendedMakeTest::class,
-        FacadeMakeCommand::class,
-        DomainCreateCommand::class,
-        DomainListCommand::class,
-        PackageCloneCommand::class,
-        PackageCreateCommand::class,
-        PackageDisableCommand::class,
+
+        // Additional
+        ClassMakeCommand::class,
+        ConfigMakeCommand::class,
+        DataFactoryMakeCommand::class,
         DescribeCommand::class,
-        PackageEnableCommand::class,
-        PackageListCommand::class,
-        PackagePublishCommand::class,
-        PackageRemoveCommand::class,
-        TestCommand::class,
+        DocsGenCommand::class,
+        DtoMakeCommand::class,
+        FacadeMakeCommand::class,
         GitlabCIMakeCommand::class,
         HelperMakeCommand::class,
         InterfaceMakeCommand::class,
         RepositoryMakeCommand::class,
         RouteMakeCommand::class,
-        ServiceMakeCommand::class,
         ScopeMakeCommand::class,
+        ServiceMakeCommand::class,
+        TestCommand::class,
         TraitMakeCommand::class,
-    ];
 
-    public function boot(): void
-    {
-        parent::boot();
-    }
+        // Packages
+        PackageCreateCommand::class,
+        PackageRemoveCommand::class,
+        PackageCloneCommand::class,
+        PackageEnableCommand::class,
+        PackageDisableCommand::class,
+        PackagePublishCommand::class,
+        PackageListCommand::class,
+
+        // Domains
+        DomainCreateCommand::class,
+        DomainEnableCommand::class,
+        DomainDisableCommand::class,
+        DomainListCommand::class,
+        // DomainPublishCommand::class,
+
+        // Models
+        ExtendedMakeModel::class,
+        ModelCreateCommand::class,
+        ModelListCommand::class,
+
+        // Providers
+        ExtendedMakeProvider::class,
+        ProviderCreateCommand::class,
+        ProviderEnableCommand::class,
+        ProviderDisableCommand::class,
+        ProviderListCommand::class,
+    ];
 
     /**
      * Register any package services.
@@ -136,7 +169,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes(
             [
-                __DIR__.'/../config/boilerplate-generator.php' => config_path('boilerplate-generator.php'),
+                __DIR__ . '../../config/boilerplate-generator.php' => config_path('boilerplate-generator.php'),
             ],
             'boilerplate-generator.config'
         );

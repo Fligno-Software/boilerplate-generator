@@ -48,7 +48,7 @@ class HelperMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageDomainOptions(true, true);
+        $this->addPackageDomainOptions(true);
 
         $this->addServiceOptions();
     }

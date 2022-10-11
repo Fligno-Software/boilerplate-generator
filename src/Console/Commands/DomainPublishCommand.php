@@ -8,11 +8,11 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 
 /**
- * Class DomainListCommand
+ * Class DomainPublishCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-class DomainListCommand extends Command
+class DomainPublishCommand extends Command
 {
     use UsesCommandVendorPackageDomainTrait;
 
@@ -21,14 +21,14 @@ class DomainListCommand extends Command
      *
      * @var string
      */
-    protected $name = 'bg:domain:list';
+    protected $name = 'bg:domain:publish';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'List all domains or modules within Laravel or within a specific package.';
+    protected $description = 'Publish a domain or module in Laravel or in a specific package.';
 
     /**
      * Create a new command instance.
@@ -51,15 +51,11 @@ class DomainListCommand extends Command
     {
         $this->setVendorPackageDomain(true, false);
 
+        $domains = starterKit()->getDomains($this->package_dir);
+
         $this->table(
-            [
-                'Package',
-                'Path',
-                'Is Local?',
-                'Is Enabled?',
-                'Is Loaded?',
-            ],
-            $this->getDomainRows()
+            ['Domain', 'Path'],
+            $domains?->mapWithKeys(fn ($item, $key) => [[$key, $item]]) ?? []
         );
 
         return self::SUCCESS;
@@ -73,27 +69,5 @@ class DomainListCommand extends Command
     protected function getClassType(): ?string
     {
         return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDomainRows(): array
-    {
-        $yes = '<fg=white;bg=green> YES </>';
-        $no = '<fg=white;bg=red> NO </>';
-
-        return boilerplateGenerator()
-            ->getSummarizedDomains($this->package_dir)
-            ->map(function (array $arr, string $package) use ($yes, $no) {
-                return [
-                    $package,
-                    $arr['path'],
-                    $arr['is_local'] ? $yes : $no,
-                    $arr['is_enabled'] ? $yes : $no,
-                    $arr['is_loaded'] ? $yes : $no,
-                ];
-            })
-            ->toArray();
     }
 }

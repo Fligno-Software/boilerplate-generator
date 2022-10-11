@@ -40,7 +40,7 @@ class DescribeCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageDomainOptions(has_force_domain: false);
+        $this->addPackageDomainOptions(has_force: false, has_force_domain: false);
     }
 
     /**

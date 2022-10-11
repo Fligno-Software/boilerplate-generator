@@ -2,7 +2,6 @@
 
 namespace Fligno\BoilerplateGenerator\Traits;
 
-use Fligno\BoilerplateGenerator\BoilerplateGenerator;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
@@ -71,7 +70,7 @@ trait UsesCommandVendorPackageDomainTrait
     /**
      * @var string
      */
-    protected string $default_package = 'root';
+    protected string $default_package = 'none';
 
     /**
      * @var bool
@@ -87,14 +86,12 @@ trait UsesCommandVendorPackageDomainTrait
 
     /**
      * @param  bool  $has_force
-     * @param  bool  $ddd_enabled
      * @param  bool  $has_force_domain
      * @param  string  $option_name
      * @return void
      */
     public function addPackageDomainOptions(
         bool $has_force = false,
-        bool $ddd_enabled = true,
         bool $has_force_domain = true,
         string $option_name = 'package',
     ): void {
@@ -110,9 +107,7 @@ trait UsesCommandVendorPackageDomainTrait
         );
 
         // Add domain options
-        if ($ddd_enabled) {
-            $this->addDomainOptions($has_force_domain);
-        }
+        $this->addDomainOptions($has_force_domain);
 
         if ($has_force && $this->getDefinition()->hasOption('force') === false) {
             $this->getDefinition()->addOption(
@@ -182,7 +177,7 @@ trait UsesCommandVendorPackageDomainTrait
         $this->setAuthorInformationOnStub();
 
         if ($this->isGeneratorSubclass()) {
-            $this->note($this->type.($this->getNameInput() ? ': '.$this->getNameInput() : null), 'ONGOING');
+            $this->ongoing('Creating '.$this->type.($this->getNameInput() ? ': '.$this->getNameInput() : null));
         }
 
         $package = $this->getPackageFromOptions() ?: $this->getPackageFromArguments();
@@ -307,7 +302,7 @@ trait UsesCommandVendorPackageDomainTrait
                     ->implode(',');
             }
 
-            return $this->choice('Choose '.($multiple ? 'target' : 'targets'), $choices, $default, null, $multiple);
+            return $this->choice('Choose target '.($multiple ? 'packages' : 'package'), $choices, $default, null, $multiple);
         }
 
         return null;
@@ -426,13 +421,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function getPackageDomainFullPath(): string
     {
-        return collect([
-            $this->package_dir ? package_domain_app_path($this->package_dir) : app_path(),
-            $this->domain_dir,
-            $this->domain_dir ? 'src' : null,
-        ])
-            ->filter()
-            ->implode('/');
+        return package_domain_app_path($this->package_dir, $this->domain_dir);
     }
 
     /**

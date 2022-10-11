@@ -23,7 +23,9 @@
         "pestphp/pest": "^1.22",
         "pestphp/pest-plugin-laravel": "^1.2",
         "milroyfraser/pest-plugin-gwt": "^0.0.3",
-        "pestphp/pest-plugin-faker": "^1.0"
+        "pestphp/pest-plugin-faker": "^1.0",
+        "knuckleswtf/scribe": "^4.0",
+        "laravel/pint": "^1.2"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
@@ -43,7 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Fligno\\BoilerplateGenerator\\BoilerplateGeneratorServiceProvider"
+                "Fligno\\BoilerplateGenerator\\Providers\\BoilerplateGeneratorServiceProvider"
             ],
             "aliases": {
                 "BoilerplateGenerator": "Fligno\\BoilerplateGenerator\\Facades\\BoilerplateGenerator"

@@ -11,13 +11,11 @@ use Illuminate\Foundation\Console\ProviderMakeCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ExtendedMakeProvider
+ * Class ProviderListCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
- *
- * @since  2021-11-19
  */
-class ExtendedMakeProvider extends ProviderMakeCommand
+class ProviderListCommand extends ProviderMakeCommand
 {
     use UsesCommandVendorPackageDomainTrait;
 
@@ -26,14 +24,14 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      *
      * @var string
      */
-    protected $name = 'bg:make:provider';
+    protected $name = 'bg:provider:list';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new service provider class in Laravel or in a specific package.';
+    protected $description = 'List all service providers in Laravel or in a specific package.';
 
     /**
      * Create a new controller creator command instance.
@@ -57,7 +55,9 @@ class ExtendedMakeProvider extends ProviderMakeCommand
         );
     }
 
-    /***** OVERRIDDEN FUNCTIONS *****/
+    /*****
+     * OVERRIDDEN FUNCTIONS
+     *****/
 
     /**
      * @return bool|null
@@ -68,9 +68,16 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     {
         $this->setVendorPackageDomain();
 
+
+        // for packages and domains
+        if ($this->package_dir) {
+
+        }
         $handled = parent::handle();
 
-        return $handled && starterKit()->clearCache() ? self::SUCCESS: self::FAILURE;
+//        starterKit()->clearCache()
+
+        return self::SUCCESS;
     }
 
     /**

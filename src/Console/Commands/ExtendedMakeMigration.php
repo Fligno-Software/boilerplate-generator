@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\ExtendedMigrationCreator;
+use Fligno\BoilerplateGenerator\Services\ExtendedMigrationCreator;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 

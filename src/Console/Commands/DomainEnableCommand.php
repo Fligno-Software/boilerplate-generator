@@ -11,11 +11,11 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * Class DomainCreateCommand
+ * Class DomainEnableCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-class DomainCreateCommand extends GeneratorCommand
+class DomainEnableCommand extends GeneratorCommand
 {
     use UsesCommandVendorPackageDomainTrait;
 
@@ -24,14 +24,14 @@ class DomainCreateCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'bg:domain:create';
+    protected $name = 'bg:domain:enable';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a domain or module in Laravel or in a specific package.';
+    protected $description = 'Enable a domain or module in Laravel or in a specific package.';
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class DomainCreateCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageDomainOptions(has_force_domain: false);
+        $this->addPackageDomainOptions(has_force: false, has_force_domain: false);
     }
 
     /**
@@ -64,38 +64,25 @@ class DomainCreateCommand extends GeneratorCommand
 
         $this->domain_name = $this->getNameInput();
 
+        $this->domain_dir = 'domains/'.$this->domain_name;
+        $this->domain_namespace = ($this->package_namespace ?: 'App\\').'Domains\\'.$this->domain_name.'\\';
+
+        $args = $this->getPackageArgs();
+        $args['--domain'] = $this->domain_name;
+        $args['--force-domain'] = true;
+        $args['--no-interaction'] = true;
+
         $success = false;
 
-        $routeArgs = $this->getPackageArgs();
-        $routeArgs['--force-domain'] = true;
-        $routeArgs['--no-interaction'] = true;
-
-        // Explode the domain name to create subdomains
-        $domains = explode('.', $this->domain_name);
-
-        for ($i = 0; $i < count($domains); $i++) {
-            // Create parent domain first before subdomains
-            $slice = array_slice($domains, 0, $i+1);
-            $routeArgs['--domain'] = implode('.', $slice);
-
-            $providerArgs = $routeArgs;
-
-            // Create routes
-            collect(['web', 'api'])->each(
-                function ($value) use ($routeArgs, &$success) {
-                    $routeArgs['name'] = $value;
-                    $routeArgs['--api'] = $value !== 'web';
-                    if ($this->call('bg:make:route', $routeArgs) === self::SUCCESS) {
-                        $success = true;
-                    }
+        collect(['web', 'api'])->each(
+            function ($value) use ($args, &$success) {
+                $args['name'] = $value;
+                $args['--api'] = $value !== 'web';
+                if ($this->call('bg:make:route', $args) === self::SUCCESS) {
+                    $success = true;
                 }
-            );
-
-            // Create Provider
-            $providerArgs['name'] = implode('', $slice);
-            $providerArgs['--starter-kit'] = true;
-            $this->call('bg:make:provider', $providerArgs);
-        }
+            }
+        );
 
         if ($success) {
             $this->done('Domain created successfully.');
@@ -104,7 +91,7 @@ class DomainCreateCommand extends GeneratorCommand
             $this->failed('Domain was not created or already existing.');
         }
 
-        return $success && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
+        return $success && (starterKit()->clearCache() ? self::SUCCESS : self::FAILURE);
     }
 
     /**
@@ -137,18 +124,6 @@ class DomainCreateCommand extends GeneratorCommand
         return [
             ['name', InputArgument::REQUIRED, 'Domain or module name'],
         ];
-    }
-
-    /**
-     * Get the validated desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getValidatedNameInput(): string
-    {
-        $name = trim($this->argument('name'));
-
-        return trim(preg_replace('/[^a-z\d]+/i', '.', $name), '.');
     }
 
     /**

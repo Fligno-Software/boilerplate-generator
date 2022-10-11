@@ -38,18 +38,11 @@ trait UsesCommandDomainTrait
     protected string $default_domain = 'none';
 
     /**
-     * @var bool
-     */
-    protected bool $ddd_enabled = true;
-
-    /**
      * @param  bool  $has_force_domain
      * @return void
      */
     public function addDomainOptions(bool $has_force_domain = true): void
     {
-        $this->ddd_enabled = true;
-
         $this->getDefinition()->addOption(
             new InputOption(
                 'domain',
@@ -106,8 +99,8 @@ trait UsesCommandDomainTrait
         string $package_namespace = null
     ): void {
         if ($this->domain_name = $this->getDomainFromOptions($package_option_name, $package_dir)) {
-            $this->domain_dir = 'domains/'.$this->domain_name;
-            $this->domain_namespace = ($package_namespace).'Domains\\'.$this->domain_name.'\\';
+            $this->domain_dir = ltrim(domain_decode($this->domain_name), '/');
+            $this->domain_namespace = ($package_namespace).ltrim(domain_decode($this->domain_name, true), '\\');
         }
     }
 
@@ -118,49 +111,60 @@ trait UsesCommandDomainTrait
      */
     public function getDomainFromOptions(string $package_option_name, string $package_dir = null): bool|array|string|null
     {
-        $domain = $this->hasOption('domain') ? trim($this->option('domain')) : null;
+        $domain = $this->hasOption('domain') ? $this->option('domain') : null;
 
         if ($domain === $this->default_domain) {
             return null;
         }
 
-        $domain = $domain ? Str::studly($domain) : null;
-        $domain_choices = starterKit()->getDomains($package_dir)?->keys();
+        $domain = $domain ? $this->qualifyDomainName($domain): null;
+        $domain_choices = boilerplateGenerator()->getSummarizedDomains(package: $package_dir);
 
-        if ($this->ddd_enabled && ($domain || $domain_choices)) {
-            // domain IS NOT NULL and domain list IS NOT EMPTY
-            if ($domain && $domain_choices) {
-                if (($this instanceof RouteMakeCommand && $this->shouldCreateDomain()) || $domain_choices->contains($domain)) {
-                    return $domain;
-                }
-
-                $this->failed('Domain not found: '.$domain);
-                $choice = $this->choice(
-                    'Choose what to do',
-                    [
-                        'create new domain',
-                        'choose from domains',
-                    ],
-                    0
-                );
-
-                if ($choice === 'create new domain') {
-                    return $this->createNewDomain($domain, $package_option_name, $domain_choices, $package_dir);
-                }
-
-                return $this->chooseFromDomains($domain_choices, $package_dir);
+        // If domain is not null and domain choices is not empty...
+        if ($domain && $domain_choices->count()) {
+            if (($this instanceof RouteMakeCommand && $this->shouldCreateDomain()) || $domain_choices->has($domain)) {
+                return $domain;
             }
 
-            // domain IS NULL and domain list IS NOT EMPTY
-            if ($domain_choices) {
-                return $this->chooseFromDomains($domain_choices, $package_dir);
+            $this->failed('Domain not found: '.$domain);
+            $choice = $this->choice(
+                'Choose what to do',
+                [
+                    'create new domain',
+                    'choose from domains',
+                ],
+                0
+            );
+
+            if ($choice === 'create new domain') {
+                return $this->createNewDomain($domain, $package_option_name, $domain_choices, $package_dir);
             }
 
-            // domain IS NOT NULL and domain list IS EMPTY
+            return $this->chooseFromDomains($domain_choices);
+        }
+
+        // If domain is null but domain choices is not empty...
+        else if ($domain_choices->count()) {
+            return $this->chooseFromDomains($domain_choices);
+        }
+
+        else if ($domain) {
+            // If domain is not null but domain choices is empty...
             return $this->createNewDomain($domain, $package_option_name, $domain_choices, $package_dir);
         }
 
         return null;
+    }
+
+    /**
+     * Qualify Domain Name
+     *
+     * @param string|null $name
+     * @return string|null
+     */
+    protected function qualifyDomainName(string|null $name): string|null
+    {
+        return trim(preg_replace('/[^a-z\d]+/i', '.', $name), '.');
     }
 
     /**
@@ -185,11 +189,12 @@ trait UsesCommandDomainTrait
             if (! $this instanceof RouteMakeCommand && ! ($domain_choices?->contains($domain))) {
                 $args = array_merge(
                     [
+                        'name' => $domain,
+                        '--no-interaction' => true,
                         '--'.$package_option_name => $package_dir,
                     ],
                     $this->getDomainArgs()
                 );
-                $args['name'] = $domain;
                 $this->call('bg:domain:create', $args);
             }
 
@@ -203,15 +208,14 @@ trait UsesCommandDomainTrait
 
     /**
      * @param  Collection|null  $domain_choices
-     * @param  string|null  $package_dir
      * @return string|null
      */
-    public function chooseFromDomains(Collection $domain_choices = null, string $package_dir = null): string|null
+    public function chooseFromDomains(Collection $domain_choices = null): string|null
     {
         if ($domain_choices &&
             ($domain = $this->choice(
                 'Choose a domain',
-                $domain_choices->prepend($this->default_domain)->toArray(),
+                $domain_choices->keys()->prepend($this->default_domain)->toArray(),
                 0
             ))
         ) {

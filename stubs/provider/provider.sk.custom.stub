@@ -1,0 +1,59 @@
+<?php
+
+namespace {{ namespace }};
+
+use Fligno\StarterKit\Abstracts\BaseStarterKitServiceProvider as ServiceProvider;
+
+/**
+ * Class {{ class }}
+ *
+ * @author {{ authorName }} <{{ authorEmail }}>
+ */
+class {{ class }} extends ServiceProvider
+{
+    /**
+     * @var array
+     */
+    protected array $commands = [];
+
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        parent::boot();
+    }
+
+    /**
+     * Register any package services.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        parent::register();
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides(): array
+    {
+        return [];
+    }
+
+    /**
+     * Console-specific booting.
+     *
+     * @return void
+     */
+    protected function bootForConsole(): void
+    {
+        // Registering package commands.
+        $this->commands($this->commands);
+    }
+}
