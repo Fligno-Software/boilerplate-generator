@@ -134,7 +134,7 @@ class DomainDisableCommand extends DomainEnableCommand
 
         if ($success_psr4) {
             $this->done('Successfully removed PSR-4 from composer.json');
-            $this->composer->dumpAutoloads();
+            $this->composerRequireOrDump();
         } else {
             $this->failed('Failed to remove PSR-4 to composer.json');
         }

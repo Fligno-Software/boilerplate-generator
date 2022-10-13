@@ -132,6 +132,7 @@ class DomainEnableCommand extends Command
             if ($this->package_dir) {
                 if (add_provider_to_composer_json($value, $path)) {
                     $this->done('Added provider to composer.json: ' . $value);
+
                 }
                 else {
                     $this->warning('Failed to add provider to composer.json: ' . $value);
@@ -149,7 +150,7 @@ class DomainEnableCommand extends Command
 
         if ($success_psr4) {
             $this->done('Successfully added PSR-4 to composer.json');
-            $this->composer->dumpAutoloads();
+            $this->composerRequireOrDump();
         } else {
             $this->failed('Failed to add PSR-4 to composer.json');
         }
@@ -239,5 +240,41 @@ class DomainEnableCommand extends Command
         }
 
         return $contents;
+    }
+
+    /**
+     * Packages need to be installed again if there are changes related to its service providers.
+     *
+     * @return bool
+     */
+    protected function composerRequireOrDump(): bool
+    {
+        if ($this->package_dir) {
+            $process = make_process(['composer', 'require', $this->package_dir]);
+
+            $this->ongoing('Reinstalling ' . $this->package_dir . ' to reflect changes');
+
+            $process->start();
+
+            $process->wait();
+
+            if ($process->isSuccessful()) {
+                $this->done('Reinstalled ' . $this->package_dir);
+                return true;
+            }
+
+            $this->failed('Failed to reinstall ' . $this->package_dir);
+            return false;
+        }
+
+        $this->ongoing('Executing composer dump');
+
+        if ($this->composer->dumpAutoloads() == self::SUCCESS) {
+            $this->done('Successfully executed composer dump');
+            return true;
+        }
+
+        $this->failed('Composer dump encountered an error');
+        return false;
     }
 }
