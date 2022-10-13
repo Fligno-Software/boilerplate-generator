@@ -7,8 +7,10 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Composer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
+use function Pest\Laravel\artisan;
 
 /**
  * Class DomainCreateCommand
@@ -41,14 +43,13 @@ class DomainCreateCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param  Filesystem  $files
-     * @return void
+     * @param Filesystem $files
      */
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);
 
-        $this->addPackageDomainOptions(has_force_domain: false);
+        $this->addPackageDomainOptions(has_domain_choices: false, has_force_domain: false);
     }
 
     /**
@@ -66,40 +67,59 @@ class DomainCreateCommand extends GeneratorCommand
 
         $success = false;
 
-        $routeArgs = $this->getPackageArgs();
-        $routeArgs['--force-domain'] = true;
-        $routeArgs['--no-interaction'] = true;
+        // Prepare Create Route Arguments & Options
+        $route_args = $this->getPackageArgs();
+        $route_args['--no-interaction'] = true;
+        $route_args['--force-domain'] = true;
+
+        // Prepare Enable Domain Arguments & Options
+        $domain_args = $route_args;
+        unset($domain_args['--force-domain'], $domain_args['--domain']);
 
         // Explode the domain name to create subdomains
         $domains = explode('.', $this->domain_name);
 
+        // Initialize encoded domain
+        $encoded_domain = null;
+
         for ($i = 0; $i < count($domains); $i++) {
             // Create parent domain first before subdomains
             $slice = array_slice($domains, 0, $i+1);
-            $routeArgs['--domain'] = implode('.', $slice);
+            $encoded_domain = implode('.', $slice);
 
-            $providerArgs = $routeArgs;
+            if (! boilerplateGenerator()->isDomainLocal($encoded_domain, $this->package_dir)) {
+                $route_args['--domain'] = $encoded_domain;
 
-            // Create routes
-            collect(['web', 'api'])->each(
-                function ($value) use ($routeArgs, &$success) {
-                    $routeArgs['name'] = $value;
-                    $routeArgs['--api'] = $value !== 'web';
-                    if ($this->call('bg:make:route', $routeArgs) === self::SUCCESS) {
-                        $success = true;
+                // Prepare Create Provider Arguments & Options
+                $provider_args = $route_args;
+
+                // Create routes
+                collect(['web', 'api'])->each(
+                    function ($value) use ($route_args, &$success) {
+                        $route_args['name'] = $value;
+                        $route_args['--api'] = $value !== 'web';
+                        if ($this->call('bg:make:route', $route_args) == self::SUCCESS) {
+                            $success = true;
+                        }
                     }
-                }
-            );
+                );
 
-            // Create Provider
-            $providerArgs['name'] = implode('', $slice);
-            $providerArgs['--starter-kit'] = true;
-            $this->call('bg:make:provider', $providerArgs);
+                // Create Provider
+                $provider_args['name'] = implode('', $slice);
+                $provider_args['--starter-kit'] = true;
+                $provider_args['--skip'] = true;
+                $this->call('bg:make:provider', $provider_args);
+            }
         }
 
         if ($success) {
             $this->done('Domain created successfully.');
-//            $this->addDomainSeedersFactoriesPathsToComposerJson();
+
+            // Enable Domain
+            if ($encoded_domain) {
+                $domain_args['name'] = $encoded_domain;
+                $this->call('bg:domain:enable', $domain_args);
+            }
         } else {
             $this->failed('Domain was not created or already existing.');
         }
@@ -149,45 +169,5 @@ class DomainCreateCommand extends GeneratorCommand
         $name = trim($this->argument('name'));
 
         return trim(preg_replace('/[^a-z\d]+/i', '.', $name), '.');
-    }
-
-    /**
-     * @return void
-     */
-    protected function addDomainSeedersFactoriesPathsToComposerJson(): void
-    {
-        $this->ongoing('Adding src, factories, and seeders paths to composer.json autoload');
-        $path = $this->package_dir ? Str::after(package_domain_path($this->package_dir), base_path()) : null;
-        $contents = getContentsFromComposerJson($path)?->toArray();
-
-        if ($contents) {
-            $namespace = $this->getPackageDomainNamespace();
-            $psr4_path = Str::of($this->getPackageDomainFullPath())
-                ->after($this->package_dir ? package_domain_path($this->package_dir) : base_path())
-                ->ltrim('/')
-                ->finish('/');
-
-            $app_src_path = $psr4_path->jsonSerialize();
-            $factories_path = $psr4_path->replace(['/app', '/src'], '/database/factories')->jsonSerialize();
-            $seeders_path = $psr4_path->replace(['/app', '/src'], '/database/seeders')->jsonSerialize();
-
-            // load src or app folder
-            $contents['autoload']['psr-4'][$namespace] = $app_src_path;
-
-            // load factories folder
-            $contents['autoload']['psr-4'][$namespace.'Database\\Factories\\'] = $factories_path;
-
-            // load seeders folder
-            $contents['autoload']['psr-4'][$namespace.'Database\\Seeders\\'] = $seeders_path;
-
-            // set updated content to composer.json
-            if (set_contents_to_composer_json($contents, $path)) {
-                $this->done('Added src, factories, and seeders paths to composer.json autoload');
-            } else {
-                $this->failed('Failed to add src, factories, and seeders paths to composer.json autoload');
-            }
-        } else {
-            $this->failed('Failed to get contents from composer.json: '.$path);
-        }
     }
 }

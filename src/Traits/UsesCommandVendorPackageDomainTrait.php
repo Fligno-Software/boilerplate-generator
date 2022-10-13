@@ -85,13 +85,15 @@ trait UsesCommandVendorPackageDomainTrait
     protected ?Collection $moreReplaceNamespace = null;
 
     /**
-     * @param  bool  $has_force
-     * @param  bool  $has_force_domain
-     * @param  string  $option_name
+     * @param bool $has_force
+     * @param bool $has_domain_choices
+     * @param bool $has_force_domain
+     * @param string $option_name
      * @return void
      */
     public function addPackageDomainOptions(
         bool $has_force = false,
+        bool $has_domain_choices = true,
         bool $has_force_domain = true,
         string $option_name = 'package',
     ): void {
@@ -107,7 +109,9 @@ trait UsesCommandVendorPackageDomainTrait
         );
 
         // Add domain options
-        $this->addDomainOptions($has_force_domain);
+        if ($has_domain_choices) {
+            $this->addDomainOptions($has_force_domain);
+        }
 
         if ($has_force && $this->getDefinition()->hasOption('force') === false) {
             $this->getDefinition()->addOption(
@@ -177,7 +181,8 @@ trait UsesCommandVendorPackageDomainTrait
         $this->setAuthorInformationOnStub();
 
         if ($this->isGeneratorSubclass()) {
-            $this->ongoing('Creating '.$this->type.($this->getNameInput() ? ': '.$this->getNameInput() : null));
+            $name = $this->getNameInput();
+            $this->ongoing('Creating '.$this->type.($name ? ': '.$name : null));
         }
 
         $package = $this->getPackageFromOptions() ?: $this->getPackageFromArguments();

@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Services;
 
+use Fligno\StarterKit\Services\StarterKit;
 use Fligno\StarterKit\Traits\HasTaggableCacheTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -272,14 +273,19 @@ class BoilerplateGenerator
      */
     public function getEnabledDomains(string $package = null): Collection
     {
-        $packages = $this->getSummarizedPackages();
-        if ($packages->has($package) &&
-            ($path = $packages->get($package)['path']) &&
-            $namespaces = get_contents_from_composer_json($path, 'autoload.psr-4')
-        ) {
-            return $namespaces->mapWithKeys(function ($path, $namespace) {
-                return [domain_encode($namespace) => $path];
-            })->keys()->filter();
+        if ($package) {
+            $res =  $this->getSummarizedPackages()->get($package);
+            $path = $res ? $res['path'] : null;
+        }
+        else {
+            $path = starterKit()->getRoot()->get('path');
+        }
+
+        if ($path && $namespaces = get_contents_from_composer_json($path, 'autoload.psr-4')) {
+            return $namespaces->mapWithKeys(function ($directory, $namespace) {
+                return [domain_encode($namespace) => $directory];
+            })
+                ->filter(fn($value, $key) => $key);
         }
 
         return collect();
@@ -326,16 +332,34 @@ class BoilerplateGenerator
      * @param bool|null $is_local
      * @param bool|null $is_enabled
      * @param bool|null $is_loaded
-     * @param bool $with_root
+     * @param bool $with_providers
      * @return Collection
      */
-    public function getSummarizedDomains(string $package = null, string|array $filter = null, bool $is_local = null, bool $is_enabled = null, bool $is_loaded = null, bool $with_root = false): Collection
+    public function getSummarizedDomains(
+        string $package = null,
+        string|array $filter = null,
+        bool $is_local = null,
+        bool $is_enabled = null,
+        bool $is_loaded = null,
+        bool $with_providers = false,
+    ): Collection
     {
         $local = $this->getLocalDomains($package);
         $enabled = $this->getEnabledDomains($package);
         $loaded = $this->getLoadedDomains($package);
 
-        return $this->getMergedCollections($local, $loaded, $enabled, $filter, $is_local, $is_enabled, $is_loaded);
+        $result = $this->getMergedCollections($local, $loaded, $enabled, $filter, $is_local, $is_enabled, $is_loaded);
+
+        if ($with_providers) {
+            return $result->map(function ($value, $key) {
+                $path = guess_file_or_directory_path($value['path'], StarterKit::PROVIDERS_DIR);
+                $providers = collect_classes_from_path($path, 'ServiceProvider');
+                $value['providers'] = $providers;
+                return $value;
+            });
+        }
+
+        return $result;
     }
 
     /**
@@ -348,6 +372,55 @@ class BoilerplateGenerator
     public function isDomainExisting(string $domain, string $package = null): bool
     {
         return $this->getSummarizedDomains($package)->has($domain);
+    }
+
+    /**
+     * @param string $domain
+     * @param string|null $package
+     * @param bool|null $is_local
+     * @param bool|null $is_enabled
+     * @param bool|null $is_loaded
+     * @param bool $with_providers
+     * @return Collection
+     */
+    public function getParentDomains(
+        string $domain,
+        string $package = null,
+        bool $is_local = null,
+        bool $is_enabled = null,
+        bool $is_loaded = null,
+        bool $with_providers = false
+    ): Collection {
+        $domains = explode('.', $domain);
+        $parents = [];
+        for ($i = 0; $i < count($domains)-1; $i++) {
+            // Create parent domain first before subdomains
+            $slice = array_slice($domains, 0, $i + 1);
+            $parents[] = implode('.', $slice);
+        }
+        return $this->getSummarizedDomains(package: $package, is_local: $is_local, is_enabled: $is_enabled, is_loaded: $is_loaded, with_providers: $with_providers)
+            ->only($parents);
+    }
+
+    /**
+     * @param string $domain
+     * @param string|null $package
+     * @param bool|null $is_local
+     * @param bool|null $is_enabled
+     * @param bool|null $is_loaded
+     * @param bool $with_providers
+     * @return Collection
+     */
+    public function getSubDomains(
+        string $domain,
+        string $package = null,
+        bool $is_local = null,
+        bool $is_enabled = null,
+        bool $is_loaded = null,
+        bool $with_providers = false
+    ): Collection {
+        return $this->getSummarizedDomains(package: $package, is_local: $is_local, is_enabled: $is_enabled, is_loaded: $is_loaded, with_providers: $with_providers)
+            ->filter(fn($value, $key) => Str::startsWith($key, $domain . '.'));
     }
 
     /**

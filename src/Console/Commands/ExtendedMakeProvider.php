@@ -46,15 +46,6 @@ class ExtendedMakeProvider extends ProviderMakeCommand
         parent::__construct($files);
 
         $this->addPackageDomainOptions();
-
-        $this->getDefinition()->addOption(
-            new InputOption(
-                '--starter-kit',
-                null,
-                InputOption::VALUE_NONE,
-                'Extend the BaseStarterKitServiceProvider.'
-            )
-        );
     }
 
     /***** OVERRIDDEN FUNCTIONS *****/
@@ -69,6 +60,18 @@ class ExtendedMakeProvider extends ProviderMakeCommand
         $this->setVendorPackageDomain();
 
         $handled = parent::handle();
+
+        // If success, enable the domain
+        if (is_null($handled) && ! $this->skipEnable()) {
+            $class = $this->qualifyClass($this->getNameInput());
+
+            if ($this->package_dir) {
+                add_provider_to_composer_json($class, package_domain_path($this->package_dir));
+            }
+            else {
+                add_provider_to_app_config($class);
+            }
+        }
 
         return $handled && starterKit()->clearCache() ? self::SUCCESS: self::FAILURE;
     }
@@ -93,5 +96,24 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     protected function getClassType(): ?string
     {
         return 'Provider';
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOptions(): array
+    {
+        return [
+            ['starter-kit', null, InputOption::VALUE_NONE, 'Extend the BaseStarterKitServiceProvider.'],
+            ['skip', null, InputOption::VALUE_NONE, 'Skip enabling the provider.'],
+        ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function skipEnable(): bool
+    {
+        return $this->option('skip');
     }
 }

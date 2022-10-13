@@ -4,21 +4,16 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
-use Illuminate\Console\GeneratorCommand;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Support\Collection;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class DomainDisableCommand
  *
  * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
-class DomainDisableCommand extends GeneratorCommand
+class DomainDisableCommand extends DomainEnableCommand
 {
-    use UsesCommandVendorPackageDomainTrait;
-
     /**
      * The name and signature of the console command.
      *
@@ -34,110 +29,136 @@ class DomainDisableCommand extends GeneratorCommand
     protected $description = 'Disable a domain or module in Laravel or in a specific package.';
 
     /**
-     * @var string
-     */
-    protected $type = 'Domain';
-
-    /**
-     * Create a new controller creator command instance.
-     *
-     * @param  Filesystem  $files
-     * @return void
-     */
-    public function __construct(Filesystem $files)
-    {
-        parent::__construct($files);
-
-        $this->addPackageDomainOptions(has_force: false, has_force_domain: false);
-    }
-
-    /**
      * Execute the console command.
      *
-     * @return bool|null
+     * @return bool
      *
-     * @throws MissingNameArgumentException|PackageNotFoundException
+     * @throws MissingNameArgumentException
+     * @throws PackageNotFoundException
      */
-    public function handle(): bool|null
+    public function handle(): bool
     {
-        $this->setVendorPackageDomain();
+        $this->setVendorPackageDomain(show_domain_choices: false);
+
+        $this->domain_name = $this->getNameInput();
+
+        $domain = boilerplateGenerator()
+            ->getSummarizedDomains(package: $this->package_dir, with_providers: true)
+            ->get($this->domain_name);
+
+        // Fail if not found or already enabled
+        if (! $domain) {
+            $this->failed('Domain not found: ' . $this->domain_name);
+            return self::FAILURE;
+        }
+        else if (! $domain['is_enabled']) {
+            $this->failed('Domain is already disable: ' . $this->domain_name);
+            return self::FAILURE;
+        }
+
+        $psr4_contents = [];
+        $providers_contents = collect();
+
+        $path = $this->getComposerJsonPath();
+
+        $add_to_psr4_contents = function ($domain) use (&$psr4_contents, $path) {
+            $psr4_contents = array_merge($psr4_contents, $this->createPsr4ContentsForComposerJson($path, $domain));
+        };
+
+        $add_to_provider_contents = function (Collection $collection) use (&$providers_contents) {
+            $providers_contents = $providers_contents->merge($collection);
+        };
+
+        $enabled_children = boilerplateGenerator()
+            ->getSubDomains($this->domain_name, $this->package_dir, with_providers: true)
+            ->where('is_enabled', true);
+
+        if ($enabled_children->count()) {
+            $this->warning('One or more child domains are still enabled: ' . $enabled_children->keys()->implode(', '));
+            if ($this->confirm('Disable child domains?', true)) {
+                $enabled_children->each(function ($value, $key) use ($add_to_psr4_contents, $add_to_provider_contents) {
+                    // Add the parent domain to PSR-4 contents
+                    $add_to_psr4_contents($key);
+                    $add_to_provider_contents($value['providers']);
+                });
+            }
+            else{
+                $this->failed('Failed to disable domain as one or more child domains are not still enabled.');
+                return self::FAILURE;
+            }
+        }
+
+        // Add the actual domain to PSR-4 contents
+        $add_to_psr4_contents($this->domain_name);
+        $add_to_provider_contents($domain['providers']);
+
+        if ($this->includeParentDomains()) {
+            $enabled_parents = boilerplateGenerator()
+                ->getParentDomains($this->domain_name, $this->package_dir, with_providers: true)
+                ->where('is_enabled', true);
+
+            if ($enabled_parents->count()) {
+                $enabled_parents->each(function ($value, $key) use ($add_to_provider_contents, $add_to_psr4_contents) {
+                    // Add the child domain to PSR-4 contents
+                    $add_to_psr4_contents($key);
+                    $add_to_provider_contents($value['providers']);
+                });
+            }
+        }
+
+        $this->ongoing('Removing PSR-4 contents from composer.json');
+
+        // Remove PSR-4 contents to composer.json
+        $success_psr4 = remove_contents_from_composer_json('autoload.psr-4', $psr4_contents, $path);
+
+        // Remove providers to composer.json or app.php
+        $providers_contents->each(function ($value) use ($path) {
+            if ($this->package_dir) {
+                if (remove_provider_from_composer_json($value, $path)) {
+                    $this->done('Removed provider from composer.json: ' . $value);
+                }
+                else {
+                    $this->warning('Failed to remove provider from composer.json: ' . $value);
+                }
+            }
+            else {
+                if (remove_provider_from_app_config($value)) {
+                    $this->done('Removed provider from app.php config: ' . $value);
+                }
+                else {
+                    $this->warning('Failed to remove provider from app.php config: ' . $value);
+                }
+            }
+        });
 
 
+        if ($success_psr4) {
+            $this->done('Successfully removed PSR-4 from composer.json');
+            $this->composer->dumpAutoloads();
+        } else {
+            $this->failed('Failed to remove PSR-4 to composer.json');
+        }
 
-        $success = true;
-
-        return $success && (starterKit()->clearCache() ? self::SUCCESS : self::FAILURE);
+        return $success_psr4 && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
     }
 
     /**
-     * Class type to append on filename.
-     *
-     * @return string|null
-     */
-    protected function getClassType(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Get the stub file for the generator.
-     *
-     * @return string|null
-     */
-    protected function getStub(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Get the console command arguments.
+     * Get the console command options.
      *
      * @return array
      */
-    protected function getArguments(): array
+    protected function getOptions(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'Domain or module name'],
+            [ 'with-parents', 'p', InputOption::VALUE_NONE, 'Include parent domains.'],
         ];
     }
 
     /**
-     * @return void
+     * @return bool
      */
-    protected function addDomainSeedersFactoriesPathsToComposerJson(): void
+    public function includeParentDomains(): bool
     {
-        $this->ongoing('Adding src, factories, and seeders paths to composer.json autoload');
-        $path = $this->package_dir ? Str::after(package_domain_path($this->package_dir), base_path()) : null;
-        $contents = getContentsFromComposerJson($path)?->toArray();
-
-        if ($contents) {
-            $namespace = $this->getPackageDomainNamespace();
-            $psr4_path = Str::of($this->getPackageDomainFullPath())
-                ->after($this->package_dir ? package_domain_path($this->package_dir) : base_path())
-                ->ltrim('/')
-                ->finish('/');
-
-            $app_src_path = $psr4_path->jsonSerialize();
-            $factories_path = $psr4_path->replace(['/app', '/src'], '/database/factories')->jsonSerialize();
-            $seeders_path = $psr4_path->replace(['/app', '/src'], '/database/seeders')->jsonSerialize();
-
-            // load src or app folder
-            $contents['autoload']['psr-4'][$namespace] = $app_src_path;
-
-            // load factories folder
-            $contents['autoload']['psr-4'][$namespace.'Database\\Factories\\'] = $factories_path;
-
-            // load seeders folder
-            $contents['autoload']['psr-4'][$namespace.'Database\\Seeders\\'] = $seeders_path;
-
-            // set updated content to composer.json
-            if (set_contents_to_composer_json($contents, $path)) {
-                $this->done('Added src, factories, and seeders paths to composer.json autoload');
-            } else {
-                $this->failed('Failed to add src, factories, and seeders paths to composer.json autoload');
-            }
-        } else {
-            $this->failed('Failed to get contents from composer.json: '.$path);
-        }
+        return $this->option('with-parents');
     }
 }
