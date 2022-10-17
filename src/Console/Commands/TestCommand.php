@@ -172,7 +172,11 @@ class TestCommand extends Command
             return '<green-bold>'.$str.'</green-bold>';
         };
 
-        $message = '🧪 Running tests for ';
+        $get_blinking_icon = function (string $str) {
+            return $this->areIconsBlinking() ? '<blink-icon>'.$str.'</blink-icon>' : $str;
+        };
+
+        $message = $get_blinking_icon('🧪') . ' Running tests for ';
         if ($package && $domain) {
             $message .= $get_green_bold_text($domain) . ' domain of ' . $get_green_bold_text($package) . ' 📦';
         }
@@ -190,7 +194,7 @@ class TestCommand extends Command
         $this->ongoing($message);
 
         if (($package || $domain) && ! $tests_path) {
-            $this->warning('🔍 Tests folder is not found.');
+            $this->warning($get_blinking_icon('🔍') . ' Tests folder is not found.');
             $this->newLine();
             return;
         }
@@ -210,7 +214,7 @@ class TestCommand extends Command
 
         $command = collect(['php artisan test', $tests_path, $test_directory])->merge($this->collectRawOptions())->filter()->implode(' ');
 
-        $this->ongoing('🏃 Running command️: '.$get_green_bold_text($command), false);
+        $this->ongoing($get_blinking_icon('🏃') . ' Running command️: '.$get_green_bold_text($command), false);
 
         exec($command);
     }
@@ -226,7 +230,7 @@ class TestCommand extends Command
         return $argv->filter(function ($arg) {
             $arg = Str::of($arg)->before('=');
 
-            return $arg->startsWith('--') && ! $arg->contains(['all', 'packages', 'package', 'test-directory', 'domain']);
+            return $arg->startsWith('--') && ! $arg->contains(['all', 'packages', 'package', 'test-directory', 'domain', 'blink']);
         });
     }
 
@@ -238,6 +242,9 @@ class TestCommand extends Command
         return [
             [
                 'domain', null, InputOption::VALUE_REQUIRED, 'Apply to a domain and its subdomains.',
+            ],
+            [
+                'blink', null, InputOption::VALUE_NONE, 'Enable blinking icons.',
             ]
         ];
     }
@@ -248,5 +255,13 @@ class TestCommand extends Command
     public function getDomainFromOption(): ?string
     {
         return $this->option('domain');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function areIconsBlinking(): ?string
+    {
+        return $this->option('blink');
     }
 }
