@@ -48,7 +48,7 @@ trait UsesCommandDomainTrait
                 'domain',
                 'd',
                 InputOption::VALUE_OPTIONAL,
-                'Domain or module name'
+                'Domain or module name.'
             )
         );
 
@@ -117,7 +117,7 @@ trait UsesCommandDomainTrait
             return null;
         }
 
-        $domain = $domain ? $this->qualifyDomainName($domain): null;
+        $domain = $domain ? $this->qualifyDomainName($domain) : null;
         $domain_choices = boilerplateGenerator()->getSummarizedDomains(package: $package_dir);
 
         // If domain is not null and domain choices is not empty...
@@ -144,11 +144,9 @@ trait UsesCommandDomainTrait
         }
 
         // If domain is null but domain choices is not empty...
-        else if ($domain_choices->count()) {
+        elseif ($domain_choices->count()) {
             return $this->chooseFromDomains($domain_choices);
-        }
-
-        else if ($domain) {
+        } elseif ($domain) {
             // If domain is not null but domain choices is empty...
             return $this->createNewDomain($domain, $package_option_name, $domain_choices, $package_dir);
         }
@@ -159,7 +157,7 @@ trait UsesCommandDomainTrait
     /**
      * Qualify Domain Name
      *
-     * @param string|null $name
+     * @param  string|null  $name
      * @return string|null
      */
     protected function qualifyDomainName(string|null $name): string|null

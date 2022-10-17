@@ -64,11 +64,12 @@ class DomainEnableCommand extends Command
 
         // Fail if not found or already enabled
         if (! $domain) {
-            $this->failed('Domain not found: ' . $this->domain_name);
+            $this->failed('Domain not found: '.$this->domain_name);
+
             return self::FAILURE;
-        }
-        else if ($domain['is_enabled']) {
-            $this->failed('Domain is already enabled: ' . $this->domain_name);
+        } elseif ($domain['is_enabled']) {
+            $this->failed('Domain is already enabled: '.$this->domain_name);
+
             return self::FAILURE;
         }
 
@@ -90,15 +91,14 @@ class DomainEnableCommand extends Command
             ->where('is_enabled', false);
 
         if ($disabled_parents->count()) {
-            $this->warning('One or more parent domains are not enabled yet: ' . $disabled_parents->keys()->implode(', '));
+            $this->warning('One or more parent domains are not enabled yet: '.$disabled_parents->keys()->implode(', '));
             if ($this->confirm('Enable parent domains?', true)) {
                 $disabled_parents->each(function ($value, $key) use ($add_to_psr4_contents, $add_to_provider_contents) {
                     // Add the parent domain to PSR-4 contents
                     $add_to_psr4_contents($key);
                     $add_to_provider_contents($value['providers']);
                 });
-            }
-            else{
+            } else {
                 $this->failed('Failed to enable domain as one or more parent domains are not yet enabled.');
             }
         }
@@ -112,7 +112,7 @@ class DomainEnableCommand extends Command
             ->where('is_enabled', false);
 
         if ($disabled_children->count()) {
-            $this->warning('Found one or more child domains that are not enabled yet: ' . $disabled_children->keys()->implode(', '));
+            $this->warning('Found one or more child domains that are not enabled yet: '.$disabled_children->keys()->implode(', '));
             if ($this->confirm('Enable child domains?', $this->includeChildDomains())) {
                 $disabled_children->each(function ($value, $key) use ($add_to_provider_contents, $add_to_psr4_contents) {
                     // Add the child domain to PSR-4 contents
@@ -131,19 +131,15 @@ class DomainEnableCommand extends Command
         $providers_contents->each(function ($value) use ($path) {
             if ($this->package_dir) {
                 if (add_provider_to_composer_json($value, $path)) {
-                    $this->done('Added provider to composer.json: ' . $value);
-
+                    $this->done('Added provider to composer.json: '.$value);
+                } else {
+                    $this->warning('Failed to add provider to composer.json: '.$value);
                 }
-                else {
-                    $this->warning('Failed to add provider to composer.json: ' . $value);
-                }
-            }
-            else {
+            } else {
                 if (add_provider_to_app_config($value)) {
-                    $this->done('Added provider to app.php config: ' . $value);
-                }
-                else {
-                    $this->warning('Failed to add provider to app.php config: ' . $value);
+                    $this->done('Added provider to app.php config: '.$value);
+                } else {
+                    $this->warning('Failed to add provider to app.php config: '.$value);
                 }
             }
         });
@@ -188,7 +184,7 @@ class DomainEnableCommand extends Command
     protected function getOptions(): array
     {
         return [
-            [ 'with-children', null, InputOption::VALUE_NONE, 'Include child domains to enable.'],
+            ['with-children', null, InputOption::VALUE_NONE, 'Include child domains to enable.'],
         ];
     }
 
@@ -221,8 +217,8 @@ class DomainEnableCommand extends Command
     }
 
     /**
-     * @param string|null $path
-     * @param string $domain
+     * @param  string|null  $path
+     * @param  string  $domain
      * @return array
      */
     protected function createPsr4ContentsForComposerJson(string|null $path, string $domain): array
@@ -252,18 +248,20 @@ class DomainEnableCommand extends Command
         if ($this->package_dir) {
             $process = make_process(['composer', 'require', $this->package_dir]);
 
-            $this->ongoing('Reinstalling ' . $this->package_dir . ' to reflect changes');
+            $this->ongoing('Reinstalling '.$this->package_dir.' to reflect changes');
 
             $process->start();
 
             $process->wait();
 
             if ($process->isSuccessful()) {
-                $this->done('Reinstalled ' . $this->package_dir);
+                $this->done('Reinstalled '.$this->package_dir);
+
                 return true;
             }
 
-            $this->failed('Failed to reinstall ' . $this->package_dir);
+            $this->failed('Failed to reinstall '.$this->package_dir);
+
             return false;
         }
 
@@ -271,10 +269,12 @@ class DomainEnableCommand extends Command
 
         if ($this->composer->dumpAutoloads() == self::SUCCESS) {
             $this->done('Successfully executed composer dump');
+
             return true;
         }
 
         $this->failed('Composer dump encountered an error');
+
         return false;
     }
 }

@@ -32,4 +32,17 @@ trait UsesCommandMultipleTargetsTrait
             new InputOption($this->package_option_argument_name, null, InputOption::VALUE_OPTIONAL, 'Apply to  (e.g., `vendor-name/package-name`).'),
         ]);
     }
+
+    /**
+     * @return bool
+     */
+    protected function isRootAndPackages(): bool
+    {
+        return $this->option('all');
+    }
+
+    protected function isPackagesOnly(): bool
+    {
+        return $this->option('packages');
+    }
 }

@@ -37,9 +37,9 @@ if (! function_exists('boilerplate_generator')) {
 
 if (! function_exists('package_domain_path')) {
     /**
-     * @param string|null $package
-     * @param string|null $domain
-     * @param bool $parse_domain
+     * @param  string|null  $package
+     * @param  string|null  $domain
+     * @param  bool  $parse_domain
      * @return string
      */
     function package_domain_path(string $package = null, string $domain = null, bool $parse_domain = false): string
@@ -393,10 +393,10 @@ if (! function_exists('setContentsToComposerJson')) {
 
 if (! function_exists('add_contents_to_composer_json')) {
     /**
-     * @param string $dot_notation_key
-     * @param Collection|array|string|bool $contents
-     * @param string|null $path
-     * @param bool $merge_if_array
+     * @param  string  $dot_notation_key
+     * @param  Collection|array|string|bool  $contents
+     * @param  string|null  $path
+     * @param  bool  $merge_if_array
      * @return bool
      */
     function add_contents_to_composer_json(
@@ -425,7 +425,7 @@ if (! function_exists('add_contents_to_composer_json')) {
         Arr::set($new_contents, $dot_notation_key, $contents);
 
         // Check whether to update composer.json or not
-        if ($old_contents != $new_contents ){
+        if ($old_contents != $new_contents) {
             return set_contents_to_composer_json($new_contents, $path);
         }
 
@@ -435,9 +435,9 @@ if (! function_exists('add_contents_to_composer_json')) {
 
 if (! function_exists('remove_contents_from_composer_json')) {
     /**
-     * @param string $dot_notation_key
-     * @param Collection|array|string|bool $contents
-     * @param string|null $path
+     * @param  string  $dot_notation_key
+     * @param  Collection|array|string|bool  $contents
+     * @param  string|null  $path
      * @return bool
      */
     function remove_contents_from_composer_json(
@@ -465,14 +465,13 @@ if (! function_exists('remove_contents_from_composer_json')) {
                 }
 
                 Arr::set($new_contents, $dot_notation_key, $old_value);
-            }
-            else {
+            } else {
                 Arr::forget($new_contents, $dot_notation_key);
             }
         }
 
         // Check whether to update composer.json or not
-        if ($old_contents != $new_contents ){
+        if ($old_contents != $new_contents) {
             return set_contents_to_composer_json($new_contents, $path);
         }
 

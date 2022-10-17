@@ -67,13 +67,12 @@ class ExtendedMakeProvider extends ProviderMakeCommand
 
             if ($this->package_dir) {
                 add_provider_to_composer_json($class, package_domain_path($this->package_dir));
-            }
-            else {
+            } else {
                 add_provider_to_app_config($class);
             }
         }
 
-        return $handled && starterKit()->clearCache() ? self::SUCCESS: self::FAILURE;
+        return $handled && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
     }
 
     /**

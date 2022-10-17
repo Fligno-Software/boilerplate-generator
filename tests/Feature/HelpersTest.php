@@ -558,13 +558,13 @@ it('can add and remove contents in composer.json', function (string $key, mixed 
     'array value' => [
         'key' => 'extra.test.array',
         'value' => [
-            'Hello World'
+            'Hello World',
         ],
     ],
     'associative array value' => [
         'key' => 'extra.test.associative',
         'value' => [
-            'hello' => 'world'
+            'hello' => 'world',
         ],
-    ]
+    ],
 ])->group('composer');

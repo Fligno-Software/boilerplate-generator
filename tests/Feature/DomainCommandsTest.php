@@ -1,9 +1,6 @@
 <?php
 
-use function Pest\Faker\faker;
 use function Pest\Laravel\artisan;
-use function PHPUnit\Framework\assertFileExists;
-use function PHPUnit\Framework\assertTrue;
 
 uses()->group('domains');
 
@@ -24,6 +21,6 @@ it('can create new domain', function (string $domain) {
 })->with([
     'a 2-level domain' => [
         'domain' => 'Hello.World',
-    ]
+    ],
 ])
     ->group('create')->only();

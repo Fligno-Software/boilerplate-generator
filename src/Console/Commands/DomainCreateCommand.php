@@ -7,10 +7,7 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Composer;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
-use function Pest\Laravel\artisan;
 
 /**
  * Class DomainCreateCommand
@@ -43,7 +40,7 @@ class DomainCreateCommand extends GeneratorCommand
     /**
      * Create a new controller creator command instance.
      *
-     * @param Filesystem $files
+     * @param  Filesystem  $files
      */
     public function __construct(Filesystem $files)
     {
@@ -84,7 +81,7 @@ class DomainCreateCommand extends GeneratorCommand
 
         for ($i = 0; $i < count($domains); $i++) {
             // Create parent domain first before subdomains
-            $slice = array_slice($domains, 0, $i+1);
+            $slice = array_slice($domains, 0, $i + 1);
             $encoded_domain = implode('.', $slice);
 
             if (! boilerplateGenerator()->isDomainLocal($encoded_domain, $this->package_dir)) {

@@ -43,7 +43,7 @@ class ExtendedMigrationCreator extends MigrationCreator
     protected function getPackageDomainFullPath(string $defaultPath): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_domain_app_path($this->package_dir) . 'ExtendedMigrationCreator.php/' .$this->domain_dir :
+            return ($this->package_dir ? package_domain_app_path($this->package_dir).'ExtendedMigrationCreator.php/'.$this->domain_dir :
                     app_path($this->domain_dir)).'/database/migrations';
         }
 

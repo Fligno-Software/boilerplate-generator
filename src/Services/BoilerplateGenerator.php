@@ -167,13 +167,14 @@ class BoilerplateGenerator
     }
 
     /**
+     * @param bool $with_details
      * @return Collection
      */
-    public function getLoadedPackages(): Collection
+    public function getLoadedPackages(bool $with_details = false): Collection
     {
-        return starterKit()->getPackages()->map(function ($package, $vendor_name) {
-            return collect($package)->mapWithKeys(function ($details, $package_name) use ($vendor_name) {
-                return [$vendor_name.'/'.$package_name => $details['path']];
+        return starterKit()->getPackages()->map(function ($package, $vendor_name) use ($with_details) {
+            return collect($package)->mapWithKeys(function ($details, $package_name) use ($vendor_name, $with_details) {
+                return [$vendor_name.'/'.$package_name => $with_details ? $details : $details['path']];
             });
         })
             ->collapse();
@@ -189,16 +190,16 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param  string|array|null  $filter
-     * @param  bool|null  $is_local
-     * @param  bool|null  $is_enabled
-     * @param  bool|null  $is_loaded
-     * @param  bool  $with_root
+     * @param string|array|null $filter
+     * @param bool|null $is_local
+     * @param bool|null $is_enabled
+     * @param bool|null $is_loaded
+     * @param bool $with_details
      * @return Collection
      */
-    public function getSummarizedPackages(string|array $filter = null, bool $is_local = null, bool $is_enabled = null, bool $is_loaded = null, bool $with_root = false): Collection
+    public function getSummarizedPackages(string|array $filter = null, bool $is_local = null, bool $is_enabled = null, bool $is_loaded = null, bool $with_details = false): Collection
     {
-        $loaded = $this->getLoadedPackages();
+        $loaded = $this->getLoadedPackages($with_details);
         $local = $this->getLocalPackages();
         $enabled = $this->getEnabledPackages();
 
@@ -206,13 +207,12 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param  string  $package
-     * @param  bool  $with_root
+     * @param string $package
      * @return bool
      */
-    public function isPackageExisting(string $package, bool $with_root = false): bool
+    public function isPackageExisting(string $package): bool
     {
-        return $this->getSummarizedPackages(with_root: $with_root)->has($package);
+        return $this->getSummarizedPackages()->has($package);
     }
 
     /***** DOMAIN RELATED *****/
@@ -220,9 +220,9 @@ class BoilerplateGenerator
     /**
      * Get all local domains of Laravel or a specific package.
      *
-     * @param string|null $package
-     * @param string|null $domain
-     * @param Collection|null $domains
+     * @param  string|null  $package
+     * @param  string|null  $domain
+     * @param  Collection|null  $domains
      * @return Collection
      */
     public function getLocalDomains(string $package = null, string $domain = null, Collection &$domains = null): Collection
@@ -256,8 +256,8 @@ class BoilerplateGenerator
     /**
      * Check whether a specific domain is local or not.
      *
-     * @param string $domain
-     * @param string|null $package
+     * @param  string  $domain
+     * @param  string|null  $package
      * @return bool
      */
     public function isDomainLocal(string $domain, string $package = null): bool
@@ -268,16 +268,15 @@ class BoilerplateGenerator
     /**
      * Get all enabled domains of Laravel or a specific package.
      *
-     * @param string|null $package
+     * @param  string|null  $package
      * @return Collection
      */
     public function getEnabledDomains(string $package = null): Collection
     {
         if ($package) {
-            $res =  $this->getSummarizedPackages()->get($package);
+            $res = $this->getSummarizedPackages()->get($package);
             $path = $res ? $res['path'] : null;
-        }
-        else {
+        } else {
             $path = starterKit()->getRoot()->get('path');
         }
 
@@ -285,7 +284,7 @@ class BoilerplateGenerator
             return $namespaces->mapWithKeys(function ($directory, $namespace) {
                 return [domain_encode($namespace) => $directory];
             })
-                ->filter(fn($value, $key) => $key);
+                ->filter(fn ($value, $key) => $key);
         }
 
         return collect();
@@ -294,8 +293,8 @@ class BoilerplateGenerator
     /**
      * Check whether a specific domain is enabled or not.
      *
-     * @param string $domain
-     * @param string|null $package
+     * @param  string  $domain
+     * @param  string|null  $package
      * @return bool
      */
     public function isDomainEnabled(string $domain, string $package = null): bool
@@ -306,7 +305,7 @@ class BoilerplateGenerator
     /**
      * Get all loaded domains of Laravel or a specific package.
      *
-     * @param string|null $package
+     * @param  string|null  $package
      * @return Collection
      */
     public function getLoadedDomains(string $package = null): Collection
@@ -317,8 +316,8 @@ class BoilerplateGenerator
     /**
      * Check whether a specific domain is loaded or not.
      *
-     * @param string $domain
-     * @param string|null $package
+     * @param  string  $domain
+     * @param  string|null  $package
      * @return bool
      */
     public function isDomainLoaded(string $domain, string $package = null): bool
@@ -327,12 +326,12 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param string|null $package
-     * @param string|array|null $filter
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
-     * @param bool $with_providers
+     * @param  string|null  $package
+     * @param  string|array|null  $filter
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
+     * @param  bool  $with_providers
      * @return Collection
      */
     public function getSummarizedDomains(
@@ -342,8 +341,7 @@ class BoilerplateGenerator
         bool $is_enabled = null,
         bool $is_loaded = null,
         bool $with_providers = false,
-    ): Collection
-    {
+    ): Collection {
         $local = $this->getLocalDomains($package);
         $enabled = $this->getEnabledDomains($package);
         $loaded = $this->getLoadedDomains($package);
@@ -355,6 +353,7 @@ class BoilerplateGenerator
                 $path = guess_file_or_directory_path($value['path'], StarterKit::PROVIDERS_DIR);
                 $providers = collect_classes_from_path($path, 'ServiceProvider');
                 $value['providers'] = $providers;
+
                 return $value;
             });
         }
@@ -365,8 +364,8 @@ class BoilerplateGenerator
     /**
      * Check whether a domain exists or not.
      *
-     * @param string $domain
-     * @param string|null $package
+     * @param  string  $domain
+     * @param  string|null  $package
      * @return bool
      */
     public function isDomainExisting(string $domain, string $package = null): bool
@@ -381,6 +380,7 @@ class BoilerplateGenerator
      * @param bool|null $is_enabled
      * @param bool|null $is_loaded
      * @param bool $with_providers
+     * @param bool $with_child
      * @return Collection
      */
     public function getParentDomains(
@@ -389,15 +389,17 @@ class BoilerplateGenerator
         bool $is_local = null,
         bool $is_enabled = null,
         bool $is_loaded = null,
-        bool $with_providers = false
+        bool $with_providers = false,
+        bool $with_child = false,
     ): Collection {
         $domains = explode('.', $domain);
         $parents = [];
-        for ($i = 0; $i < count($domains)-1; $i++) {
+        for ($i = 0; $i < count($domains) - ($with_child ? 0 : 1); $i++) {
             // Create parent domain first before subdomains
             $slice = array_slice($domains, 0, $i + 1);
             $parents[] = implode('.', $slice);
         }
+
         return $this->getSummarizedDomains(package: $package, is_local: $is_local, is_enabled: $is_enabled, is_loaded: $is_loaded, with_providers: $with_providers)
             ->only($parents);
     }
@@ -409,6 +411,7 @@ class BoilerplateGenerator
      * @param bool|null $is_enabled
      * @param bool|null $is_loaded
      * @param bool $with_providers
+     * @param bool $with_parent
      * @return Collection
      */
     public function getSubDomains(
@@ -417,20 +420,21 @@ class BoilerplateGenerator
         bool $is_local = null,
         bool $is_enabled = null,
         bool $is_loaded = null,
-        bool $with_providers = false
+        bool $with_providers = false,
+        bool $with_parent = false,
     ): Collection {
         return $this->getSummarizedDomains(package: $package, is_local: $is_local, is_enabled: $is_enabled, is_loaded: $is_loaded, with_providers: $with_providers)
-            ->filter(fn($value, $key) => Str::startsWith($key, $domain . '.'));
+            ->filter(fn ($value, $key) => Str::startsWith($key, $domain.'.') || ($with_parent && $key === $domain));
     }
 
     /**
-     * @param Collection $local
-     * @param Collection $loaded
-     * @param Collection $enabled
-     * @param array|string|null $filter
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
+     * @param  Collection  $local
+     * @param  Collection  $loaded
+     * @param  Collection  $enabled
+     * @param  array|string|null  $filter
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
      * @return Collection|mixed
      */
     private function getMergedCollections(
@@ -443,20 +447,29 @@ class BoilerplateGenerator
         ?bool $is_loaded
     ): mixed {
         return $local->merge($loaded)->map(function ($path, $package) use ($local, $loaded, $enabled) {
-            return [
-                'path' => $path,
+            $details = [
                 'is_local' => $local->has($package),
                 'is_enabled' => $enabled->has($package),
                 'is_loaded' => $loaded->has($package),
             ];
+
+            // Path in this case might be all details about the package
+            if (is_string($path)) {
+                $details['path'] = $path;
+            }
+            else {
+                $details = array_merge($details, $path);
+            }
+
+            return $details;
         })
             ->when($filter,
-                fn(Collection $collection) => $collection->filter(fn($value, $key) => Str::contains($key, $filter)))
-            ->when(!is_null($is_local),
-                fn(Collection $collection) => $collection->filter(fn(array $arr) => $arr['is_local'] == $is_local))
-            ->when(!is_null($is_enabled),
-                fn(Collection $collection) => $collection->filter(fn(array $arr) => $arr['is_enabled'] == $is_enabled))
-            ->when(!is_null($is_loaded),
-                fn(Collection $collection) => $collection->filter(fn(array $arr) => $arr['is_loaded'] == $is_loaded));
+                fn (Collection $collection) => $collection->filter(fn ($value, $key) => Str::contains($key, $filter)))
+            ->when(! is_null($is_local),
+                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_local'] == $is_local))
+            ->when(! is_null($is_enabled),
+                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_enabled'] == $is_enabled))
+            ->when(! is_null($is_loaded),
+                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_loaded'] == $is_loaded));
     }
 }

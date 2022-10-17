@@ -48,11 +48,12 @@ class DomainDisableCommand extends DomainEnableCommand
 
         // Fail if not found or already enabled
         if (! $domain) {
-            $this->failed('Domain not found: ' . $this->domain_name);
+            $this->failed('Domain not found: '.$this->domain_name);
+
             return self::FAILURE;
-        }
-        else if (! $domain['is_enabled']) {
-            $this->failed('Domain is already disable: ' . $this->domain_name);
+        } elseif (! $domain['is_enabled']) {
+            $this->failed('Domain is already disable: '.$this->domain_name);
+
             return self::FAILURE;
         }
 
@@ -74,16 +75,16 @@ class DomainDisableCommand extends DomainEnableCommand
             ->where('is_enabled', true);
 
         if ($enabled_children->count()) {
-            $this->warning('One or more child domains are still enabled: ' . $enabled_children->keys()->implode(', '));
+            $this->warning('One or more child domains are still enabled: '.$enabled_children->keys()->implode(', '));
             if ($this->confirm('Disable child domains?', true)) {
                 $enabled_children->each(function ($value, $key) use ($add_to_psr4_contents, $add_to_provider_contents) {
                     // Add the parent domain to PSR-4 contents
                     $add_to_psr4_contents($key);
                     $add_to_provider_contents($value['providers']);
                 });
-            }
-            else{
+            } else {
                 $this->failed('Failed to disable domain as one or more child domains are not still enabled.');
+
                 return self::FAILURE;
             }
         }
@@ -115,22 +116,18 @@ class DomainDisableCommand extends DomainEnableCommand
         $providers_contents->each(function ($value) use ($path) {
             if ($this->package_dir) {
                 if (remove_provider_from_composer_json($value, $path)) {
-                    $this->done('Removed provider from composer.json: ' . $value);
+                    $this->done('Removed provider from composer.json: '.$value);
+                } else {
+                    $this->warning('Failed to remove provider from composer.json: '.$value);
                 }
-                else {
-                    $this->warning('Failed to remove provider from composer.json: ' . $value);
-                }
-            }
-            else {
+            } else {
                 if (remove_provider_from_app_config($value)) {
-                    $this->done('Removed provider from app.php config: ' . $value);
-                }
-                else {
-                    $this->warning('Failed to remove provider from app.php config: ' . $value);
+                    $this->done('Removed provider from app.php config: '.$value);
+                } else {
+                    $this->warning('Failed to remove provider from app.php config: '.$value);
                 }
             }
         });
-
 
         if ($success_psr4) {
             $this->done('Successfully removed PSR-4 from composer.json');
@@ -150,7 +147,7 @@ class DomainDisableCommand extends DomainEnableCommand
     protected function getOptions(): array
     {
         return [
-            [ 'with-parents', 'p', InputOption::VALUE_NONE, 'Include parent domains.'],
+            ['with-parents', 'p', InputOption::VALUE_NONE, 'Include parent domains.'],
         ];
     }
 
