@@ -97,12 +97,12 @@ class TestCommand extends Command
 
         $add_to_test_paths = function (array $domains, string $package = null) use ($domain_search, $dot_notation, &$test_paths) {
             collect($domains)
-                ->when($domain_search, fn ($collection) => $collection->filter(fn($details, $domain) => $domain == $domain_search || Str::contains($domain, $domain_search)))
+                ->when($domain_search, fn ($collection) => $collection->filter(fn ($details, $domain) => $domain == $domain_search || Str::contains($domain, $domain_search)))
                 ->each(function ($details, $domain) use ($package, $dot_notation, &$test_paths) {
                     $test_paths[] = [
                         'package' => $package,
                         'domain' => $domain,
-                        'tests_path' => Arr::get($details, $dot_notation)
+                        'tests_path' => Arr::get($details, $dot_notation),
                     ];
                 });
         };
@@ -113,7 +113,7 @@ class TestCommand extends Command
                 $test_paths[] = [
                     'package' => null,
                     'domain' => null,
-                    'tests_path' => null
+                    'tests_path' => null,
                 ];
             }
             $domains = starterKit()->getRoot()->get('domains', []);
@@ -128,7 +128,7 @@ class TestCommand extends Command
                     if (! $domain_search) {
                         $test_paths[] = [
                             'package' => $package,
-                            'tests_path' => Arr::get($details, $dot_notation)
+                            'tests_path' => Arr::get($details, $dot_notation),
                         ];
                     }
                     $domains = Arr::get($details, 'domains', []);
@@ -136,18 +136,24 @@ class TestCommand extends Command
                 });
         }
 
-        $progress = $this->output->createProgressBar(count($test_paths));
+        if ($count = count($test_paths)) {
+            $progress = $this->output->createProgressBar($count);
 
-        // function to run the tests
-        foreach ($test_paths as $test_path) {
-            $progress->advance();
-            $progress->display();
-            $this->executeTests(...$test_path);
+            // function to run the tests
+            foreach ($test_paths as $test_path) {
+                $progress->advance();
+                $progress->display();
+                $this->executeTests(...$test_path);
+            }
+
+            $progress->finish();
+
+            return self::SUCCESS;
         }
 
-        $progress->finish();
+        $this->failed('No tests found.');
 
-        return 0;
+        return self::FAILURE;
     }
 
     /**
@@ -161,9 +167,9 @@ class TestCommand extends Command
     }
 
     /**
-     * @param string|null $package
-     * @param string|null $domain
-     * @param string|null $tests_path
+     * @param  string|null  $package
+     * @param  string|null  $domain
+     * @param  string|null  $tests_path
      * @return void
      */
     public function executeTests(string $package = null, string $domain = null, string $tests_path = null): void
@@ -176,17 +182,14 @@ class TestCommand extends Command
             return $this->areIconsBlinking() ? '<blink-icon>'.$str.'</blink-icon>' : $str;
         };
 
-        $message = $get_blinking_icon('🧪') . ' Running tests for ';
+        $message = $get_blinking_icon('🧪').' Running tests for ';
         if ($package && $domain) {
-            $message .= $get_green_bold_text($domain) . ' domain of ' . $get_green_bold_text($package) . ' 📦';
-        }
-        elseif ($package) {
-            $message .= $get_green_bold_text($package) . ' 📦';
-        }
-        elseif ($domain) {
-            $message .= $get_green_bold_text($domain) . ' domain of ' . $get_green_bold_text('Laravel');
-        }
-        else {
+            $message .= $get_green_bold_text($domain).' domain of '.$get_green_bold_text($package).' 📦';
+        } elseif ($package) {
+            $message .= $get_green_bold_text($package).' 📦';
+        } elseif ($domain) {
+            $message .= $get_green_bold_text($domain).' domain of '.$get_green_bold_text('Laravel');
+        } else {
             $message .= $get_green_bold_text('Laravel');
         }
 
@@ -194,8 +197,9 @@ class TestCommand extends Command
         $this->ongoing($message);
 
         if (($package || $domain) && ! $tests_path) {
-            $this->warning($get_blinking_icon('🔍') . ' Tests folder is not found.');
+            $this->warning($get_blinking_icon('🔍').' Tests folder is not found.');
             $this->newLine();
+
             return;
         }
 
@@ -214,7 +218,7 @@ class TestCommand extends Command
 
         $command = collect(['php artisan test', $tests_path, $test_directory])->merge($this->collectRawOptions())->filter()->implode(' ');
 
-        $this->ongoing($get_blinking_icon('🏃') . ' Running command️: '.$get_green_bold_text($command), false);
+        $this->ongoing($get_blinking_icon('🏃').' Running command️: '.$get_green_bold_text($command), false);
 
         exec($command);
     }
@@ -245,7 +249,7 @@ class TestCommand extends Command
             ],
             [
                 'blink', null, InputOption::VALUE_NONE, 'Enable blinking icons.',
-            ]
+            ],
         ];
     }
 

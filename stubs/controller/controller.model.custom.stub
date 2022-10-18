@@ -47,7 +47,7 @@ class {{ class }} extends Controller
         if ($request->has('full_data') === TRUE) {
             $data = $data->get();
         } else {
-            $data = $data->simplePaginate($request->get('per_page', 15));
+            $data = $data->fastPaginate($request->get('per_page', 15));
         }
 
         event(new {{ indexEvent }}($data));

@@ -4,6 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandFilterTrait;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\Command;
 
@@ -14,7 +15,7 @@ use Illuminate\Console\Command;
  */
 class DomainListCommand extends Command
 {
-    use UsesCommandVendorPackageDomainTrait;
+    use UsesCommandVendorPackageDomainTrait, UsesCommandFilterTrait;
 
     /**
      * The name and signature of the console command.
@@ -39,7 +40,9 @@ class DomainListCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageDomainOptions();
+        $this->addPackageDomainOptions(has_domain_choices: false);
+
+        $this->addFilterOptions('domain');
     }
 
     /**
@@ -50,6 +53,12 @@ class DomainListCommand extends Command
     public function handle(): int
     {
         $this->setVendorPackageDomain(true, false);
+
+        // Handle is_local, is_enabled, is_loaded, and filter
+        $is_local = $this->validateBoolean('local');
+        $is_enabled = $this->validateBoolean('enabled');
+        $is_loaded = $this->validateBoolean('loaded');
+        $filter = $this->option('filter');
 
         $this->table(
             [
@@ -83,8 +92,14 @@ class DomainListCommand extends Command
         $yes = '<fg=white;bg=green> YES </>';
         $no = '<fg=white;bg=red> NO </>';
 
+        // Handle is_local, is_enabled, is_loaded, and filter
+        $is_local = $this->validateBoolean('local');
+        $is_enabled = $this->validateBoolean('enabled');
+        $is_loaded = $this->validateBoolean('loaded');
+        $filter = $this->option('filter');
+
         return boilerplateGenerator()
-            ->getSummarizedDomains($this->package_dir)
+            ->getSummarizedDomains($this->package_dir, $filter, $is_local, $is_enabled, $is_loaded)
             ->map(function (array $arr, string $package) use ($yes, $no) {
                 return [
                     $package,

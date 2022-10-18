@@ -100,6 +100,7 @@ class DomainEnableCommand extends Command
                 });
             } else {
                 $this->failed('Failed to enable domain as one or more parent domains are not yet enabled.');
+
                 return self::FAILURE;
             }
         }

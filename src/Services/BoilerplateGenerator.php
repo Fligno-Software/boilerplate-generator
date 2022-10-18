@@ -167,7 +167,7 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param bool $with_details
+     * @param  bool  $with_details
      * @return Collection
      */
     public function getLoadedPackages(bool $with_details = false): Collection
@@ -190,11 +190,11 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param string|array|null $filter
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
-     * @param bool $with_details
+     * @param  string|array|null  $filter
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
+     * @param  bool  $with_details
      * @return Collection
      */
     public function getSummarizedPackages(string|array $filter = null, bool $is_local = null, bool $is_enabled = null, bool $is_loaded = null, bool $with_details = false): Collection
@@ -207,7 +207,7 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param string $package
+     * @param  string  $package
      * @return bool
      */
     public function isPackageExisting(string $package): bool
@@ -374,13 +374,13 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param string $domain
-     * @param string|null $package
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
-     * @param bool $with_providers
-     * @param bool $with_child
+     * @param  string  $domain
+     * @param  string|null  $package
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
+     * @param  bool  $with_providers
+     * @param  bool  $with_child
      * @return Collection
      */
     public function getParentDomains(
@@ -405,13 +405,13 @@ class BoilerplateGenerator
     }
 
     /**
-     * @param string $domain
-     * @param string|null $package
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
-     * @param bool $with_providers
-     * @param bool $with_parent
+     * @param  string  $domain
+     * @param  string|null  $package
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
+     * @param  bool  $with_providers
+     * @param  bool  $with_parent
      * @return Collection
      */
     public function getSubDomains(
@@ -456,8 +456,7 @@ class BoilerplateGenerator
             // Path in this case might be all details about the package
             if (is_string($path)) {
                 $details['path'] = $path;
-            }
-            else {
+            } else {
                 $details = array_merge($details, $path);
             }
 

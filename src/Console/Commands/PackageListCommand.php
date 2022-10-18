@@ -2,8 +2,8 @@
 
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
+use Fligno\BoilerplateGenerator\Traits\UsesCommandFilterTrait;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class PackageListCommand
@@ -14,6 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class PackageListCommand extends Command
 {
+    use UsesCommandFilterTrait;
+
     /**
      * The name of the console command.
      *
@@ -32,34 +34,7 @@ class PackageListCommand extends Command
     {
         parent::__construct();
 
-        $this->getDefinition()->addOptions(
-            [
-                new InputOption(
-                    'local',
-                    null,
-                    InputOption::VALUE_REQUIRED,
-                    'Whether or not to show local packages.'
-                ),
-                new InputOption(
-                    'enabled',
-                    null,
-                    InputOption::VALUE_REQUIRED,
-                    'Whether or not to show enabled packages.'
-                ),
-                new InputOption(
-                    'loaded',
-                    null,
-                    InputOption::VALUE_REQUIRED,
-                    'Whether or not to show loaded packages.'
-                ),
-                new InputOption(
-                    'filter',
-                    null,
-                    InputOption::VALUE_REQUIRED,
-                    'Filter package by name.'
-                ),
-            ]
-        );
+        $this->addFilterOptions('package');
     }
 
     /**
@@ -67,20 +42,6 @@ class PackageListCommand extends Command
      */
     public function handle(): void
     {
-        $validateBoolean = function (string $key): bool|null {
-            if ($option = $this->option($key)) {
-                return filter_var($option, FILTER_VALIDATE_BOOLEAN);
-            }
-
-            return null;
-        };
-
-        // Handle is_local, is_enabled, is_loaded, and filter
-        $is_local = $validateBoolean('local');
-        $is_enabled = $validateBoolean('enabled');
-        $is_loaded = $validateBoolean('loaded');
-        $filter = $this->option('filter');
-
         $this->table(
             [
                 'Package',
@@ -89,7 +50,7 @@ class PackageListCommand extends Command
                 'Is Enabled?',
                 'Is Loaded?',
             ],
-            $this->getPackagesRows($filter, $is_local, $is_enabled, $is_loaded)
+            $this->getPackagesRows()
         );
     }
 
@@ -104,16 +65,18 @@ class PackageListCommand extends Command
     }
 
     /**
-     * @param  string|null  $filter
-     * @param  bool|null  $is_local
-     * @param  bool|null  $is_enabled
-     * @param  bool|null  $is_loaded
      * @return array
      */
-    public function getPackagesRows(string $filter = null, bool $is_local = null, bool $is_enabled = null, bool $is_loaded = null): array
+    public function getPackagesRows(): array
     {
         $yes = '<fg=white;bg=green> YES </>';
         $no = '<fg=white;bg=red> NO </>';
+
+        // Handle is_local, is_enabled, is_loaded, and filter
+        $is_local = $this->validateBoolean('local');
+        $is_enabled = $this->validateBoolean('enabled');
+        $is_loaded = $this->validateBoolean('loaded');
+        $filter = $this->option('filter');
 
         return boilerplateGenerator()
             ->getSummarizedPackages($filter, $is_local, $is_enabled, $is_loaded)

@@ -164,13 +164,13 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param bool $show_package_choices
-     * @param bool $show_domain_choices
-     * @param bool $show_default_package
-     * @param array|string|null $filter
-     * @param bool $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
+     * @param  bool  $show_package_choices
+     * @param  bool  $show_domain_choices
+     * @param  bool  $show_default_package
+     * @param  array|string|null  $filter
+     * @param  bool  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
      * @return void
      *
      * @throws MissingNameArgumentException
@@ -294,13 +294,13 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param string|array|null $filter
-     * @param bool|null $is_local
-     * @param bool|null $is_enabled
-     * @param bool|null $is_loaded
-     * @param bool $show_default_package
-     * @param bool $multiple
-     * @param array $default_choices
+     * @param  string|array|null  $filter
+     * @param  bool|null  $is_local
+     * @param  bool|null  $is_enabled
+     * @param  bool|null  $is_loaded
+     * @param  bool  $show_default_package
+     * @param  bool  $multiple
+     * @param  array  $default_choices
      * @return array|string|null
      */
     public function choosePackageFromList(string|array $filter = null, bool $is_local = true, bool $is_enabled = null, bool $is_loaded = null, bool $show_default_package = true, bool $multiple = false, array $default_choices = []): array|string|null
