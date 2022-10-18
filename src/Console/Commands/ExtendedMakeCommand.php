@@ -25,7 +25,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:command';
+    protected $name = 'bg:make:command';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -68,7 +68,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/console.custom.stub';
+        return __DIR__.'/../../../stubs/command/command.custom.stub';
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandContainerTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandServiceTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -18,14 +18,14 @@ use Illuminate\Filesystem\Filesystem;
  */
 class FacadeMakeCommand extends GeneratorCommand
 {
-    use UsesCommandContainerTrait;
+    use UsesCommandServiceTrait;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'gen:facade';
+    protected $name = 'bg:make:facade';
 
     /**
      * The console command description.
@@ -49,9 +49,9 @@ class FacadeMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
 
-        $this->addContainerOptions();
+        $this->addServiceOptions();
     }
 
     /**
@@ -64,8 +64,8 @@ class FacadeMakeCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain();
 
-        if ($this->option('container')) {
-            $this->addContainerReplaceNamespace();
+        if ($this->getServiceFromOptions()) {
+            $this->addServiceReplaceNamespace();
         }
 
         return parent::handle() && starterKit()->clearCache();
@@ -78,8 +78,8 @@ class FacadeMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return $this->moreReplaceNamespace ? __DIR__.'/../../../stubs/facade.container.custom.stub' :
-            __DIR__.'/../../../stubs/facade.custom.stub';
+        return $this->moreReplaceNamespace ? __DIR__.'/../../../stubs/facade/facade.service.custom.stub' :
+            __DIR__.'/../../../stubs/facade/facade.custom.stub';
     }
 
     /**

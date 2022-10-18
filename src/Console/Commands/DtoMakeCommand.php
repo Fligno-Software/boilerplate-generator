@@ -27,7 +27,7 @@ class DtoMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:dto';
+    protected $name = 'bg:make:dto';
 
     /**
      * The console command description.
@@ -58,7 +58,7 @@ class DtoMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -145,7 +145,7 @@ class DtoMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/dto.'.$this->dtoType.'.custom.stub';
+        return __DIR__.'/../../../stubs/data-transfer-object/dto.'.$this->dtoType.'.custom.stub';
     }
 
     /**
@@ -155,6 +155,6 @@ class DtoMakeCommand extends GeneratorCommand
      */
     protected function getClassType(): ?string
     {
-        return 'Data';
+        return 'DTO';
     }
 }

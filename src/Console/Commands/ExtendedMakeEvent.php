@@ -25,7 +25,7 @@ class ExtendedMakeEvent extends EventMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:event';
+    protected $name = 'bg:make:event';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeEvent extends EventMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -68,7 +68,7 @@ class ExtendedMakeEvent extends EventMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/event.custom.stub';
+        return __DIR__.'/../../../stubs/event/event.custom.stub';
     }
 
     /**

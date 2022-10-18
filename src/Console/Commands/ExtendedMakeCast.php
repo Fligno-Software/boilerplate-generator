@@ -25,7 +25,7 @@ class ExtendedMakeCast extends CastMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:cast';
+    protected $name = 'bg:make:cast';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeCast extends CastMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -69,7 +69,7 @@ class ExtendedMakeCast extends CastMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/cast.custom.stub';
+        return __DIR__.'/../../../stubs/cast/cast.custom.stub';
     }
 
     /**

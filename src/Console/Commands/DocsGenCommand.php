@@ -16,7 +16,7 @@ class DocsGenCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'gen:docs';
+    protected $signature = 'bg:docs';
 
     /**
      * The console command description.

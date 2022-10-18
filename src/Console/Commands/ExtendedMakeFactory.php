@@ -26,7 +26,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:factory';
+    protected $name = 'bg:make:factory';
 
     /**
      * The console command description.
@@ -42,14 +42,12 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
 
         $this->addModelOptions();
     }
 
-    /*****
-     * OVERRIDDEN FUNCTIONS
-     *****/
+    /*****  OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
@@ -66,7 +64,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
         $this->createFactoryTrait();
 
-        return $res && starterKit()->clearCache();
+        return $res && (starterKit()->clearCache() ? self::SUCCESS : self::FAILURE);
     }
 
     /**
@@ -78,7 +76,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         if (($this->package_name || $this->domain_name) && $this->model_name) {
             $this->call(
-                'gen:trait',
+                'bg:make:trait',
                 array_merge(
                     $this->getPackageArgs(),
                     [
@@ -95,7 +93,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/factory.custom.stub';
+        return __DIR__.'/../../../stubs/factory/factory.custom.stub';
     }
 
     /**
@@ -106,11 +104,25 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getPath($name): string
     {
-        $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
+        $name = Str::of($name)
+            ->replaceFirst($this->rootNamespace(), '')
+            ->after('Database\\Factories\\')
+            ->replace('\\', '/')
+            ->finish('Factory')
+            ->jsonSerialize();
 
         $path = $this->getPackageDomainFullPath();
 
-        return $path.'/factories/'.str_replace('\\', '/', $name).'.php';
+        return $path.'/factories/'.$name.'.php';
+    }
+
+    /**
+     * @param $rootNamespace
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return $rootNamespace.'\\Database\\Factories';
     }
 
     /**
@@ -143,10 +155,10 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir).'/'.$this->domain_dir :
+            return ($this->package_dir ? package_domain_app_path($this->package_dir).'/'.$this->domain_dir :
                     app_path($this->domain_dir)).'/database';
         }
 
-        return $this->package_dir ? package_database_path($this->package_dir) : database_path();
+        return $this->package_dir ? package_domain_database_path($this->package_dir) : database_path();
     }
 }

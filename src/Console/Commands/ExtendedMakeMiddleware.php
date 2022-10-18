@@ -25,7 +25,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:middleware';
+    protected $name = 'bg:make:middleware';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -68,7 +68,7 @@ class ExtendedMakeMiddleware extends MiddlewareMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/middleware.custom.stub';
+        return __DIR__.'/../../../stubs/middleware/middleware.custom.stub';
     }
 
     /**

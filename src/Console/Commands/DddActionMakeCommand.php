@@ -23,7 +23,7 @@ class DddActionMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:ddd:action';
+    protected $name = 'bg:make:ddd:action';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class DddActionMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
         $this->addModelOptions();
     }
 

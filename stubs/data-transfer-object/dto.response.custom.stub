@@ -1,0 +1,16 @@
+<?php
+
+namespace {{ namespace }};
+
+use Fligno\StarterKit\Abstracts\BaseJsonSerializable;
+use Illuminate\Support\Collection;
+
+/**
+ * Class {{ class }}
+ *
+ * @author {{ authorName }} <{{ authorEmail }}>
+ */
+class {{ class }} extends BaseJsonSerializable
+{
+    // Build something amazing...
+}

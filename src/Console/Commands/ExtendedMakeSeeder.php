@@ -7,6 +7,7 @@ use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
 use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Database\Console\Seeds\SeederMakeCommand;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 /**
  * Class ExtendedMakeSeeder
@@ -24,7 +25,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:seeder';
+    protected $name = 'bg:make:seeder';
 
     /**
      * The console command description.
@@ -43,7 +44,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -69,7 +70,7 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/seeder.custom.stub';
+        return __DIR__.'/../../../stubs/seeder/seeder.custom.stub';
     }
 
     /**
@@ -80,6 +81,13 @@ class ExtendedMakeSeeder extends SeederMakeCommand
      */
     protected function getPath($name): string
     {
+        $name = Str::of($name)
+            ->replaceFirst($this->rootNamespace(), '')
+            ->after('Database\\Seeders\\')
+            ->replace('\\', '/')
+            ->finish('Factory')
+            ->jsonSerialize();
+
         $path = $this->getPackageDomainFullPath();
 
         if (is_dir($path.'/seeds')) {
@@ -87,6 +95,29 @@ class ExtendedMakeSeeder extends SeederMakeCommand
         }
 
         return $path.'/seeders/'.$name.'.php';
+    }
+
+    /**
+     * @param $rootNamespace
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return $rootNamespace.'\\Database\\Seeders';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRootNamespaceDuringReplaceNamespace(): string
+    {
+        $rootNameSpace = $this->rootNamespace();
+
+        if ($rootNameSpace !== $this->package_namespace) {
+            $rootNameSpace = '';
+        }
+
+        return $rootNameSpace;
     }
 
     /**
@@ -105,10 +136,33 @@ class ExtendedMakeSeeder extends SeederMakeCommand
     protected function getPackageDomainFullPath(): string
     {
         if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir).'/'.$this->domain_dir :
+            return ($this->package_dir ? package_domain_app_path($this->package_dir).'/'.$this->domain_dir :
                     app_path($this->domain_dir)).'/database';
         }
 
-        return $this->package_dir ? package_database_path($this->package_dir) : database_path();
+        return $this->package_dir ? package_domain_database_path($this->package_dir) : database_path();
+    }
+
+    /**
+     * Overridden from SeederMakeCommand
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function qualifyClass($name): string
+    {
+        $name = ltrim($name, '\\/');
+
+        $name = str_replace('/', '\\', $name);
+
+        $rootNamespace = $this->rootNamespace();
+
+        if (Str::startsWith($name, $rootNamespace)) {
+            return $name;
+        }
+
+        return $this->qualifyClass(
+            $this->getDefaultNamespace(trim($rootNamespace, '\\')).'\\'.$name
+        );
     }
 }

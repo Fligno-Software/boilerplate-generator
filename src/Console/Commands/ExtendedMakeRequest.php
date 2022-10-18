@@ -25,7 +25,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:request';
+    protected $name = 'bg:make:request';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -70,7 +70,7 @@ class ExtendedMakeRequest extends RequestMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/request.custom.stub';
+        return __DIR__.'/../../../stubs/request/request.custom.stub';
     }
 
     /**

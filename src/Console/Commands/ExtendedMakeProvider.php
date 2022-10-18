@@ -8,6 +8,7 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\ProviderMakeCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ExtendedMakeProvider
@@ -25,7 +26,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:provider';
+    protected $name = 'bg:make:provider';
 
     /**
      * The console command description.
@@ -44,12 +45,10 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
-    /*****
-     * OVERRIDDEN FUNCTIONS
-     *****/
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
@@ -60,7 +59,20 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle() && starterKit()->clearCache();
+        $handled = parent::handle();
+
+        // If success, enable the domain
+        if (is_null($handled) && ! $this->skipEnable()) {
+            $class = $this->qualifyClass($this->getNameInput());
+
+            if ($this->package_dir) {
+                add_provider_to_composer_json($class, package_domain_path($this->package_dir));
+            } else {
+                add_provider_to_app_config($class);
+            }
+        }
+
+        return $handled && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
     }
 
     /**
@@ -68,7 +80,11 @@ class ExtendedMakeProvider extends ProviderMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/provider.custom.stub';
+        if ($this->option('starter-kit')) {
+            return __DIR__.'/../../../stubs/provider/provider.sk.custom.stub';
+        }
+
+        return __DIR__.'/../../../stubs/provider/provider.custom.stub';
     }
 
     /**
@@ -79,5 +95,24 @@ class ExtendedMakeProvider extends ProviderMakeCommand
     protected function getClassType(): ?string
     {
         return 'Provider';
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOptions(): array
+    {
+        return [
+            ['starter-kit', null, InputOption::VALUE_NONE, 'Extend the BaseStarterKitServiceProvider.'],
+            ['skip', null, InputOption::VALUE_NONE, 'Skip enabling the provider.'],
+        ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function skipEnable(): bool
+    {
+        return $this->option('skip');
     }
 }

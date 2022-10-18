@@ -24,7 +24,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:notification';
+    protected $name = 'bg:make:notification';
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -69,7 +69,7 @@ class ExtendedMakeNotification extends NotificationMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/notification.custom.stub';
+        return __DIR__.'/../../../stubs/notification/notification.custom.stub';
     }
 
     /**

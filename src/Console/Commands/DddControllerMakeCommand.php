@@ -24,7 +24,7 @@ class DddControllerMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:ddd:controller';
+    protected $name = 'bg:make:ddd:controller';
 
     /**
      * The console command description.
@@ -45,7 +45,7 @@ class DddControllerMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
         $this->addModelOptions();
     }
 
@@ -110,7 +110,7 @@ class DddControllerMakeCommand extends GeneratorCommand
 
         $requestArgs = $this->getPackageArgs();
         $requestArgs['name'] = $requestClassPath;
-        $this->call('gen:request', $requestArgs);
+        $this->call('bg:make:request', $requestArgs);
 
         $searches = [
             ['{{ actionRequest }}', '{{ namespacedActionRequest }}'],

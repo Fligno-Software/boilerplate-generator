@@ -25,7 +25,7 @@ class ExtendedMakeRule extends RuleMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:rule';
+    protected $name = 'bg:make:rule';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeRule extends RuleMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -68,7 +68,7 @@ class ExtendedMakeRule extends RuleMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/rule.custom.stub';
+        return __DIR__.'/../../../stubs/rule/rule.custom.stub';
     }
 
     /**

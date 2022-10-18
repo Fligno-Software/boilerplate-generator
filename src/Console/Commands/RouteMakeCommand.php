@@ -28,7 +28,7 @@ class RouteMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'gen:route';
+    protected $name = 'bg:make:route';
 
     /**
      * The console command description.
@@ -58,7 +58,7 @@ class RouteMakeCommand extends GeneratorCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions(true, true);
+        $this->addPackageDomainOptions(true);
     }
 
     /**
@@ -73,7 +73,7 @@ class RouteMakeCommand extends GeneratorCommand
         $path = $this->getPath($name);
 
         if (! $this->shouldOverwrite() && file_exists($path)) {
-            $this->error(Str::ucfirst($name).' route already exists!');
+            $this->warning(Str::ucfirst($name).' route already exists!');
 
             return self::FAILURE;
         }
@@ -87,7 +87,7 @@ class RouteMakeCommand extends GeneratorCommand
 
         $this->info($this->type.' created successfully.');
 
-        return starterKit()->clearCache();
+        return self::SUCCESS;
     }
 
     /**
@@ -107,7 +107,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/route.custom.stub';
+        return __DIR__.'/../../../stubs/route/route.custom.stub';
     }
 
     /**
@@ -140,11 +140,10 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getPackageDomainFullPath(): string
     {
-        if ($this->domain_dir) {
-            return ($this->package_dir ? package_app_path($this->package_dir) :
-                    app_path()).'/'.$this->domain_dir.'/routes';
+        if ($this->package_dir) {
+            return package_domain_routes_path($this->package_dir, $this->domain_dir);
         }
 
-        return $this->package_dir ? package_routes_path($this->package_dir) : base_path('routes');
+        return base_path($this->domain_dir).'/routes';
     }
 }

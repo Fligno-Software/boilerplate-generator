@@ -23,7 +23,7 @@ class GitlabCIMakeCommand extends Command
      *
      * @var string
      */
-    protected $name = 'gen:gitlab';
+    protected $name = 'bg:make:gitlab';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class GitlabCIMakeCommand extends Command
     {
         parent::__construct();
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /**
@@ -57,7 +57,7 @@ class GitlabCIMakeCommand extends Command
 
         $file = '.gitlab-ci.yml';
 
-        $packagePath = package_path($this->package_dir);
+        $packagePath = package_domain_path($this->package_dir);
 
         $source = __DIR__.'/../../../stubs/'.$file;
 

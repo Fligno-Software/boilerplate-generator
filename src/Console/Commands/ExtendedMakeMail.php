@@ -24,7 +24,7 @@ class ExtendedMakeMail extends MailMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:mail';
+    protected $name = 'bg:make:mail';
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class ExtendedMakeMail extends MailMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -69,8 +69,8 @@ class ExtendedMakeMail extends MailMakeCommand
      */
     protected function getStub(): string
     {
-        return $this->option('markdown') !== false ? __DIR__.'/../../../stubs/markdown-mail.custom.stub' :
-            __DIR__.'/../../../stubs/mail.custom.stub';
+        return $this->option('markdown') !== false ? __DIR__.'/../../../stubs/mail/mail-markdown.custom.stub' :
+            __DIR__.'/../../../stubs/mail/mail.custom.stub';
     }
 
     /**

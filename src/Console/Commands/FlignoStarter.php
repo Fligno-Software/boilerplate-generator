@@ -26,7 +26,7 @@ class FlignoStarter extends Command
      *
      * @var string
      */
-    protected $name = 'fligno:start';
+    protected $name = 'bg:start';
 
     /**
      * @var string
@@ -64,7 +64,7 @@ class FlignoStarter extends Command
     {
         parent::__construct();
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -173,7 +173,7 @@ class FlignoStarter extends Command
             }
 
             if ($will_generate) {
-                $this->call('gen:model', $args);
+                $this->call('bg:make:model', $args);
                 $this->is_model_created = true;
             }
         } else {
@@ -192,7 +192,7 @@ class FlignoStarter extends Command
         ) {
             $args = $this->getPackageArgs();
             $args['name'] = $this->getModelName().'Resource';
-            $this->call('gen:resource', $args);
+            $this->call('bg:make:resource', $args);
         }
     }
 
@@ -212,7 +212,7 @@ class FlignoStarter extends Command
             $args['--model'] = $model;
             $args['--skip'] = true;
 
-            $this->call('gen:test', $args);
+            $this->call('bg:make:test', $args);
         }
     }
 

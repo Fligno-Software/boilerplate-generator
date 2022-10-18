@@ -25,7 +25,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      *
      * @var string
      */
-    protected $name = 'gen:channel';
+    protected $name = 'bg:make:channel';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
     {
         parent::__construct($files);
 
-        $this->addPackageOptions();
+        $this->addPackageDomainOptions();
     }
 
     /*****
@@ -69,7 +69,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
      */
     protected function getStub(): string
     {
-        return __DIR__.'/../../../stubs/channel.custom.stub';
+        return __DIR__.'/../../../stubs/channel/channel.custom.stub';
     }
 
     /**
