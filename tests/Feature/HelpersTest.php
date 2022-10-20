@@ -8,9 +8,10 @@ uses()->group('helpers');
 /***** PATHS *****/
 
 it('can create package-domain base path', function (string|null $package, string|null $domain, string|null $expected) {
-    $expected = base_path($expected);
-    $computed = package_domain_path($package, $domain, true);
-    expect($computed)->toBe($expected);
+    expect(package_domain_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -35,8 +36,10 @@ it('can create package-domain base path', function (string|null $package, string
 ])->group('base', 'path');
 
 it('can create package-domain app path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_app_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_app_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_app_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -61,8 +64,10 @@ it('can create package-domain app path', function (string|null $package, string|
 ])->group('app', 'path');
 
 it('can create package-domain database path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_database_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_database_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_database_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -87,8 +92,10 @@ it('can create package-domain database path', function (string|null $package, st
 ])->group('database', 'path');
 
 it('can create package-domain migrations path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_migrations_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_migrations_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_migrations_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -113,8 +120,10 @@ it('can create package-domain migrations path', function (string|null $package, 
 ])->group('migrations', 'path');
 
 it('can create package-domain seeders path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_seeders_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_seeders_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_seeders_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -139,8 +148,10 @@ it('can create package-domain seeders path', function (string|null $package, str
 ])->group('seeders', 'path');
 
 it('can create package-domain factories path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_factories_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_factories_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_factories_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -165,8 +176,10 @@ it('can create package-domain factories path', function (string|null $package, s
 ])->group('factories', 'path');
 
 it('can create package-domain resources path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_resources_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_resources_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_resources_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -191,8 +204,10 @@ it('can create package-domain resources path', function (string|null $package, s
 ])->group('resources', 'path');
 
 it('can create package-domain views path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_views_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_views_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_views_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -217,8 +232,10 @@ it('can create package-domain views path', function (string|null $package, strin
 ])->group('views', 'path');
 
 it('can create package-domain lang path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_lang_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_lang_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_lang_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -243,8 +260,10 @@ it('can create package-domain lang path', function (string|null $package, string
 ])->group('lang', 'path');
 
 it('can create package-domain tests path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_tests_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_tests_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_tests_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -269,8 +288,10 @@ it('can create package-domain tests path', function (string|null $package, strin
 ])->group('tests', 'path');
 
 it('can create package-domain routes path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_routes_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_routes_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_routes_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -295,8 +316,10 @@ it('can create package-domain routes path', function (string|null $package, stri
 ])->group('routes', 'path');
 
 it('can create package-domain helpers path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_helpers_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_helpers_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_helpers_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',
@@ -321,8 +344,10 @@ it('can create package-domain helpers path', function (string|null $package, str
 ])->group('helpers', 'path');
 
 it('can create package-domain domains path', function (string|null $package, string|null $domain, string $expected) {
-    $expected = base_path($expected);
-    expect(package_domain_domains_path($package, $domain, true))->toBe($expected);
+    expect(package_domain_domains_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_domains_path($package, $domain, true, false))
+        ->toBe($expected);
 })->with([
     'both package and domain' => [
         'package' => 'fligno/test-package',

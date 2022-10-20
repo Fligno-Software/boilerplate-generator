@@ -3,3 +3,13 @@
 /**
  * @author {{ authorName }} <{{ authorEmail }}>
  */
+
+//if (! function_exists('my_function')) {
+//    /**
+//     * @return string
+//     */
+//    function my_function(): string
+//    {
+//        return '';
+//    }
+//}

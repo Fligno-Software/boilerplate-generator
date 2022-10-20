@@ -58,13 +58,14 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        $this->setModelFields();
+        $this->setModelFields(true);
 
-        $res = parent::handle();
+        if ($success = ! parent::handle()) {
+            $this->createFactoryTrait();
+            starterKit()->clearCache();
+        }
 
-        $this->createFactoryTrait();
-
-        return $res && (starterKit()->clearCache() ? self::SUCCESS : self::FAILURE);
+        return $success;
     }
 
     /**
@@ -81,7 +82,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
                     $this->getPackageArgs(),
                     [
                         'name' => 'Has'.$this->getNameInput(),
-                        '--factory' => $this->getNameInput(),
+                        '--factory' => $this->qualifyClass($this->getNameInput()),
                     ]
                 )
             );
@@ -105,15 +106,14 @@ class ExtendedMakeFactory extends FactoryMakeCommand
     protected function getPath($name): string
     {
         $name = Str::of($name)
-            ->replaceFirst($this->rootNamespace(), '')
-            ->after('Database\\Factories\\')
+            ->replaceFirst(package_domain_factories_namespace($this->package_dir, $this->domain_dir), '')
             ->replace('\\', '/')
             ->finish('Factory')
             ->jsonSerialize();
 
         $path = $this->getPackageDomainFullPath();
 
-        return $path.'/factories/'.$name.'.php';
+        return $path.'/'.$name.'.php';
     }
 
     /**
@@ -122,21 +122,7 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace.'\\Database\\Factories';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRootNamespaceDuringReplaceNamespace(): string
-    {
-        $rootNameSpace = $this->rootNamespace();
-
-        if ($rootNameSpace !== $this->package_namespace) {
-            $rootNameSpace = '';
-        }
-
-        return $rootNameSpace;
+        return rtrim(package_domain_factories_namespace($this->package_dir, $this->domain_dir), '\\');
     }
 
     /**
@@ -154,11 +140,29 @@ class ExtendedMakeFactory extends FactoryMakeCommand
      */
     protected function getPackageDomainFullPath(): string
     {
-        if ($this->domain_dir) {
-            return ($this->package_dir ? package_domain_app_path($this->package_dir).'/'.$this->domain_dir :
-                    app_path($this->domain_dir)).'/database';
+        return package_domain_factories_path($this->package_dir, $this->domain_dir);
+    }
+
+    /**
+     * Parse the class name and format according to the root namespace.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function qualifyClass($name): string
+    {
+        $name = ltrim($name, '\\/');
+
+        $name = str_replace('/', '\\', $name);
+
+        $rootNamespace = package_domain_factories_namespace($this->package_dir, $this->domain_dir);
+
+        if (Str::startsWith($name, $rootNamespace)) {
+            return $name;
         }
 
-        return $this->package_dir ? package_domain_database_path($this->package_dir) : database_path();
+        return $this->qualifyClass(
+            $this->getDefaultNamespace(trim($rootNamespace, '\\')).'\\'.$name
+        );
     }
 }

@@ -4,7 +4,7 @@ namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Exceptions\MissingNameArgumentException;
 use Fligno\BoilerplateGenerator\Exceptions\PackageNotFoundException;
-use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
+use Fligno\BoilerplateGenerator\Traits\UsesCommandEloquentModelTrait;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\EventMakeCommand;
@@ -18,7 +18,7 @@ use Illuminate\Foundation\Console\EventMakeCommand;
  */
 class ExtendedMakeEvent extends EventMakeCommand
 {
-    use UsesCommandVendorPackageDomainTrait;
+    use UsesCommandEloquentModelTrait;
 
     /**
      * The console command name.
@@ -45,6 +45,8 @@ class ExtendedMakeEvent extends EventMakeCommand
         parent::__construct($files);
 
         $this->addPackageDomainOptions();
+
+        $this->addModelOptions();
     }
 
     /*****
@@ -60,6 +62,8 @@ class ExtendedMakeEvent extends EventMakeCommand
     {
         $this->setVendorPackageDomain();
 
+        $this->setModelFields();
+
         return parent::handle() && starterKit()->clearCache();
     }
 
@@ -68,6 +72,10 @@ class ExtendedMakeEvent extends EventMakeCommand
      */
     protected function getStub(): string
     {
+        if ($this->option('model')) {
+            return __DIR__.'/../../../stubs/event/event.model.custom.stub';
+        }
+
         return __DIR__.'/../../../stubs/event/event.custom.stub';
     }
 

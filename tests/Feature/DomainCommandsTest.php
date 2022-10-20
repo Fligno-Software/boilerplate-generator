@@ -23,4 +23,4 @@ it('can create new domain', function (string $domain) {
         'domain' => 'Hello.World',
     ],
 ])
-    ->group('create')->only();
+    ->group('create');

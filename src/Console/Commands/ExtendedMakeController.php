@@ -210,7 +210,7 @@ class ExtendedMakeController extends ControllerMakeCommand
 
             $model = Str::of($modelClass)->afterLast('\\');
             $this->getControllerMethods()->each(
-                function ($event, $request) use ($model, $res) {
+                function ($event, $request) use ($modelClass, $model, $res) {
                     // Generate Request
                     $requestClass = $request.$model.'Request';
                     $requestClassPath = $model.'\\'.$requestClass;
@@ -218,6 +218,7 @@ class ExtendedMakeController extends ControllerMakeCommand
 
                     $requestArgs = $this->getPackageArgs();
                     $requestArgs['name'] = $requestClassPath;
+
                     $this->call('bg:make:request', $requestArgs);
 
                     $res->put('{{ '.Str::camel($request.'Request').' }}', $requestClass);
@@ -232,6 +233,7 @@ class ExtendedMakeController extends ControllerMakeCommand
 
                     $eventArgs = $this->getPackageArgs();
                     $eventArgs['name'] = $eventClassPath;
+                    $eventArgs['--model'] = $modelClass;
                     $this->call('bg:make:event', $eventArgs);
 
                     $res->put('{{ '.Str::camel($request.'Event').' }}', $eventClass);

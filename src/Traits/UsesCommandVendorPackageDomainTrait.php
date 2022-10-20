@@ -306,6 +306,7 @@ trait UsesCommandVendorPackageDomainTrait
     public function choosePackageFromList(string|array $filter = null, bool $is_local = true, bool $is_enabled = null, bool $is_loaded = null, bool $show_default_package = true, bool $multiple = false, array $default_choices = []): array|string|null
     {
         $choices = boilerplateGenerator()->getSummarizedPackages($filter, $is_local, $is_enabled, $is_loaded)->keys();
+
         if ($choices->count()) {
             $choices = $choices
                 ->when($show_default_package, fn ($choices) => $choices->prepend($this->default_package))
@@ -333,14 +334,14 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @param  bool  $withDomain
+     * @param  bool  $with_domain
      * @return array
      */
-    public function getPackageArgs(bool $withDomain = true): array
+    public function getPackageArgs(bool $with_domain = true): array
     {
         $args['--'.$this->package_option_argument_name] = $this->package_dir ?? $this->default_package;
 
-        if ($withDomain) {
+        if ($with_domain) {
             $args = array_merge($args, $this->getDomainArgs());
         }
 
@@ -352,16 +353,14 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function rootNamespace(): string
     {
-        if ($this->is_package_namespace_disabled || ! $this->getPackageDomainNamespace()) {
+        if ($this->is_package_namespace_disabled || ! $namespace = $this->getPackageDomainNamespace()) {
             return parent::rootNamespace();
         }
 
-        return $this->getPackageDomainNamespace();
+        return $namespace;
     }
 
-    /*****
-     * NAME INPUT
-     *****/
+    /***** NAME INPUT *****/
 
     /**
      * Class type to append on filename.
@@ -526,7 +525,7 @@ trait UsesCommandVendorPackageDomainTrait
 
         $replacements = [
             $this->getNamespace($name),
-            $this->getRootNamespaceDuringReplaceNamespace(),
+            $this->rootNamespace(),
             $this->userProviderModel(),
         ];
 
@@ -558,14 +557,6 @@ trait UsesCommandVendorPackageDomainTrait
     }
 
     /**
-     * @return string
-     */
-    protected function getRootNamespaceDuringReplaceNamespace(): string
-    {
-        return $this->rootNamespace();
-    }
-
-    /**
      * @param  string  $classNamespace
      * @return array|string
      */
@@ -584,9 +575,7 @@ trait UsesCommandVendorPackageDomainTrait
         return $this->hasOption('force') && $this->option('force');
     }
 
-    /*****
-     * ELOQUENT MODEL RELATED
-     *****/
+    /***** MODEL RELATED *****/
 
     /**
      * @param  string  $option_name
@@ -594,53 +583,33 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function getModelClass(string $option_name): string
     {
-        $modelClass = $this->parseModel($this->option($option_name));
+        $model = $this->option($option_name);
+        $model_class = $model ? $this->parseModel($model) : null;
 
-        if (! class_exists($modelClass)) {
+        if (! $model_class || ! class_exists($model_class)) {
             // ask if the model should be generated instead
-            if ($this->confirm("$modelClass model does not exist. Do you want to generate it?", true)) {
+            if ($model_class && $this->confirm("$model_class model does not exist. Do you want to generate it?", true)) {
                 $args = $this->getPackageArgs();
-                $args['name'] = $modelClass;
+                $args['name'] = $model_class;
 
                 $this->call('bg:make:model', $args);
             }
 
             // or maybe choose from possible Eloquent models
             else {
-                $alternativeModels = collect();
+                $possible_models = starterKit()->getPossibleModels($this->package_dir, $this->domain_name);
 
-                if (($packageDomainFullPath = $this->getPackageDomainFullPath()) !== app_path()) {
-                    if (file_exists($temp = $packageDomainFullPath.'/Models')) {
-                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
-                    }
-
-                    if ($this->package_dir &&
-                        ($temp = package_domain_app_path($this->package_dir)) &&
-                        $temp !== $packageDomainFullPath &&
-                        file_exists($temp .= '/Models')
-                    ) {
-                        $alternativeModels = $alternativeModels->merge(collect_classes_from_path($temp)?->values());
-                    }
-                }
-
-                $alternativeModels = $alternativeModels
-                    ->merge(collect_classes_from_path(app_path('Models'))?->values());
-
-                $defaultAlternativeModel = 'none';
-
-                $modelClass = $this->choice(
+                $model_class = $this->choice(
                     'Choose alternative '.($option_name === 'parent' ? $option_name.' ' : null).'model',
-                    $alternativeModels->prepend($defaultAlternativeModel)->toArray(),
+                    $possible_models->collapse()->toArray(),
                     0
                 );
 
-                $modelClass = $modelClass === $defaultAlternativeModel ? null : $modelClass;
-
-                $this->input->setOption($option_name, $modelClass);
+                $this->input->setOption($option_name, $model_class);
             }
         }
 
-        return $modelClass;
+        return $model_class;
     }
 
     /**
@@ -670,7 +639,7 @@ trait UsesCommandVendorPackageDomainTrait
      */
     protected function handleTestCreation($path): void
     {
-        $app_path = $this->package_dir ? package_domain_app_path($this->package_dir) : $this->laravel['path'];
+        $app_path = package_domain_app_path($this->package_dir, $this->domain_dir);
 
         $name = Str::of($path)
             ->after($app_path)
@@ -682,25 +651,10 @@ trait UsesCommandVendorPackageDomainTrait
             ->jsonSerialize();
 
         $args['--no-interaction'] = true;
+        $args['--pest'] = $this->option('pest');
+        $args = array_merge($args, $this->getPackageArgs());
 
-        if ($this->option('pest') || boilerplateGenerator()->isPestEnabled()) {
-            if ($this->package_dir) {
-                $args['--test-directory'] = Str::of(package_domain_tests_path($this->package_dir))
-                    ->after(base_path())
-                    ->replace('\\', '/')
-                    ->ltrim('/')
-                    ->jsonSerialize();
-            }
-
-            // Generate Pest Test
-            $this->call('pest:test', $args);
-
-            // Generate Dataset
-            $args['name'] = $name->replace('\\', '/')->afterLast('/')->jsonSerialize();
-            $this->call('pest:dataset', $args);
-        } else {
-            $this->call('bg:make:test', array_merge($args, $this->getPackageArgs()));
-        }
+        $this->call('bg:make:test', $args);
     }
 
     /***** AUTHOR INFORMATION FOR FILE GENERATION *****/

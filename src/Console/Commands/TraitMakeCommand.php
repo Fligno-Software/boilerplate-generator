@@ -164,12 +164,12 @@ class TraitMakeCommand extends GeneratorCommand
     {
         $name = (string) $this->cleanClassNamespace($name);
 
-        $rootNamespace = 'Database\\Factories';
+        $rootNamespace = package_domain_factories_namespace($this->package_dir, $this->domain_dir);
 
         if (Str::startsWith($name, $rootNamespace)) {
             return $name;
         }
 
-        return $this->qualifyFactoryClass(trim($rootNamespace, '\\').'\\'.$name);
+        return $this->qualifyFactoryClass($rootNamespace.$name);
     }
 }

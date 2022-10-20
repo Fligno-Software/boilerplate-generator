@@ -77,12 +77,8 @@ trait UsesCommandDomainTrait
      */
     public function getDomainArgs(): array
     {
-        $args = [];
-
-        if ($this->domain_name) {
-            $args['--domain'] = $this->domain_name;
-            $args['--force-domain'] = $this->shouldCreateDomain();
-        }
+        $args['--domain'] = $this->domain_name ?? $this->default_domain;
+        $args['--force-domain'] = $this->shouldCreateDomain();
 
         return $args;
     }
@@ -100,7 +96,11 @@ trait UsesCommandDomainTrait
     ): void {
         if ($this->domain_name = $this->getDomainFromOptions($package_option_name, $package_dir)) {
             $this->domain_dir = ltrim(domain_decode($this->domain_name), '/');
-            $this->domain_namespace = ($package_namespace).ltrim(domain_decode($this->domain_name, true), '\\');
+            $this->domain_namespace = Str::of(domain_decode($this->domain_name, true))
+                ->finish('\\')
+                ->ltrim('\\')
+                ->prepend($package_namespace)
+                ->jsonSerialize();
         }
     }
 

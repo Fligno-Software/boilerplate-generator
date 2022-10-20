@@ -71,14 +71,13 @@ trait UsesCommandEloquentModelTrait
      *****/
 
     /**
+     * @param  bool  $require_model
      * @return void
      */
-    public function setModelFields(): void
+    public function setModelFields(bool $require_model = false): void
     {
-        if ($this->hasOption('model') && $model = $this->option('model')) {
-            if (! class_exists($model)) {
-                $model = $this->getModelClass('model');
-            }
+        if ($this->hasOption('model') && ($this->option('model') || $require_model)) {
+            $model = $this->getModelClass('model');
 
             if ($this->option('model')) {
                 $this->setModelClass($model);
