@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Database\Migrations\MigrationCreator;
 
 /**
- * Fligno\BoilerplateGenerator\BoilerplateGeneratorServiceProvider
+ * Class ExtendedMigrationCreator
  */
 class ExtendedMigrationCreator extends MigrationCreator
 {
@@ -42,17 +42,10 @@ class ExtendedMigrationCreator extends MigrationCreator
      */
     protected function getPackageDomainFullPath(string $defaultPath): string
     {
-        if ($this->domain_dir) {
-            return ($this->package_dir ? package_domain_app_path($this->package_dir).'ExtendedMigrationCreator.php/'.$this->domain_dir :
-                    app_path($this->domain_dir)).'/database/migrations';
-        }
-
-        return $this->package_dir ? package_domain_migrations_path($this->package_dir) : $defaultPath;
+        return package_domain_migrations_path($this->package_dir, $this->domain_dir);
     }
 
-    /*****
-     * SETTER & GETTER
-     *****/
+    /***** SETTER & GETTER *****/
 
     /**
      * @param  string|null  $package_dir

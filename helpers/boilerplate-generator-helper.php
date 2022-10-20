@@ -40,20 +40,26 @@ if (! function_exists('package_domain_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
-     * @return string
+     * @param  bool  $with_base_path
+     * @return string|null
      */
-    function package_domain_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
+    function package_domain_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string|null {
         $package = trim($package, '/');
         $domain = $domain ? trim($parse_domain ? domain_decode($domain) : $domain, '/') : null;
 
-        return base_path(
-            collect()
-                ->when($package, fn (Collection $collection) => $collection->merge(['packages', $package]))
-                ->when($domain, fn (Collection $collection) => $collection->add($domain))
-                ->filter()
-                ->implode('/')
-        );
+        $path = collect()
+            ->when($package, fn (Collection $collection) => $collection->merge(['packages', $package]))
+            ->when($domain, fn (Collection $collection) => $collection->add($domain))
+            ->filter();
+
+        $path = $path->count() ? $path->implode('/') : null;
+
+        return $with_base_path ? base_path($path) : $path;
     }
 }
 
@@ -64,11 +70,21 @@ if (! function_exists('package_domain_app_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_app_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).($package || $domain ? '/src' : '/app');
+    function package_domain_app_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([
+            package_domain_path($package, $domain, $parse_domain, $with_base_path),
+            $package || $domain ? 'src' : 'app',
+        ])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -79,11 +95,18 @@ if (! function_exists('package_domain_database_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_database_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).'/database';
+    function package_domain_database_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'database'])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -94,11 +117,16 @@ if (! function_exists('package_domain_migrations_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_migrations_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_database_path($package, $domain, $parse_domain).'/migrations';
+    function package_domain_migrations_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return package_domain_database_path($package, $domain, $parse_domain, $with_base_path).'/migrations';
     }
 }
 
@@ -109,11 +137,16 @@ if (! function_exists('package_domain_seeders_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_seeders_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_database_path($package, $domain, $parse_domain).'/seeders';
+    function package_domain_seeders_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return package_domain_database_path($package, $domain, $parse_domain, $with_base_path).'/seeders';
     }
 }
 
@@ -124,11 +157,16 @@ if (! function_exists('package_domain_factories_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_factories_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_database_path($package, $domain, $parse_domain).'/factories';
+    function package_domain_factories_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return package_domain_database_path($package, $domain, $parse_domain, $with_base_path).'/factories';
     }
 }
 
@@ -139,11 +177,18 @@ if (! function_exists('package_domain_resources_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_resources_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).'/resources';
+    function package_domain_resources_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'resources'])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -154,11 +199,16 @@ if (! function_exists('package_domain_views_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_views_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_resources_path($package, $domain, $parse_domain).'/views';
+    function package_domain_views_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return package_domain_resources_path($package, $domain, $parse_domain, $with_base_path).'/views';
     }
 }
 
@@ -169,11 +219,16 @@ if (! function_exists('package_domain_lang_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_lang_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_resources_path($package, $domain, $parse_domain).'/lang';
+    function package_domain_lang_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return package_domain_resources_path($package, $domain, $parse_domain, $with_base_path).'/lang';
     }
 }
 
@@ -184,11 +239,18 @@ if (! function_exists('package_domain_tests_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_tests_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).'/tests';
+    function package_domain_tests_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'tests'])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -199,11 +261,18 @@ if (! function_exists('package_domain_routes_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_routes_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).'/routes';
+    function package_domain_routes_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'routes'])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -214,11 +283,18 @@ if (! function_exists('package_domain_helpers_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_helpers_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).'/helpers';
+    function package_domain_helpers_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'helpers'])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -229,11 +305,18 @@ if (! function_exists('package_domain_domains_path')) {
      * @param  string|null  $package
      * @param  string|null  $domain
      * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
      * @return string
      */
-    function package_domain_domains_path(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_path($package, $domain, $parse_domain).'/domains';
+    function package_domain_domains_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'domains'])
+            ->filter()
+            ->implode('/');
     }
 }
 
@@ -245,11 +328,12 @@ if (! function_exists('package_domain_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string|null
      */
-    function package_domain_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string|null
-    {
+    function package_domain_namespace(
+        string $package = null,
+        string $domain = null
+    ): string|null {
         $vendor_name = $package_name = null;
 
         if ($package) {
@@ -258,7 +342,7 @@ if (! function_exists('package_domain_namespace')) {
             $package_name = Str::studly($package_name);
         }
 
-        $domain = $domain ? trim($parse_domain ? domain_decode($domain, true) : $domain, '/') : null;
+        $domain = $domain ? domain_decode(domain_encode($domain), true) : null;
 
         return collect()
             ->when($vendor_name && $package_name, fn (Collection $collection) => $collection->merge([$vendor_name, $package_name]))
@@ -275,12 +359,13 @@ if (! function_exists('package_domain_app_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string
      */
-    function package_domain_app_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return (package_domain_namespace($package, $domain, $parse_domain) ?? 'App').'\\';
+    function package_domain_app_namespace(
+        string $package = null,
+        string $domain = null
+    ): string {
+        return (package_domain_namespace($package, $domain) ?? 'App').'\\';
     }
 }
 
@@ -290,12 +375,13 @@ if (! function_exists('package_domain_database_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string
      */
-    function package_domain_database_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return collect([package_domain_namespace($package, $domain, $parse_domain), 'Database'])->filter()->implode('\\');
+    function package_domain_database_namespace(
+        string $package = null,
+        string $domain = null
+    ): string {
+        return collect([package_domain_namespace($package, $domain), 'Database'])->filter()->implode('\\');
     }
 }
 
@@ -305,12 +391,13 @@ if (! function_exists('package_domain_seeders_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string
      */
-    function package_domain_seeders_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_database_namespace($package, $domain, $parse_domain).'\\Seeders\\';
+    function package_domain_seeders_namespace(
+        string $package = null,
+        string $domain = null
+    ): string {
+        return package_domain_database_namespace($package, $domain).'\\Seeders\\';
     }
 }
 
@@ -320,12 +407,13 @@ if (! function_exists('package_domain_factories_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string
      */
-    function package_domain_factories_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return package_domain_database_namespace($package, $domain, $parse_domain).'\\Factories\\';
+    function package_domain_factories_namespace(
+        string $package = null,
+        string $domain = null
+    ): string {
+        return package_domain_database_namespace($package, $domain).'\\Factories\\';
     }
 }
 
@@ -335,12 +423,13 @@ if (! function_exists('package_domain_tests_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string
      */
-    function package_domain_tests_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return collect([package_domain_namespace($package, $domain, $parse_domain), 'Tests'])->filter()->implode('\\').'\\';
+    function package_domain_tests_namespace(
+        string $package = null,
+        string $domain = null
+    ): string {
+        return collect([package_domain_namespace($package, $domain), 'Tests'])->filter()->implode('\\').'\\';
     }
 }
 
@@ -350,12 +439,13 @@ if (! function_exists('package_domain_domains_namespace')) {
     /**
      * @param  string|null  $package
      * @param  string|null  $domain
-     * @param  bool  $parse_domain
      * @return string
      */
-    function package_domain_domains_namespace(string $package = null, string $domain = null, bool $parse_domain = false): string
-    {
-        return collect([package_domain_namespace($package, $domain, $parse_domain), 'Domains'])->filter()->implode('\\').'\\';
+    function package_domain_domains_namespace(
+        string $package = null,
+        string $domain = null
+    ): string {
+        return collect([package_domain_namespace($package, $domain), 'Domains'])->filter()->implode('\\').'\\';
     }
 }
 

@@ -51,7 +51,7 @@ class PackageEnableCommand extends Command
      */
     public function handle(): void
     {
-        $this->setVendorPackageDomain(show_default_package: false, is_loaded: false);
+        $this->setVendorPackageDomain(show_domain_choices: false, show_default_package: false, is_loaded: false);
 
         $this->call(
             'packager:enable',

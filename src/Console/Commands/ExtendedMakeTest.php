@@ -64,7 +64,54 @@ class ExtendedMakeTest extends TestMakeCommand
 
         $this->setModelFields();
 
-        return parent::handle() && starterKit()->clearCache();
+        $name = Str::of($this->getValidatedNameInput());
+
+        if ($this->option('pest') || boilerplateGenerator()->isPestEnabled()) {
+            $path = package_domain_tests_path($this->package_dir, $this->domain_dir);
+
+            // Create tests folder if not exists.
+            if (! file_exists($path)) {
+                mkdir($path);
+            }
+
+            $args['--test-directory'] = Str::of($path)
+                ->after(base_path())
+                ->replace('\\', '/')
+                ->ltrim('/')
+                ->jsonSerialize();
+
+            // Check if Pest is already installed.
+            // If not, install it.
+            if (is_null(guess_file_or_directory_path(
+                package_domain_tests_path($this->package_dir, $this->domain_dir),
+                'Pest.php'))
+            ) {
+                $this->call('pest:install', array_merge($args, [
+                    '--no-interaction' => true,
+                ]));
+            }
+
+            // Generate Pest Test
+            $args['name'] = $name->jsonSerialize();
+            $this->call('pest:test', $args);
+
+            // Generate Dataset
+            $args['name'] = $name
+                ->replace('\\', '/')
+                ->afterLast('/')
+                ->before('Test')
+                ->jsonSerialize();
+
+            $result = $this->call('pest:dataset', $args);
+        } else {
+            $result = parent::handle();
+        }
+
+        if ($success = $result == self::SUCCESS) {
+            starterKit()->clearCache();
+        }
+
+        return $success;
     }
 
     /**

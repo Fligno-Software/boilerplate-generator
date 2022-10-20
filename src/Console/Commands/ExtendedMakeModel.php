@@ -63,28 +63,21 @@ class ExtendedMakeModel extends ModelMakeCommand
         $this->setVendorPackageDomain();
 
         if ($this->option('all')) {
-            $this->input->setOption('repository', true);
             $this->input->setOption('observer', true);
-            $this->input->setOption('df', true);
         }
 
         parent::handle();
 
         // Clear starter kit cache and run composer dump
-        starterKit()->clearCache();
         $this->composer->dumpAutoloads();
-
-        if ($this->option('repository')) {
-            $this->createRepository();
-        }
+        starterKit()->clearCache();
 
         if ($this->option('observer')) {
             $this->createObserver();
         }
 
-        if ($this->option('df')) {
-            $this->createDataFactory();
-        }
+        $this->createRepository();
+        $this->createDataFactory();
 
         starterKit()->clearCache();
     }
