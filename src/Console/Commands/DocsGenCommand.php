@@ -32,6 +32,12 @@ class DocsGenCommand extends Command
      */
     public function handle(): void
     {
+        if (! file_exists(config_path('scribe.php'))) {
+            $this->call('vendor:publish', [
+                '--tag' => 'scribe-config'
+            ]);
+        }
+
         $this->call('scribe:generate');
     }
 }

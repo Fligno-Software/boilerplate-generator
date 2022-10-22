@@ -342,7 +342,12 @@ if (! function_exists('package_domain_namespace')) {
             $package_name = Str::studly($package_name);
         }
 
-        $domain = $domain ? domain_decode(domain_encode($domain), true) : null;
+        if ($domain) {
+            if ($encoded = domain_encode($domain)) {
+                $domain = $encoded;
+            }
+            $domain = domain_decode($domain, true);
+        }
 
         return collect()
             ->when($vendor_name && $package_name, fn (Collection $collection) => $collection->merge([$vendor_name, $package_name]))
