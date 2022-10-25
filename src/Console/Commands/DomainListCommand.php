@@ -52,24 +52,16 @@ class DomainListCommand extends Command
      */
     public function handle(): int
     {
+        // Set Symfony Console Formatter
+        $this->setupOutputFormatters();
+
         $this->setVendorPackageDomain(true, false);
 
-        // Handle is_local, is_enabled, is_loaded, and filter
-        $is_local = $this->validateBoolean('local');
-        $is_enabled = $this->validateBoolean('enabled');
-        $is_loaded = $this->validateBoolean('loaded');
-        $filter = $this->option('filter');
-
-        $this->table(
-            [
-                'Package',
-                'Path',
-                'Is Local?',
-                'Is Enabled?',
-                'Is Loaded?',
-            ],
+        $this->createTable(
+            'Domains',
+            ['Domain', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
             $this->getDomainRows()
-        );
+        )?->render();
 
         return self::SUCCESS;
     }
@@ -89,8 +81,8 @@ class DomainListCommand extends Command
      */
     public function getDomainRows(): array
     {
-        $yes = '<fg=white;bg=green> YES </>';
-        $no = '<fg=white;bg=red> NO </>';
+        $yes = $this->createTableCell('YES');
+        $no = $this->createTableCell('NO', 'red-bold');
 
         // Handle is_local, is_enabled, is_loaded, and filter
         $is_local = $this->validateBoolean('local');

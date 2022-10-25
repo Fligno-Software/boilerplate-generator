@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @author {{ authorName }} <{{ authorEmail }}>
  *
- * @see \{{ namespacedContainer }}
+ * @see \{{ namespacedService }}
  */
 class {{ class }} extends Facade
 {
@@ -20,6 +20,6 @@ class {{ class }} extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return '{{ containerSlug }}';
+        return '{{ serviceSlug }}';
     }
 }

@@ -64,9 +64,7 @@ class FacadeMakeCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain();
 
-        if ($this->getServiceFromOptions()) {
-            $this->addServiceReplaceNamespace();
-        }
+        $this->addServiceReplaceNamespace();
 
         return parent::handle() && starterKit()->clearCache();
     }

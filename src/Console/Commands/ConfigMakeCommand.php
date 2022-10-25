@@ -8,7 +8,7 @@ use Fligno\BoilerplateGenerator\Traits\UsesCommandVendorPackageDomainTrait;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Str;
 
 /**
  * Class ConfigMakeCommand
@@ -20,61 +20,41 @@ class ConfigMakeCommand extends GeneratorCommand
     use UsesCommandVendorPackageDomainTrait;
 
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'bg:make:class';
+    protected $name = 'bg:make:config';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new PHP class in Laravel or in a specific package.';
+    protected $description = 'Create a new config file in Laravel or in a specific package.';
 
     /**
-     * The type of class being generated.
-     *
      * @var string
      */
-    protected $type = 'Class';
+    protected $type = 'Config';
 
+    /**
+     * Create a new config make command instance.
+     *
+     * @param  Filesystem  $files
+     * @return void
+     */
     public function __construct(Filesystem $files)
     {
         parent::__construct($files);
 
-        $this->addPackageDomainOptions();
-
-        if ($this->getDefinition()->hasOption('abstract') === false) {
-            $this->getDefinition()->addOptions(
-                [
-                    new InputOption(
-                        'abstract',
-                        'a',
-                        InputOption::VALUE_NONE,
-                        'Generate an abstract class.'
-                    ),
-                    new InputOption(
-                        'invokable',
-                        'i',
-                        InputOption::VALUE_NONE,
-                        'Generate a single method, invokable class.'
-                    ),
-                ]
-            );
-        }
+        $this->addPackageDomainOptions(true);
     }
-
-    /*****
-     * OVERRIDDEN FUNCTIONS
-     *****/
 
     /**
      * @return bool|null
      *
-     * @throws FileNotFoundException
-     * @throws PackageNotFoundException|MissingNameArgumentException
+     * @throws MissingNameArgumentException|PackageNotFoundException|FileNotFoundException
      */
     public function handle(): ?bool
     {
@@ -84,19 +64,13 @@ class ConfigMakeCommand extends GeneratorCommand
     }
 
     /**
+     * Get the stub file for the generator.
+     *
      * @return string
      */
     protected function getStub(): string
     {
-        $type = '';
-
-        if ($this->option('abstract')) {
-            $type = '.abstract';
-        } elseif ($this->option('invokable')) {
-            $type = '.invokable';
-        }
-
-        return __DIR__.'/../../../stubs/class/class'.$type.'.custom.stub';
+        return __DIR__.'/../../../stubs/config/config.custom.stub';
     }
 
     /**
@@ -107,5 +81,23 @@ class ConfigMakeCommand extends GeneratorCommand
     protected function getClassType(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get the validated desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getValidatedNameInput(): string
+    {
+        return Str::of($this->argument('name'))->snake('-')->jsonSerialize();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPackageDomainFullPath(): string
+    {
+        return package_domain_config_path($this->package_dir, $this->domain_dir);
     }
 }

@@ -52,36 +52,14 @@ class TestCommand extends Command
      */
     public function handle(): int
     {
-        $this->targets = $this->getPackageFromOptions(true);
-
-        $domain_search = $this->getDomainFromOption();
-
-        // check if it has default package
-        $has_root = $this->targets && in_array($this->default_package, $this->targets);
-
-        // show choices if neither --all or --packages is used
-        if (! $this->isRootAndPackages() && ! $this->isPackagesOnly()) {
-            $default_choices = $this->targets ? boilerplateGenerator()->getSummarizedPackages($this->targets)
-                ->keys()
-                // add back 'root' to the list of default choices if previously typed
-                ->when(
-                    $has_root,
-                    fn (Collection $collection) => $collection->prepend($this->default_package)
-                )
-                ->toArray() :
-                [];
-
-            $this->targets = $this->choosePackageFromList(is_loaded: true, multiple: true, default_choices: $default_choices);
-        } else {
-            $this->targets = null;
-        }
+        $this->setTargetsAndDomains();
 
         // default behavior
         $test_packages = false;
 
         // needed checks related to default package
-        $has_root = $this->targets && in_array($this->default_package, $this->targets); // check again
-        $has_other_than_root = $has_root ? count($this->targets) > 1 : ($this->targets && count($this->targets));
+        $has_root = $this->hasRoot(); // check again
+        $has_other_than_root = $this->hasOtherThanRoot();
 
         // if packages is null or has root already
         $test_root = (! $this->targets || $has_root) && ! $this->isPackagesOnly();
@@ -95,9 +73,9 @@ class TestCommand extends Command
         $test_paths = [];
         $dot_notation = 'directories.tests.path';
 
-        $add_to_test_paths = function (array $domains, string $package = null) use ($domain_search, $dot_notation, &$test_paths) {
+        $add_domains_to_test_paths = function (array $domains, string $package = null) use ($dot_notation, &$test_paths) {
             collect($domains)
-                ->when($domain_search, fn ($collection) => $collection->filter(fn ($details, $domain) => $domain == $domain_search || Str::contains($domain, $domain_search)))
+                ->when($this->domain_search, fn ($collection) => $collection->filter(fn ($details, $domain) => $domain == $this->domain_search || Str::contains($domain, $this->domain_search)))
                 ->each(function ($details, $domain) use ($package, $dot_notation, &$test_paths) {
                     $test_paths[] = [
                         'package' => $package,
@@ -109,7 +87,7 @@ class TestCommand extends Command
 
         // Get root and its domains tests paths
         if ($test_root) {
-            if (! $domain_search) {
+            if (! $this->domain_search) {
                 $test_paths[] = [
                     'package' => null,
                     'domain' => null,
@@ -117,22 +95,22 @@ class TestCommand extends Command
                 ];
             }
             $domains = starterKit()->getRoot()->get('domains', []);
-            $add_to_test_paths($domains);
+            $add_domains_to_test_paths($domains);
         }
 
         // Get packages and each package's domains tests paths
         if ($test_packages) {
             boilerplateGenerator()->getSummarizedPackages(is_loaded: true, with_details: true)
                 ->when($has_other_than_root, fn (Collection $collection) => $collection->only($this->targets))
-                ->each(function (array $details, string $package) use ($add_to_test_paths, $dot_notation, &$test_paths, $domain_search) {
-                    if (! $domain_search) {
+                ->each(function (array $details, string $package) use ($add_domains_to_test_paths, $dot_notation, &$test_paths) {
+                    if (! $this->domain_search) {
                         $test_paths[] = [
                             'package' => $package,
                             'tests_path' => Arr::get($details, $dot_notation),
                         ];
                     }
                     $domains = Arr::get($details, 'domains', []);
-                    $add_to_test_paths($domains, $package);
+                    $add_domains_to_test_paths($domains, $package);
                 });
         }
 
@@ -174,23 +152,19 @@ class TestCommand extends Command
      */
     public function executeTests(string $package = null, string $domain = null, string $tests_path = null): void
     {
-        $get_green_bold_text = function (string $str) {
-            return '<green-bold>'.$str.'</green-bold>';
-        };
-
         $get_blinking_icon = function (string $str) {
             return $this->areIconsBlinking() ? '<blink-icon>'.$str.'</blink-icon>' : $str;
         };
 
         $message = $get_blinking_icon('🧪').' Running tests for ';
         if ($package && $domain) {
-            $message .= $get_green_bold_text($domain).' domain of '.$get_green_bold_text($package).' 📦';
+            $message .= $this->getBoldText($domain).' domain of '.$this->getBoldText($package).' 📦';
         } elseif ($package) {
-            $message .= $get_green_bold_text($package).' 📦';
+            $message .= $this->getBoldText($package).' 📦';
         } elseif ($domain) {
-            $message .= $get_green_bold_text($domain).' domain of '.$get_green_bold_text('Laravel');
+            $message .= $this->getBoldText($domain).' domain of '.$this->getBoldText('Laravel');
         } else {
-            $message .= $get_green_bold_text('Laravel');
+            $message .= $this->getBoldText('Laravel');
         }
 
         $this->newLine(2);
@@ -218,7 +192,7 @@ class TestCommand extends Command
 
         $command = collect(['php artisan test', $tests_path, $test_directory])->merge($this->collectRawOptions())->filter()->implode(' ');
 
-        $this->ongoing($get_blinking_icon('🏃').' Running command️: '.$get_green_bold_text($command), false);
+        $this->ongoing($get_blinking_icon('🏃').' Running command️: '.$this->getBoldText($command), false);
 
         exec($command);
     }
@@ -245,20 +219,9 @@ class TestCommand extends Command
     {
         return [
             [
-                'domain', null, InputOption::VALUE_REQUIRED, 'Apply to a domain and its subdomains.',
-            ],
-            [
                 'blink', null, InputOption::VALUE_NONE, 'Enable blinking icons.',
             ],
         ];
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDomainFromOption(): ?string
-    {
-        return $this->option('domain');
     }
 
     /**
