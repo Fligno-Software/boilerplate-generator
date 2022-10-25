@@ -185,14 +185,11 @@ trait UsesCommandDomainTrait
         // create domain if it does not exist
         if ($domain) {
             if (! $this instanceof RouteMakeCommand && ! ($domain_choices?->contains($domain))) {
-                $args = array_merge(
-                    [
-                        'name' => $domain,
-                        '--no-interaction' => true,
-                        '--'.$package_option_name => $package_dir,
-                    ],
-                    $this->getDomainArgs()
-                );
+                $args = [
+                    'name' => $domain,
+                    '--no-interaction' => true,
+                    '--'.$package_option_name => $package_dir,
+                ];
                 $this->call('bg:domain:create', $args);
             }
 

@@ -3,7 +3,9 @@
 namespace Fligno\BoilerplateGenerator\Providers;
 
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\ConfigMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DescribeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainDisableCommand;
@@ -90,9 +92,9 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
 
         // Additional
         ClassMakeCommand::class,
-        // Todo: ConfigMakeCommand::class,
+        ConfigMakeCommand::class,
         DataFactoryMakeCommand::class,
-        // Todo: DescribeCommand::class,
+        DescribeCommand::class,
         DocsGenCommand::class,
         DtoMakeCommand::class,
         FacadeMakeCommand::class,
@@ -121,6 +123,20 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         DomainDisableCommand::class,
         DomainListCommand::class,
         // Todo: DomainPublishCommand::class,
+    ];
+
+    /**
+     * Publishable Environment Variables
+     *
+     * @example [ 'HELLO_WORLD' => true ]
+     *
+     * @var array
+     */
+    protected array $env_vars = [
+        'BG_PEST_ENABLED' => true,
+        'BG_AUTHOR_NAME' => 'James Carlo Luchavez',
+        'BG_AUTHOR_EMAIL' => 'jamescarlo.luchavez@fligno.com',
+        'BG_AUTHOR_HOMEPAGE' => 'https://www.linkedin.com/in/jsluchavez',
     ];
 
     /**

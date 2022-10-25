@@ -34,7 +34,7 @@ class DocsGenCommand extends Command
     {
         if (! file_exists(config_path('scribe.php'))) {
             $this->call('vendor:publish', [
-                '--tag' => 'scribe-config'
+                '--tag' => 'scribe-config',
             ]);
         }
 

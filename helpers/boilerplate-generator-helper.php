@@ -276,6 +276,28 @@ if (! function_exists('package_domain_routes_path')) {
     }
 }
 
+// Config Path
+
+if (! function_exists('package_domain_config_path')) {
+    /**
+     * @param  string|null  $package
+     * @param  string|null  $domain
+     * @param  bool  $parse_domain
+     * @param  bool  $with_base_path
+     * @return string
+     */
+    function package_domain_config_path(
+        string $package = null,
+        string $domain = null,
+        bool $parse_domain = false,
+        bool $with_base_path = true
+    ): string {
+        return collect([package_domain_path($package, $domain, $parse_domain, $with_base_path), 'config'])
+            ->filter()
+            ->implode('/');
+    }
+}
+
 // Helpers Path
 
 if (! function_exists('package_domain_helpers_path')) {

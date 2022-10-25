@@ -315,6 +315,34 @@ it('can create package-domain routes path', function (string|null $package, stri
     ],
 ])->group('routes', 'path');
 
+it('can create package-domain config path', function (string|null $package, string|null $domain, string $expected) {
+    expect(package_domain_config_path($package, $domain, true))
+        ->toBe(base_path($expected))
+        ->and(package_domain_config_path($package, $domain, true, false))
+        ->toBe($expected);
+})->with([
+    'both package and domain' => [
+        'package' => 'fligno/test-package',
+        'domain' => 'Hello.World',
+        'expected' => 'packages/fligno/test-package/domains/Hello/domains/World/config',
+    ],
+    'package only' => [
+        'package' => 'fligno/test-package',
+        'domain' => null,
+        'expected' => 'packages/fligno/test-package/config',
+    ],
+    'domain only' => [
+        'package' => null,
+        'domain' => 'Hello.World',
+        'expected' => 'domains/Hello/domains/World/config',
+    ],
+    'no package and no domain' => [
+        'package' => null,
+        'domain' => null,
+        'expected' => 'config',
+    ],
+])->group('config', 'path')->only();
+
 it('can create package-domain helpers path', function (string|null $package, string|null $domain, string $expected) {
     expect(package_domain_helpers_path($package, $domain, true))
         ->toBe(base_path($expected))

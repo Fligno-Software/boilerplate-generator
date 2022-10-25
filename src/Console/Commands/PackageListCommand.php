@@ -3,6 +3,7 @@
 namespace Fligno\BoilerplateGenerator\Console\Commands;
 
 use Fligno\BoilerplateGenerator\Traits\UsesCommandFilterTrait;
+use Fligno\StarterKit\Traits\UsesCommandCustomMessagesTrait;
 use Illuminate\Console\Command;
 
 /**
@@ -14,7 +15,7 @@ use Illuminate\Console\Command;
  */
 class PackageListCommand extends Command
 {
-    use UsesCommandFilterTrait;
+    use UsesCommandFilterTrait, UsesCommandCustomMessagesTrait;
 
     /**
      * The name of the console command.
@@ -42,16 +43,14 @@ class PackageListCommand extends Command
      */
     public function handle(): void
     {
-        $this->table(
-            [
-                'Package',
-                'Path',
-                'Is Local?',
-                'Is Enabled?',
-                'Is Loaded?',
-            ],
+        // Set Symfony Console Formatter
+        $this->setupOutputFormatters();
+
+        $this->createTable(
+            'Packages',
+            ['Package', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
             $this->getPackagesRows()
-        );
+        )?->render();
     }
 
     /**
@@ -69,8 +68,8 @@ class PackageListCommand extends Command
      */
     public function getPackagesRows(): array
     {
-        $yes = '<fg=white;bg=green> YES </>';
-        $no = '<fg=white;bg=red> NO </>';
+        $yes = $this->createTableCell('YES');
+        $no = $this->createTableCell('NO', 'red-bold');
 
         // Handle is_local, is_enabled, is_loaded, and filter
         $is_local = $this->validateBoolean('local');

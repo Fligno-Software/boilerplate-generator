@@ -62,9 +62,7 @@ class HelperMakeCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain();
 
-        if ($this->getServiceFromOptions()) {
-            $this->addServiceReplaceNamespace();
-        }
+        $this->addServiceReplaceNamespace();
 
         return parent::handle() && starterKit()->clearCache();
     }
@@ -113,11 +111,6 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getPackageDomainFullPath(): string
     {
-        if ($this->domain_dir) {
-            return ($this->package_dir ? package_domain_app_path($this->package_dir) :
-                    app_path()).'/'.$this->domain_dir.'/helpers';
-        }
-
-        return $this->package_dir ? package_domain_helpers_path($this->package_dir) : base_path('helpers');
+        return package_domain_helpers_path($this->package_dir, $this->domain_dir);
     }
 }
