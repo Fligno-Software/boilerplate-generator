@@ -57,13 +57,21 @@ class DomainListCommand extends Command
 
         $this->setVendorPackageDomain(true, false);
 
-        $this->createTable(
-            'Domains',
-            ['Domain', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
-            $this->getDomainRows()
-        )?->render();
+        $rows = $this->getDomainRows();
 
-        return self::SUCCESS;
+        if (count($rows)) {
+            $this->createTable(
+                'Domains',
+                ['Domain', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
+                $rows
+            )?->render();
+
+            return self::SUCCESS;
+        }
+
+        $this->failed('No domains found.');
+
+        return self::FAILURE;
     }
 
     /**
@@ -101,6 +109,7 @@ class DomainListCommand extends Command
                     $arr['is_loaded'] ? $yes : $no,
                 ];
             })
+            ->sortKeys()
             ->toArray();
     }
 }

@@ -38,6 +38,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeTest;
 use Fligno\BoilerplateGenerator\Console\Commands\FacadeMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\GitlabCIMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\InstallCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
@@ -107,6 +108,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         ServiceMakeCommand::class,
         TestCommand::class,
         TraitMakeCommand::class,
+        InstallCommand::class,
 
         // Packages
         PackageCreateCommand::class,

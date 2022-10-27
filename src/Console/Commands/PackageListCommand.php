@@ -46,11 +46,17 @@ class PackageListCommand extends Command
         // Set Symfony Console Formatter
         $this->setupOutputFormatters();
 
-        $this->createTable(
-            'Packages',
-            ['Package', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
-            $this->getPackagesRows()
-        )?->render();
+        $rows = $this->getPackagesRows();
+
+        if (count($rows)) {
+            $this->createTable(
+                'Packages',
+                ['Package', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
+                $rows
+            )?->render();
+        }
+
+        $this->failed('No packages found.');
     }
 
     /**
