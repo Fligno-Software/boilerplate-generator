@@ -401,8 +401,10 @@ trait UsesCommandVendorPackageDomainTrait
                     throw new MissingNameArgumentException();
                 }
 
-                $this->error('You need to specify the class name.');
-                $this->input->setArgument('name', $this->ask("What's the name of the class?"));
+                $type = Str::lower($this->type) ?? 'file';
+
+                $this->failed("You need to specify the $type name.");
+                $this->input->setArgument('name', $this->ask("What is the name of the $type?"));
 
                 return $this->getNameInput();
             }

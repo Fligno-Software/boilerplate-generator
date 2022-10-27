@@ -124,15 +124,31 @@ class RouteMakeCommand extends GeneratorCommand
      * Get the validated desired class name from the input.
      *
      * @return string
+     *
+     * @throws MissingNameArgumentException
      */
     protected function getValidatedNameInput(): string
     {
-        return Str::of(preg_replace('/[^A-Za-z\d]/', ' ', trim($this->argument('name'))))
-            ->snake('-')
-            ->replace('api', '')
+        $name = Str::of($this->argument('name'))->replace('\\', '/');
+
+        $file = $name->afterLast('/')->jsonSerialize();
+        $dir = $name->beforeLast('/')->jsonSerialize();
+
+        $file = Str::of(preg_replace('/[^a-z\d-]/i', '-', $file))
+            ->lower()
+            ->replace('api', null)
             ->trim('-')
             ->when($this->option('api'), fn (Stringable $str) => $str->append('.api'))
             ->trim('.');
+
+        if ($file->isNotEmpty()) {
+            return collect([$dir, $file])->filter()->implode('/');
+        }
+
+        // go back to getNameInput() when empty
+        $this->input->setArgument('name', null);
+
+        return $this->getNameInput();
     }
 
     /**

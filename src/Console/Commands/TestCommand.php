@@ -153,7 +153,7 @@ class TestCommand extends Command
     public function executeTests(string $package = null, string $domain = null, string $tests_path = null): void
     {
         $get_blinking_icon = function (string $str) {
-            return $this->areIconsBlinking() ? '<blink-icon>'.$str.'</blink-icon>' : $str;
+            return $this->areIconsBlinking() ? '<blink>'.$str.'</blink>' : $str;
         };
 
         $message = $get_blinking_icon('🧪').' Running tests for ';

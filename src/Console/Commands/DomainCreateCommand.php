@@ -158,6 +158,7 @@ class DomainCreateCommand extends GeneratorCommand
 
     /**
      * Get the validated desired class name from the input.
+     * Filtered out domain string from name.
      *
      * @return string
      */
@@ -165,6 +166,8 @@ class DomainCreateCommand extends GeneratorCommand
     {
         $name = trim($this->argument('name'));
 
-        return trim(preg_replace('/[^a-z\d]+/i', '.', $name), '.');
+        $filtered = preg_replace('/[^a-z\d](domain(s)*)*+/i', '.', $name);
+
+        return collect(explode('.', $filtered))->filter()->implode('.');
     }
 }
