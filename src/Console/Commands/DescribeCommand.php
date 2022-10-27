@@ -57,7 +57,7 @@ class DescribeCommand extends Command
 
         $keys = ['path', 'directories', 'domains'];
 
-        if ($this->hasRoot()) {
+        if ($this->hasRoot() || is_null($this->package_name)) {
             $data = starterKit()->getRoot()->only($keys)->toArray();
             $data['package'] = null;
 
