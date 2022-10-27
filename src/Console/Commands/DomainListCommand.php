@@ -67,11 +67,11 @@ class DomainListCommand extends Command
             )?->render();
 
             return self::SUCCESS;
+        } else {
+            $this->failed('No domains found.');
+
+            return self::FAILURE;
         }
-
-        $this->failed('No domains found.');
-
-        return self::FAILURE;
     }
 
     /**

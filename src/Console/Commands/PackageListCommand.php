@@ -54,9 +54,9 @@ class PackageListCommand extends Command
                 ['Package', 'Path', 'Is Local?', 'Is Enabled?', 'Is Loaded?'],
                 $rows
             )?->render();
+        } else {
+            $this->failed('No packages found.');
         }
-
-        $this->failed('No packages found.');
     }
 
     /**
