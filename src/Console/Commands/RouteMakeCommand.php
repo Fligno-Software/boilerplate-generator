@@ -132,7 +132,7 @@ class RouteMakeCommand extends GeneratorCommand
         $name = Str::of($this->argument('name'))->replace('\\', '/');
 
         $file = $name->afterLast('/')->jsonSerialize();
-        $dir = $name->beforeLast('/')->jsonSerialize();
+        $dir = $name->beforeLast($file)->trim('/')->jsonSerialize();
 
         $file = Str::of(preg_replace('/[^a-z\d-]/i', '-', $file))
             ->lower()
