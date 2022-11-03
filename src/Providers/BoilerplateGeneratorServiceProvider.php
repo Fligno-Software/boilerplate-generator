@@ -5,6 +5,7 @@ namespace Fligno\BoilerplateGenerator\Providers;
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ConfigMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\DataMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DescribeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DocsGenCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainCreateCommand;
@@ -94,6 +95,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         // Additional
         ClassMakeCommand::class,
         ConfigMakeCommand::class,
+        DataMakeCommand::class,
         DataFactoryMakeCommand::class,
         DescribeCommand::class,
         DocsGenCommand::class,
