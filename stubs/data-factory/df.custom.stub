@@ -4,7 +4,6 @@ namespace {{ namespace }};
 
 use Fligno\StarterKit\Abstracts\BaseDataFactory;
 use Illuminate\Database\Eloquent\Builder;
-
 // Model
 use {{ modelClass }};
 
