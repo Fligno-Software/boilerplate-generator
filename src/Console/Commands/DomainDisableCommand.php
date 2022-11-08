@@ -51,16 +51,17 @@ class DomainDisableCommand extends DomainEnableCommand
             $this->failed('Domain not found: '.$this->domain_name);
 
             return self::FAILURE;
-        } elseif (! $domain['is_enabled']) {
-            $this->failed('Domain is already disable: '.$this->domain_name);
+        } elseif (! $domain['is_enabled'] && ! $domain['is_loaded']) {
+            $this->failed('Domain is already disabled: '.$this->domain_name);
 
             return self::FAILURE;
         }
 
         $psr4_contents = [];
         $providers_contents = collect();
+        $is_enabled_inside_package = $domain['is_enabled'];
 
-        $path = $this->getComposerJsonPath();
+        $path = $this->getComposerJsonPath($is_enabled_inside_package);
 
         $add_to_psr4_contents = function ($domain) use (&$psr4_contents, $path) {
             $psr4_contents = array_merge($psr4_contents, $this->createPsr4ContentsForComposerJson($path, $domain));
@@ -113,8 +114,8 @@ class DomainDisableCommand extends DomainEnableCommand
         $success_psr4 = remove_contents_from_composer_json('autoload.psr-4', $psr4_contents, $path);
 
         // Remove providers to composer.json or app.php
-        $providers_contents->each(function ($value) use ($path) {
-            if ($this->package_dir) {
+        $providers_contents->each(function ($value) use ($is_enabled_inside_package, $path) {
+            if ($this->package_dir && $is_enabled_inside_package) {
                 if (remove_provider_from_composer_json($value, $path)) {
                     $this->done('Removed provider from composer.json: '.$value);
                 } else {

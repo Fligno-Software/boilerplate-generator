@@ -272,8 +272,7 @@ class DescribeCommand extends Command
 
             if ($possible_models?->count()) {
                 $arr = $possible_models->toArray();
-            }
-            else {
+            } else {
                 $arr = [[$this->createTableCell('No rows!', 'yellow-bold', count($headers))]];
             }
 
