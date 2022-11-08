@@ -10,7 +10,7 @@ use Illuminate\Support\Composer;
 /**
  * Class InstallCommand
  *
- * @author Fredrick Cua <fredrick.cua@fligno.com>
+ * @author James Carlo Luchavez <jamescarlo.luchavez@fligno.com>
  */
 class InstallCommand extends Command
 {
