@@ -57,7 +57,7 @@ class DescribeCommand extends Command
 
         $keys = ['path', 'directories', 'domains'];
 
-        if ($this->hasRoot() || is_null($this->package_name)) {
+        if ($this->hasRoot()) {
             $data = starterKit()->getRoot()->only($keys)->toArray();
             $data['package'] = null;
 
@@ -112,7 +112,7 @@ class DescribeCommand extends Command
             $domains = collect($domains)->only($only->keys());
         } else {
             // Describe Laravel-related metadata.
-            $this->displayDirectories($directories);
+            $this->displayDirectories($directories, $package);
         }
 
         // Describe domains-related metadata.
@@ -133,7 +133,7 @@ class DescribeCommand extends Command
         $package = $package ? "$package 📦" : 'Laravel';
         $this->note($this->getBoldText($domain).' of '.$this->getBoldText($package), 'DOMAIN', false);
         $this->newLine();
-        $this->displayDirectories($directories);
+        $this->displayDirectories($directories, $package);
     }
 
     public function describeComposerJson(string $path)
@@ -257,7 +257,7 @@ class DescribeCommand extends Command
                 StarterKit::REPOSITORIES_DIR => starterKit()->getRepositories($package, $domain, $map),
             };
 
-            $possible_models = $possible_models->map(fn (Collection|string $related_model, $class) => [
+            $possible_models = $possible_models?->map(fn (Collection|string $related_model, $class) => [
                 $class,
                 is_string($related_model) ? $related_model : $related_model->implode(', '),
                 is_string($related_model) ? $no : $yes,
@@ -270,7 +270,14 @@ class DescribeCommand extends Command
 
             $display_model_related[] = [$this->createTableCell($target, 'default-bold', count($headers))];
 
-            $display_model_related = array_merge($display_model_related, [$separator], $possible_models->toArray());
+            if ($possible_models?->count()) {
+                $arr = $possible_models->toArray();
+            }
+            else {
+                $arr = [[$this->createTableCell('No rows!', 'yellow-bold', count($headers))]];
+            }
+
+            $display_model_related = array_merge($display_model_related, [$separator], $arr);
         };
 
         $add_model_related_rows(StarterKit::OBSERVERS_DIR, $observer_map);
