@@ -75,8 +75,9 @@ class DomainEnableCommand extends Command
 
         $psr4_contents = [];
         $providers_contents = collect();
+        $is_package_local = boilerplateGenerator()->isPackageLocal($this->package_dir);
 
-        $path = $this->getComposerJsonPath();
+        $path = $this->getComposerJsonPath($is_package_local);
 
         $add_to_psr4_contents = function ($domain) use (&$psr4_contents, $path) {
             $psr4_contents = array_merge($psr4_contents, $this->createPsr4ContentsForComposerJson($path, $domain));
@@ -130,8 +131,8 @@ class DomainEnableCommand extends Command
         $success_psr4 = add_contents_to_composer_json('autoload.psr-4', $psr4_contents, $path);
 
         // Add providers to composer.json or app.php
-        $providers_contents->each(function ($value) use ($path) {
-            if ($this->package_dir) {
+        $providers_contents->each(function ($value) use ($is_package_local, $path) {
+            if ($this->package_dir && $is_package_local) {
                 if (add_provider_to_composer_json($value, $path)) {
                     $this->done('Added provider to composer.json: '.$value);
                 } else {
@@ -211,11 +212,14 @@ class DomainEnableCommand extends Command
     }
 
     /**
+     * @param  bool  $is_package_local
      * @return string
      */
-    protected function getComposerJsonPath(): string
+    protected function getComposerJsonPath(bool $is_package_local = true): string
     {
-        return qualify_composer_json(package_domain_path($this->package_dir));
+        $path = $is_package_local ? package_domain_path($this->package_dir) : null;
+
+        return qualify_composer_json($path);
     }
 
     /**
