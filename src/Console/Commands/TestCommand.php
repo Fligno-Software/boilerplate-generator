@@ -218,9 +218,7 @@ class TestCommand extends Command
     protected function getOptions(): array
     {
         return [
-            [
-                'blink', null, InputOption::VALUE_NONE, 'Enable blinking icons.',
-            ],
+            new InputOption('blink', null, InputOption::VALUE_NONE, 'Enable blinking icons.'),
         ];
     }
 
