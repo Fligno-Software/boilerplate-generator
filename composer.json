@@ -26,7 +26,7 @@
         "pestphp/pest-plugin-faker": "^1.0",
         "knuckleswtf/scribe": "^4.1",
         "laravel/pint": "^1.2",
-        "fligno/starter-kit": "^3.2"
+        "fligno/starter-kit": "^3.3"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
