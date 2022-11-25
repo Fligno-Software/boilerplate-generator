@@ -73,7 +73,7 @@ class ServiceMakeCommand extends GeneratorCommand
 
         $this->createContainerFacade();
 
-        return $res && starterKit()->clearCache();
+        return $res;
     }
 
     /**

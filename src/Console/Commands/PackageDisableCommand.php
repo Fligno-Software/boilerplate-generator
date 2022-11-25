@@ -62,8 +62,6 @@ class PackageDisableCommand extends Command
                 ]
             );
         }
-
-        starterKit()->clearCache();
     }
 
     /**

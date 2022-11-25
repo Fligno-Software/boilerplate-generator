@@ -154,7 +154,7 @@ class DomainEnableCommand extends Command
             $this->failed('Failed to add PSR-4 to composer.json');
         }
 
-        return $success_psr4 && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
+        return $success_psr4 ? self::SUCCESS : self::FAILURE;
     }
 
     /**

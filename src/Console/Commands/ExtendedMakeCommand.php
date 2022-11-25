@@ -47,9 +47,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
         $this->addPackageDomainOptions();
     }
 
-    /*****
-     * OVERRIDDEN FUNCTIONS
-     *****/
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
@@ -60,7 +58,7 @@ class ExtendedMakeCommand extends ConsoleMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

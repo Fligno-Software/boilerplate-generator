@@ -121,7 +121,7 @@ class DomainCreateCommand extends GeneratorCommand
             $this->failed('Domain was not created or already existing.');
         }
 
-        return $success && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
+        return $success ? self::SUCCESS : self::FAILURE;
     }
 
     /**

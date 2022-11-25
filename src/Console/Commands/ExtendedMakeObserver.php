@@ -59,8 +59,6 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     public function handle(): ?bool
     {
         $this->setVendorPackageDomain();
-
-        return parent::handle() && starterKit()->clearCache();
     }
 
     /**

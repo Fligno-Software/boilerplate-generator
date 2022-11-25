@@ -60,8 +60,6 @@ class PackagePublishCommand extends Command
      */
     public function handle(): void
     {
-        starterKit()->clearCache();
-
         $this->setVendorPackageDomain();
 
         $this->call(

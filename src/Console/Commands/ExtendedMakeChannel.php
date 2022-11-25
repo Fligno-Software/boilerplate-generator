@@ -61,7 +61,7 @@ class ExtendedMakeChannel extends ChannelMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

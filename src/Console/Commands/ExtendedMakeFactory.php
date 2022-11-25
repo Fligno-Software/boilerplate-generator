@@ -62,7 +62,6 @@ class ExtendedMakeFactory extends FactoryMakeCommand
 
         if ($success = ! parent::handle()) {
             $this->createFactoryTrait();
-            starterKit()->clearCache();
         }
 
         return $success;

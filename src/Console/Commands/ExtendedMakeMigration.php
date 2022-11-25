@@ -67,8 +67,6 @@ class ExtendedMakeMigration extends MigrateMakeCommand
         }
 
         parent::handle();
-
-        starterKit()->clearCache();
     }
 
     /**

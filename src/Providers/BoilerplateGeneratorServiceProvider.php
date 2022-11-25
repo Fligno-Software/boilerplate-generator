@@ -13,6 +13,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\DomainDisableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainEnableCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DomainListCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DtoMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\EnvPublishCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCast;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeChannel;
 use Fligno\BoilerplateGenerator\Console\Commands\ExtendedMakeCommand;
@@ -111,6 +112,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         TestCommand::class,
         TraitMakeCommand::class,
         InstallCommand::class,
+        EnvPublishCommand::class,
 
         // Packages
         PackageCreateCommand::class,

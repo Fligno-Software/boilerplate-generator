@@ -70,7 +70,6 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         // Clear starter kit cache and run composer dump
         $this->composer->dumpAutoloads();
-        starterKit()->clearCache();
 
         if ($this->option('observer')) {
             $this->createObserver();
@@ -78,8 +77,6 @@ class ExtendedMakeModel extends ModelMakeCommand
 
         $this->createRepository();
         $this->createDataFactory();
-
-        starterKit()->clearCache();
     }
 
     /**

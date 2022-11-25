@@ -60,8 +60,6 @@ class ExtendedMakeMail extends MailMakeCommand
         $this->setVendorPackageDomain();
 
         parent::handle();
-
-        starterKit()->clearCache();
     }
 
     /**

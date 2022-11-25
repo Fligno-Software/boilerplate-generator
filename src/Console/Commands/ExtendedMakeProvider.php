@@ -72,7 +72,7 @@ class ExtendedMakeProvider extends ProviderMakeCommand
             }
         }
 
-        return $handled && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
+        return $handled ? self::SUCCESS : self::FAILURE;
     }
 
     /**

@@ -65,8 +65,7 @@ class PackageRemoveCommand extends Command
             );
         }
 
-        // Clear starter kit cache and run composer dump
-        starterKit()->clearCache();
+        // Run composer dump
         $this->composer->dumpAutoloads();
     }
 
