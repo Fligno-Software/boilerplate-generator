@@ -60,7 +60,7 @@ class ConfigMakeCommand extends GeneratorCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

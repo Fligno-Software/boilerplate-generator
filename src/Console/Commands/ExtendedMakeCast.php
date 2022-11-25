@@ -61,7 +61,7 @@ class ExtendedMakeCast extends CastMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

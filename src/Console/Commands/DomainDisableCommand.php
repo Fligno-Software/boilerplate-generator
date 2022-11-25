@@ -137,7 +137,7 @@ class DomainDisableCommand extends DomainEnableCommand
             $this->failed('Failed to remove PSR-4 to composer.json');
         }
 
-        return $success_psr4 && starterKit()->clearCache() ? self::SUCCESS : self::FAILURE;
+        return $success_psr4 ? self::SUCCESS : self::FAILURE;
     }
 
     /**

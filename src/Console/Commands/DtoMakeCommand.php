@@ -87,7 +87,7 @@ class DtoMakeCommand extends GeneratorCommand
             parent::handle();
         }
 
-        return starterKit()->clearCache();
+        return true;
     }
 
     /**

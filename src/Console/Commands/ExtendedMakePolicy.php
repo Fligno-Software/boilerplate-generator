@@ -61,7 +61,7 @@ class ExtendedMakePolicy extends PolicyMakeCommand
     {
         $this->setVendorPackageDomain();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

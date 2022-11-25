@@ -64,7 +64,7 @@ class ExtendedMakeEvent extends EventMakeCommand
 
         $this->setModelFields();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

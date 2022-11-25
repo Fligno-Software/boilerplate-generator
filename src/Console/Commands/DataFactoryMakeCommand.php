@@ -76,7 +76,7 @@ class DataFactoryMakeCommand extends GeneratorCommand
 
         $this->setModelFields();
 
-        return parent::handle() && starterKit()->clearCache();
+        return parent::handle();
     }
 
     /**

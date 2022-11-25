@@ -107,11 +107,7 @@ class ExtendedMakeTest extends TestMakeCommand
             $result = parent::handle();
         }
 
-        if ($success = $result == self::SUCCESS) {
-            starterKit()->clearCache();
-        }
-
-        return $success;
+        return $result == self::SUCCESS;
     }
 
     /**
