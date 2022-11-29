@@ -153,14 +153,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register the service the package provides.
-        $this->app->singleton(
-            'boilerplate-generator',
-            function () {
-                return new BoilerplateGenerator();
-            }
-        );
-
-        parent::register();
+        $this->app->singleton('boilerplate-generator', fn () => new BoilerplateGenerator());
     }
 
     /**

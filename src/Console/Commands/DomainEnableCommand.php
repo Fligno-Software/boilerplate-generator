@@ -75,7 +75,7 @@ class DomainEnableCommand extends Command
 
         $psr4_contents = [];
         $providers_contents = collect();
-        $is_package_local = boilerplateGenerator()->isPackageLocal($this->package_dir);
+        $is_package_local = $this->package_dir && boilerplateGenerator()->isPackageLocal($this->package_dir);
 
         $path = $this->getComposerJsonPath($is_package_local);
 
