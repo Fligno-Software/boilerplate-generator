@@ -90,7 +90,7 @@ class PackageCreateCommand extends Command
         );
 
         $this->call(
-            'bg:make:gitlab',
+            'bg:gitlab:publish',
             [
                 '--package' => $this->package_dir,
                 '--no-interaction' => true,

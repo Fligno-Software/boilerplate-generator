@@ -23,7 +23,7 @@ class GitlabCIMakeCommand extends Command
      *
      * @var string
      */
-    protected $name = 'bg:make:gitlab';
+    protected $name = 'bg:gitlab:publish';
 
     /**
      * The console command description.
@@ -59,7 +59,7 @@ class GitlabCIMakeCommand extends Command
 
         $packagePath = package_domain_path($this->package_dir);
 
-        $source = __DIR__.'/../../../stubs/'.$file;
+        $source = __DIR__.'/../../../gitlab/'.$file;
 
         $target = $packagePath.'/'.$file;
 

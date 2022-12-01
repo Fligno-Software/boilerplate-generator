@@ -2,6 +2,7 @@
 
 namespace Fligno\BoilerplateGenerator\Providers;
 
+use Fligno\BoilerplateGenerator\Console\Commands\AwsPublishCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ClassMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\ConfigMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\DataFactoryMakeCommand;
@@ -113,6 +114,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         TraitMakeCommand::class,
         InstallCommand::class,
         EnvPublishCommand::class,
+        AwsPublishCommand::class,
 
         // Packages
         PackageCreateCommand::class,
@@ -166,9 +168,18 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes(
             [
-                __DIR__.'../../config/boilerplate-generator.php' => config_path('boilerplate-generator.php'),
+                __DIR__.'/../../config/boilerplate-generator.php' => config_path('boilerplate-generator.php'),
             ],
             'boilerplate-generator.config'
+        );
+
+        // Publishing AWS configuration files
+        $this->publishes(
+            [
+                __DIR__.'/../../aws/.ebextensions' => base_path('.ebextensions'),
+                __DIR__.'/../../aws/.platform' => base_path('.platform'),
+            ],
+            'boilerplate-generator.aws'
         );
 
         // Publishing the views.
