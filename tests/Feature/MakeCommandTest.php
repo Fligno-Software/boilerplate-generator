@@ -1041,7 +1041,7 @@
 //    public function canCreateRandomGitlabCiWithoutSpecifiedPackage(): void
 //    {
 //        $this->artisan(
-//            'bg:make:gitlab',
+//            'bg:gitlab:publish',
 //            [
 //                '--force' => true,
 //            ]
@@ -1059,7 +1059,7 @@
 //    public function canCreateRandomGitlabCiWithSpecifiedPackage(): void
 //    {
 //        $this->artisan(
-//            'bg:make:gitlab',
+//            'bg:gitlab:publish',
 //            [
 //                '--package' => 'dummy/package',
 //                '--force' => true,
