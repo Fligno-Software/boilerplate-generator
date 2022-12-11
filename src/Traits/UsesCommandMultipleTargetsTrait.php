@@ -54,17 +54,21 @@ trait UsesCommandMultipleTargetsTrait
 
         // show choices if neither --all or --packages is used
         if (! $this->isRootAndPackages() && ! $this->isPackagesOnly()) {
-            $default_choices = $this->targets ? boilerplateGenerator()->getSummarizedPackages($this->targets)
-                ->keys()
-                // add back 'root' to the list of default choices if previously typed
-                ->when(
-                    $has_root,
-                    fn (Collection $collection) => $collection->prepend($this->default_package)
-                )
-                ->toArray() :
-                [];
+            $default_choices = $this->targets ?
+                boilerplateGenerator()->getSummarizedPackages($this->targets)->keys() :
+                collect();
 
-            $this->targets = $this->choosePackageFromList(is_loaded: true, multiple: true, default_choices: $default_choices);
+            // add back 'root' to the list of default choices if previously typed
+            $default_choices = $default_choices
+                ->when($has_root, fn (Collection $collection) => $collection->prepend($this->default_package))
+                ->toArray();
+
+            $this->targets = $this->choosePackageFromList(
+                is_local: null,
+                is_loaded: true,
+                multiple: true,
+                default_choices: $default_choices
+            );
         } else {
             $this->targets = null;
         }
