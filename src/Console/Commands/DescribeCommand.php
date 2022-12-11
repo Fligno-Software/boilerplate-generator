@@ -257,9 +257,9 @@ class DescribeCommand extends Command
                 StarterKit::REPOSITORIES_DIR => starterKit()->getRepositories($package, $domain, $map),
             };
 
-            $possible_models = $possible_models?->map(fn (Collection|string $related_model, $class) => [
+            $possible_models = $possible_models?->map(fn (Collection|array|string $related_model, $class) => [
                 $class,
-                is_string($related_model) ? $related_model : $related_model->implode(', '),
+                is_string($related_model) ? $related_model : collect($related_model)->implode(', '),
                 is_string($related_model) ? $no : $yes,
             ]);
 

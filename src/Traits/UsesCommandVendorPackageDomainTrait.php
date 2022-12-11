@@ -303,7 +303,15 @@ trait UsesCommandVendorPackageDomainTrait
      * @param  array  $default_choices
      * @return array|string|null
      */
-    public function choosePackageFromList(string|array $filter = null, bool $is_local = true, bool $is_enabled = null, bool $is_loaded = null, bool $show_default_package = true, bool $multiple = false, array $default_choices = []): array|string|null
+    public function choosePackageFromList(
+        string|array $filter = null,
+        bool|null $is_local = true,
+        bool|null $is_enabled = null,
+        bool|null $is_loaded = null,
+        bool $show_default_package = true,
+        bool $multiple = false,
+        array $default_choices = []
+    ): array|string|null
     {
         $choices = boilerplateGenerator()->getSummarizedPackages($filter, $is_local, $is_enabled, $is_loaded)->keys();
 
