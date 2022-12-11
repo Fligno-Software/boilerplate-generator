@@ -54,11 +54,13 @@ class ExtendedMakeObserver extends ObserverMakeCommand
     /**
      * @return bool|null
      *
-     * @throws FileNotFoundException|PackageNotFoundException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException
      */
     public function handle(): ?bool
     {
         $this->setVendorPackageDomain();
+
+        return true;
     }
 
     /**
