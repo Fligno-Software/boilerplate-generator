@@ -311,8 +311,7 @@ trait UsesCommandVendorPackageDomainTrait
         bool $show_default_package = true,
         bool $multiple = false,
         array $default_choices = []
-    ): array|string|null
-    {
+    ): array|string|null {
         $choices = boilerplateGenerator()->getSummarizedPackages($filter, $is_local, $is_enabled, $is_loaded)->keys();
 
         if ($choices->count()) {

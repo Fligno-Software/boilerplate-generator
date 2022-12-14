@@ -47,20 +47,18 @@ class ExtendedMakeObserver extends ObserverMakeCommand
         $this->addPackageDomainOptions();
     }
 
-    /*****
-     * OVERRIDDEN FUNCTIONS
-     *****/
+    /***** OVERRIDDEN FUNCTIONS *****/
 
     /**
      * @return bool|null
      *
-     * @throws PackageNotFoundException|MissingNameArgumentException
+     * @throws PackageNotFoundException|MissingNameArgumentException|FileNotFoundException
      */
     public function handle(): ?bool
     {
         $this->setVendorPackageDomain();
 
-        return true;
+        return parent::handle();
     }
 
     /**
