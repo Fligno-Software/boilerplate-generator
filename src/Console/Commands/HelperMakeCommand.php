@@ -74,7 +74,7 @@ class HelperMakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return $this->moreReplaceNamespace ?
+        return $this->moreReplaceNamespace?->has('NamespacedService') ?
             __DIR__.'/../../../stubs/helper/helper.service.custom.stub' :
             __DIR__.'/../../../stubs/helper/helper.custom.stub';
     }
