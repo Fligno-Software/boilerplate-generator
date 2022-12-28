@@ -43,6 +43,7 @@ use Fligno\BoilerplateGenerator\Console\Commands\GitlabCIMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\HelperMakeCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InstallCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\InterfaceMakeCommand;
+use Fligno\BoilerplateGenerator\Console\Commands\LaravelLogClearCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCloneCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageCreateCommand;
 use Fligno\BoilerplateGenerator\Console\Commands\PackageDisableCommand;
@@ -115,6 +116,7 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
         InstallCommand::class,
         EnvPublishCommand::class,
         AwsPublishCommand::class,
+        LaravelLogClearCommand::class,
 
         // Packages
         PackageCreateCommand::class,
