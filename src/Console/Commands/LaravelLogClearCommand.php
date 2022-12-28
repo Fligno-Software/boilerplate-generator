@@ -47,8 +47,7 @@ class LaravelLogClearCommand extends Command
 
         if ($result == self::SUCCESS) {
             $this->done('Successfully cleared log contents.');
-        }
-        else {
+        } else {
             $this->failed('Failed to clear log contents.');
         }
 
