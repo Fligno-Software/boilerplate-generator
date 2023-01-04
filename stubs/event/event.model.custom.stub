@@ -2,14 +2,14 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\Channel;
+use Illuminate\Pagination\Paginator;
 
 // Model
 use {{ modelClass }};
@@ -28,18 +28,8 @@ class {{ class }}
      *
      * @return void
      */
-    public function __construct(public {{ modelName }}|Collection ${{ modelSnake }})
+    public function __construct(public {{ modelName }}|Collection|LengthAwarePaginator|Paginator ${{ modelSnake }})
     {
         //
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel|PrivateChannel|array
-     */
-    public function broadcastOn(): Channel|PrivateChannel|array
-    {
-        return new PrivateChannel('{{ modelKebab }}');
     }
 }
