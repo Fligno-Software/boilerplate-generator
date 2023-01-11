@@ -192,9 +192,13 @@ class TestCommand extends Command
 
         $command = collect(['php artisan test', $tests_path, $test_directory])->merge($this->collectRawOptions())->filter()->implode(' ');
 
-        $this->ongoing($get_blinking_icon('🏃').' Running command️: '.$this->getBoldText($command), false);
+        $this->ongoing($get_blinking_icon('🏃').' Running command: '.$this->getBoldText($command), false);
 
-        exec($command);
+        // Execute command and save output
+        exec($command, $output);
+
+        // Append output to the main output
+        $this->getOutput()->writeln($output);
     }
 
     /**
