@@ -15,7 +15,8 @@ use Illuminate\Console\Command;
  */
 class DomainListCommand extends Command
 {
-    use UsesCommandVendorPackageDomainTrait, UsesCommandFilterTrait;
+    use UsesCommandVendorPackageDomainTrait;
+    use UsesCommandFilterTrait;
 
     /**
      * The name and signature of the console command.

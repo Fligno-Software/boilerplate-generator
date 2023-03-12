@@ -462,13 +462,21 @@ class BoilerplateGenerator
 
             return $details;
         })
-            ->when($filter,
-                fn (Collection $collection) => $collection->filter(fn ($value, $key) => Str::contains($key, $filter)))
-            ->when(! is_null($is_local),
-                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_local'] == $is_local))
-            ->when(! is_null($is_enabled),
-                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_enabled'] == $is_enabled))
-            ->when(! is_null($is_loaded),
-                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_loaded'] == $is_loaded));
+            ->when(
+                $filter,
+                fn (Collection $collection) => $collection->filter(fn ($value, $key) => Str::contains($key, $filter))
+            )
+            ->when(
+                ! is_null($is_local),
+                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_local'] == $is_local)
+            )
+            ->when(
+                ! is_null($is_enabled),
+                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_enabled'] == $is_enabled)
+            )
+            ->when(
+                ! is_null($is_loaded),
+                fn (Collection $collection) => $collection->filter(fn (array $arr) => $arr['is_loaded'] == $is_loaded)
+            );
     }
 }
