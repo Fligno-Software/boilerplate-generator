@@ -168,7 +168,7 @@ class DescribeCommand extends Command
     protected function displayDependenciesTable(array $dependencies = [], array $dev_dependencies = []): void
     {
         // Create a new TableSeparator instance.
-        $separator = new TableSeparator;
+        $separator = new TableSeparator();
 
         $get_displayable_dependencies = function (string $title, array $dependencies = []) use ($separator) {
             $title = $this->createTableCell($title, 'default-bold', 2);
@@ -197,7 +197,7 @@ class DescribeCommand extends Command
         $directories = collect($directories);
 
         // Create a new TableSeparator instance.
-        $separator = new TableSeparator;
+        $separator = new TableSeparator();
         $yes = $this->createTableCell('YES', 'red-bold');
         $no = $this->createTableCell('NO');
 

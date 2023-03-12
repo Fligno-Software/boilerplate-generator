@@ -184,21 +184,6 @@ class BoilerplateGeneratorServiceProvider extends ServiceProvider
             'boilerplate-generator.aws'
         );
 
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/fligno'),
-        ], 'boilerplate-generator.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/fligno'),
-        ], 'boilerplate-generator.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/fligno'),
-        ], 'boilerplate-generator.views');*/
-
         // Registering package commands.
         $this->commands($this->commands);
     }

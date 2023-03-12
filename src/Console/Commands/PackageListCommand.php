@@ -15,7 +15,8 @@ use Illuminate\Console\Command;
  */
 class PackageListCommand extends Command
 {
-    use UsesCommandFilterTrait, UsesCommandCustomMessagesTrait;
+    use UsesCommandFilterTrait;
+    use UsesCommandCustomMessagesTrait;
 
     /**
      * The name of the console command.

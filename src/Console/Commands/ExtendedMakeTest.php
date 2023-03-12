@@ -84,7 +84,8 @@ class ExtendedMakeTest extends TestMakeCommand
             // If not, install it.
             if (is_null(guess_file_or_directory_path(
                 package_domain_tests_path($this->package_dir, $this->domain_dir),
-                'Pest.php'))
+                'Pest.php'
+            ))
             ) {
                 $this->call('pest:install', array_merge($args, [
                     '--no-interaction' => true,
