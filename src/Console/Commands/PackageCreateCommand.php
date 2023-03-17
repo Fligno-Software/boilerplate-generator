@@ -98,8 +98,7 @@ class PackageCreateCommand extends Command
         );
 
         $test_directory = Str::of(package_domain_tests_path($this->package_dir))
-            ->after(base_path())
-            ->replace('\\', '/')
+            ->after(str_replace('\\', '/', base_path()))
             ->ltrim('/')
             ->jsonSerialize();
 

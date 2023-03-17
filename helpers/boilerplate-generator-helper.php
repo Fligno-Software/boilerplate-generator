@@ -59,7 +59,7 @@ if (! function_exists('package_domain_path')) {
 
         $path = $path->count() ? $path->implode('/') : null;
 
-        return $with_base_path ? base_path($path) : $path;
+        return $with_base_path ? str_replace('\\', '/', base_path($path)) : $path;
     }
 }
 

@@ -160,6 +160,6 @@ class RouteMakeCommand extends GeneratorCommand
             return package_domain_routes_path($this->package_dir, $this->domain_dir);
         }
 
-        return base_path($this->domain_dir).'/routes';
+        return str_replace('\\', '/', base_path($this->domain_dir)).'/routes';
     }
 }

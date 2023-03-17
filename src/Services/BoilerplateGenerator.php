@@ -113,11 +113,15 @@ class BoilerplateGenerator
      */
     public function getLocalPackages(): Collection
     {
-        if (file_exists(base_path('packages'))) {
-            return collect(File::directories(base_path('packages')))->map(function ($vendor_path) {
+        $path = str_replace('\\', '/', base_path('packages'));
+
+        if (file_exists($path)) {
+            return collect(File::directories($path))->map(function ($vendor_path) {
+                $vendor_path = str_replace('\\', '/', $vendor_path);
                 $vendor = Str::afterLast($vendor_path, '/');
 
                 return collect(File::directories($vendor_path))->mapWithKeys(function ($package_path) use ($vendor) {
+                    $package_path = str_replace('\\', '/', $package_path);
                     $package = Str::afterLast($package_path, '/');
 
                     return [$vendor.'/'.$package => $package_path];
@@ -144,9 +148,9 @@ class BoilerplateGenerator
      */
     public function getEnabledPackages(): Collection
     {
-        $packagesPath = base_path('packages/');
+        $packages_path = base_path('packages/');
         $repositories = collect(getContentsFromComposerJson()->get('repositories', []));
-        $pattern = '{'.addslashes($packagesPath).'(.*)$}';
+        $pattern = '{'.addslashes($packages_path).'(.*)$}';
 
         return $repositories->mapWithKeys(function ($repository) use ($pattern) {
             if (isset($repository['url']) && preg_match($pattern, $repository['url'], $match)) {
@@ -239,6 +243,7 @@ class BoilerplateGenerator
         if (($path = package_domain_domains_path($package, $domain, true)) && file_exists($path)) {
             $found = collect(File::directories($path))
                 ->mapWithKeys(function ($path) {
+                    $path = str_replace('\\', '/', $path);
                     return [domain_encode($path) => $path];
                 });
 
